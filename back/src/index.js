@@ -7,6 +7,9 @@ const connect = require("./utils/db");
 
 connect.connectDB();
 
+// do we need to wait for the connectDB promise to return before executing
+// the following code?
+
 const modelsFiles = globSync("./src/models/**/*.js");
 
 for (const filePath of modelsFiles) {

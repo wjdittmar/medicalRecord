@@ -4,23 +4,24 @@ const url = config.MONGODB_URI;
 
 function connectDB() {
 	mongoose.set("strictQuery", false);
-	mongoose.connect(url)
+	return mongoose.connect(url)
 		.then(() => {
-			console.log("connected to MongoDB");
+			console.log("Connected to MongoDB");
 		})
 		.catch((error) => {
-			// eslint-disable-next-line no-console
-			console.log("error connecting to MongoDB:", error.message);
+			console.log("Error connecting to MongoDB:", error.message);
+			throw error; // Propagate the error to the caller
 		});
 }
 
 function disconnectDB() {
-	mongoose.disconnect().then(() => {
-		console.log("disconnected from MongoDB");
-	})
+	return mongoose.disconnect()
+		.then(() => {
+			console.log("Disconnected from MongoDB");
+		})
 		.catch((error) => {
-			// eslint-disable-next-line no-console
-			console.log("error connecting to MongoDB:", error.message);
+			console.log("Error disconnecting from MongoDB:", error.message);
+			throw error; // Propagate the error to the caller
 		});
 }
 
