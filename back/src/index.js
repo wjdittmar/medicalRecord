@@ -1,20 +1,11 @@
 const config = require("./utils/config");
 
-const mongoose = require("mongoose");
 const { globSync } = require("glob");
 const path = require("path");
 
-const url = config.MONGODB_URI;
+const connect = require("./utils/db");
 
-mongoose.set("strictQuery", false);
-mongoose.connect(url)
-	.then(() => {
-		console.log("connected to MongoDB");
-	})
-	.catch((error) => {
-		// eslint-disable-next-line no-console
-		console.log("error connecting to MongoDB:", error.message);
-	});
+connect.connectDB();
 
 const modelsFiles = globSync("./src/models/**/*.js");
 
