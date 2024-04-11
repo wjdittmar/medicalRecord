@@ -10,29 +10,34 @@ Personal objectives for this project:
 
 Product Requirements:
 
-CRUD patient records
-first_name
-last_name
-dob (ISO 8601 format (YYYY-MM-DD))
-email
-phone (xxxxxxxxxx)
-preferred_language (ISO 639-1 language code)
-pre_existing_conditions (diagnosis[])
-sex
+### CRUD patient records
 
-Read diagnosis
-ICD10 code
-Description
+- firstName
+- lastName
+- dob (ISO 8601 format (YYYY-MM-DD))
+- email
+- phone (xxx-xxx-xxxx)
+- preferred_language (ISO 639-1 language code)
+- pre_existing_conditions (diagnosis[])
+- sex
 
-CRUD providers
-first_name
-last_name
-email
-phone (xxxxxxxxxx)
-licenses (license[])
-license
-{license_id, state}
-Visit
-patient_id
-visit_datetime (ISO 8601 format (YYYY-MM-DD))
-provider_notes
+### Diagnosis
+
+- ICD10 code
+- Description
+
+### Providers
+
+- firstName
+- lastName
+- email
+- phone (xxx-xxx-xxxx)
+- licenses (license[])
+- license
+  - {license_id, state}
+
+### Visit
+
+- patient_id
+- visit_datetime (ISO 8601 format (YYYY-MM-DD))
+- provider_notes
