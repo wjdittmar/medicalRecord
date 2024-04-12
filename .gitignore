@@ -1,3 +1,5 @@
 .env
 node_modules
 dist/
+back/src/data/sf_addresses.csv
+back/src/data/sf_addresses_100.csv

@@ -10,15 +10,15 @@ Personal objectives for this project:
 
 Product Requirements:
 
-### CRUD patient records
+### Patient
 
 - firstName
 - lastName
 - dob (Date type -- e.g. 2020-05-11T20:14:14.796Z)
 - email
 - phone (xxx-xxx-xxxx)
-- preferred_language (ISO 639-1 language code)
-- pre_existing_conditions (diagnosis[])
+- preferredLanguage (ISO 639-1 language code)
+- preExistingConditions (diagnosis[])
 - sex
 
 ### Diagnosis
@@ -38,6 +38,8 @@ Product Requirements:
 
 ### Visit
 
-- patient_id
-- visit_datetime (ISO 8601 format (YYYY-MM-DD))
-- provider_notes
+- patient (Patient[])
+- encounterDate (Date type -- e.g. 2020-05-11T20:14:14.796Z)
+- providerNotes
+- address
+  - { address1, address2, city, state, zipCode }
