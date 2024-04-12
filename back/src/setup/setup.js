@@ -3,9 +3,15 @@ const db = require("../utils/db");
 const Patient = require("../models/patient");
 const Provider = require("../models/provider");
 const Diagnosis = require("../models/diagnosis");
+const Visit = require("../models/visit");
+const { faker } = require("@faker-js/faker");
+
+const fs = require("fs");
+const { parse } = require("csv-parse");
 
 const NUM_PROVIDERS = 50;
 const NUM_PATIENTS = 50;
+const NUM_VISITS = 100;
 const DIAGNOSES_PER_PATIENT = 5;
 
 async function savePatients() {
@@ -63,23 +69,89 @@ async function saveProviders() {
 	}
 }
 
-// Connect to the database first
-db.connectDB()
-	.then(() => {
+async function readAddresses() {
+	return new Promise((resolve, reject) => {
+		const addresses = [];
+		const stream = fs.createReadStream("src/data/sf_addresses_100.csv")
+			.pipe(parse({ delimiter: ",", from_line: 2 }));
+
+		stream.on("data", function (row) {
+			addresses.push(row);
+		});
+
+		stream.on("end", function () {
+			resolve(addresses);
+		});
+
+		stream.on("error", function (error) {
+			reject(error);
+		});
+	});
+}
+
+
+async function saveVisits() {
+
+	const addresses = await readAddresses();
+
+	try {
+		const result = await Patient.aggregate([
+			{ $sample: { size: NUM_VISITS } },
+			{ $project: { _id: 1 } }
+		]);
+
+		// Run database operations
+		const promises = [];
+
+		for (let i = 0; i < NUM_VISITS; i++) {
+			const visit = new Visit({
+				...randomEntry.createRandomVisit(),
+				address: {
+					address1: addresses[i][0],
+					city: addresses[i][1],
+					state: addresses[i][2],
+					zipCode: addresses[i][3]
+				},
+				patientID: result[i]._id
+			});
+
+			const promise = visit.save()
+				.then(() => {
+					//console.log("Adding visit", visit);
+				})
+				.catch((error) => {
+					console.log("Error adding visit to database:", error.message);
+				});
+
+			promises.push(promise);
+		}
+
+		await Promise.allSettled(promises);
+		console.log("All visits saved");
+	} catch (error) {
+		console.error("Error saving visits:", error.message);
+	}
+}
+
+async function generateCollections() {
+	try {
+		// Connect to the database first
+		await db.connectDB();
 		console.log("Connected to the database");
 
 		// Run both functions concurrently
-		Promise.allSettled([savePatients(), saveProviders()])
-			.then(() => {
-				// Disconnect from the database after both functions are done
-				db.disconnectDB();
-				console.log("Disconnected from the database");
-			})
-			.catch((error) => {
-				console.error("Error:", error.message);
-				db.disconnectDB();
-			});
-	})
-	.catch((error) => {
-		console.error("Error connecting to the database:", error.message);
-	});
+		await Promise.allSettled([savePatients(), saveProviders()]);
+
+		// Generate visits
+		await saveVisits();
+
+		// Disconnect from the database after both functions are done
+		await db.disconnectDB();
+		console.log("Disconnected from the database");
+	} catch (error) {
+		console.error("Error:", error.message);
+		await db.disconnectDB();
+	}
+}
+
+generateCollections();

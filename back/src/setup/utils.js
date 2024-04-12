@@ -26,7 +26,14 @@ function createRandomPatient() {
 
 	};
 }
+
+function createRandomVisit() {
+	return {
+		encounterDate: faker.helpers.arrayElement([faker.date.soon(), faker.date.recent()])
+	};
+}
 module.exports = {
 	createRandomProvider,
-	createRandomPatient
+	createRandomPatient,
+	createRandomVisit
 };
