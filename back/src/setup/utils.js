@@ -23,13 +23,13 @@ function createRandomPatient() {
 		dob: faker.date.birthdate(),
 		email: faker.internet.email(),
 		sex: faker.person.sex(),
-
 	};
 }
 
 function createRandomVisit() {
 	return {
-		encounterDate: faker.helpers.arrayElement([faker.date.soon(), faker.date.recent()])
+		encounterDate: faker.helpers.arrayElement([faker.date.soon(), faker.date.recent()]),
+		providerNotes: faker.hacker.phrase()
 	};
 }
 module.exports = {

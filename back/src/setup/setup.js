@@ -4,7 +4,6 @@ const Patient = require("../models/patient");
 const Provider = require("../models/provider");
 const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit");
-const { faker } = require("@faker-js/faker");
 
 const fs = require("fs");
 const { parse } = require("csv-parse");
@@ -99,7 +98,6 @@ async function saveVisits() {
 			{ $sample: { size: NUM_VISITS } },
 			{ $project: { _id: 1 } }
 		]);
-
 		// Run database operations
 		const promises = [];
 
@@ -112,7 +110,7 @@ async function saveVisits() {
 					state: addresses[i][2],
 					zipCode: addresses[i][3]
 				},
-				patientID: result[i]._id
+				patient: result[i]._id
 			});
 
 			const promise = visit.save()
