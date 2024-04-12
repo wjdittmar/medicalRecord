@@ -14,7 +14,7 @@ Product Requirements:
 
 - firstName
 - lastName
-- dob (ISO 8601 format (YYYY-MM-DD))
+- dob (Date type -- e.g. 2020-05-11T20:14:14.796Z)
 - email
 - phone (xxx-xxx-xxxx)
 - preferred_language (ISO 639-1 language code)

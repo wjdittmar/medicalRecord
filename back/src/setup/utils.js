@@ -13,6 +13,20 @@ function createRandomProvider() {
 		}
 	};
 }
+
+function createRandomPatient() {
+	return {
+		firstName: faker.person.firstName(),
+		lastName: faker.person.lastName(),
+		phone: faker.helpers.fromRegExp("[1-9]{3}-[1-9]{3}-[1-9]{4}"),
+		preferredLanguage: faker.helpers.arrayElement(["en", "es", "fr"]),
+		dob: faker.date.birthdate(),
+		email: faker.internet.email(),
+		sex: faker.person.sex(),
+
+	};
+}
 module.exports = {
-	createRandomProvider
+	createRandomProvider,
+	createRandomPatient
 };
