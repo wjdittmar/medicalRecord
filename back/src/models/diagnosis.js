@@ -5,4 +5,4 @@ const diagnosisSchema = new mongoose.Schema({
 	disease: String,
 });
 
-module.exports = mongoose.model("diagnoses", diagnosisSchema);
+module.exports = mongoose.model("Diagnosis", diagnosisSchema);

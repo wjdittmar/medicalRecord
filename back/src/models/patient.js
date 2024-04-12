@@ -19,7 +19,7 @@ const patientSchema = new mongoose.Schema({
 		trim: true
 	},
 	preExistingConditions: [
-		{ type: mongoose.Schema.Types.ObjectId, ref: "diagnoses" }
+		{ type: mongoose.Schema.Types.ObjectId, ref: "Diagnosis" }
 	],
 	dob: Date,
 	email: {
