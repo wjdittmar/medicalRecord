@@ -9,9 +9,9 @@ const Dashboard = () => {
 	return (
 		<>
 			<div>
-				<Link to="/patients">patients</Link>
-				<Link to="/providers">providers</Link>
-				<Link to="/visits">visits</Link>
+				<Link to="/dashboard/patients">patients</Link>
+				<Link to="/dashboard/providers">providers</Link>
+				<Link to="/dashboard/visits">visits</Link>
 			</div>
 
 			<Routes>
