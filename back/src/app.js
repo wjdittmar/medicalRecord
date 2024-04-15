@@ -6,7 +6,7 @@ const providerRouter = require("./routes/provider");
 const visitRouter = require("./routes/visits");
 const app = express();
 
-app.use(express.static("dist"));
+app.use(express.static("../dist"));
 
 app.use(cors());
 app.use(express.json());
