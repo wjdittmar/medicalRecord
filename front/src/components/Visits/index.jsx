@@ -20,6 +20,7 @@ const Visits = () => {
 
 	return (
 		<>
+
 			<table>
 				<thead>
 					<tr>
