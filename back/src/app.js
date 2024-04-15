@@ -1,3 +1,4 @@
+var path = require("path");
 const express = require("express");
 const cors = require("cors");
 const diagnosesRouter = require("./routes/diagnosis");
@@ -19,5 +20,11 @@ app.use("/api/diagnoses", diagnosesRouter);
 app.use("/api/patients", patientRouter);
 app.use("/api/providers", providerRouter);
 app.use("/api/visits", visitRouter);
+
+/* final catch-all route to index.html defined last */
+app.get("/*", (req, res) => {
+	res.sendFile(path.resolve("dist/index.html"));
+});
+
 
 module.exports = app;
