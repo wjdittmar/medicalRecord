@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Provider from './Provider';
+import Pagination from '../Pagination';
 import providerService from "../../services/Providers";
 
 const Providers = () => {
@@ -17,10 +18,6 @@ const Providers = () => {
 	const endIndex = startIndex + resultsPerPage;
 	const currentProviders = providers.slice(startIndex, endIndex);
 
-	const handlePageChange = (page) => {
-		setCurrentPage(page);
-	};
-
 	return (
 		<>
 			<table>
@@ -37,13 +34,7 @@ const Providers = () => {
 					))}
 				</tbody>
 			</table>
-			<div className="pagination">
-				{Array.from({ length: totalPages }, (_, index) => (
-					<button key={index} onClick={() => handlePageChange(index + 1)}>
-						{index + 1}
-					</button>
-				))}
-			</div>
+			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);
 };

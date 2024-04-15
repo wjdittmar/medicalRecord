@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Visit from './Visit';
+import Pagination from '../Pagination';
 import visitService from "../../services/Visits";
 
 const Visits = () => {
@@ -17,11 +18,6 @@ const Visits = () => {
 	const endIndex = startIndex + resultsPerPage;
 	const currentVisits = visits.slice(startIndex, endIndex);
 
-
-	const handlePageChange = (page) => {
-		setCurrentPage(page);
-	};
-
 	return (
 		<>
 			<table>
@@ -38,13 +34,7 @@ const Visits = () => {
 					))}
 				</tbody>
 			</table>
-			<div className="pagination">
-				{Array.from({ length: totalPages }, (_, index) => (
-					<button key={index} onClick={() => handlePageChange(index + 1)}>
-						{index + 1}
-					</button>
-				))}
-			</div>
+			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);
 };

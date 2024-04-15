@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Patient from './Patient';
+import Pagination from '../Pagination';
 import patientService from "../../services/Patients";
 
 const Patients = () => {
@@ -17,7 +18,7 @@ const Patients = () => {
 	const endIndex = startIndex + resultsPerPage;
 	const currentPatients = patients.slice(startIndex, endIndex);
 
-	const handlePageChange = (page) => {
+	const handlePagination = (page) => {
 		setCurrentPage(page);
 	};
 
@@ -37,13 +38,7 @@ const Patients = () => {
 					))}
 				</tbody>
 			</table>
-			<div className="pagination">
-				{Array.from({ length: totalPages }, (_, index) => (
-					<button key={index} onClick={() => handlePageChange(index + 1)}>
-						{index + 1}
-					</button>
-				))}
-			</div>
+			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);
 };
