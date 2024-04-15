@@ -6,6 +6,7 @@
 	"scripts": {
 		"start": "node src/index.js",
 		"dev": "nodemon src/index.js --ignore public/",
+		"build:ui": "rm -rf dist && cd ../front/ && npm run build && cp -r dist ../back",
 		"production": "NODE_ENV=production",
 		"setup": "node src/setup/setup.js",
 		"eslint": "eslint './**/*.{js,jsx}'"

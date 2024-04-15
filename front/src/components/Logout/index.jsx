@@ -1,4 +1,4 @@
 const Logout = () => {
-	return <div className="logout"><h2>Logout</h2></div>
+	return <div className="logout"><span>L</span></div>
 };
 export default Logout;
