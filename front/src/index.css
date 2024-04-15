@@ -4,6 +4,7 @@
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
 }
 
 a {
@@ -20,6 +21,7 @@ body {
 }
 
 body {
+  line-height: 1.5;
 }
 
 h1 {
@@ -75,4 +77,51 @@ div.twoColumn > div.right {
   width: 50%;
   display: flex;
   justify-content: space-around;
+}
+
+div.sidebarMain {
+  display: flex;
+  height: 100vh;
+}
+
+div.sidebarMain > div.main {
+  padding: 2rem;
+}
+
+.side > * {
+  padding-left: 2rem;
+  padding-right: 2rem;
+}
+
+div.nav {
+  padding-top: 1rem;
+}
+
+.side ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.side li {
+  margin: 0.25rem 0;
+}
+.side a {
+  padding: 0.5rem;
+}
+
+.side {
+  background-color: #f7f7f7;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  background-color: aliceblue;
+}
+
+div.logo {
+  margin: 0 2rem;
+}
+div.logout {
+  margin: 0 2rem;
 }
