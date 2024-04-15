@@ -23,7 +23,6 @@ const Providers = () => {
 
 	return (
 		<>
-			<h2>Providers</h2>
 			<table>
 				<thead>
 					<tr>
@@ -38,7 +37,7 @@ const Providers = () => {
 					))}
 				</tbody>
 			</table>
-			<div>
+			<div className="pagination">
 				{Array.from({ length: totalPages }, (_, index) => (
 					<button key={index} onClick={() => handlePageChange(index + 1)}>
 						{index + 1}
