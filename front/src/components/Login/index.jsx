@@ -1,13 +1,29 @@
 import { useNavigate } from 'react-router-dom';
 import { NavLink } from "react-router-dom";
+import loginService from "../../services/Login";
+import { useState } from 'react';
 
 const Login = () => {
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
 	const navigate = useNavigate();
-	const handleSubmit = (event) => {
-		// TODO: implement logic for sending the form submission to the back end and verifying
-		// the information
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		navigate('/dashboard');
+
+		try {
+			const user = await loginService.login({
+				email, password,
+			});
+
+			setEmail('');
+			setPassword('');
+			navigate('/dashboard');
+
+		} catch (exception) {
+			console.log("wrong credentials");
+		}
+
 	};
 
 	return (<>
@@ -17,11 +33,11 @@ const Login = () => {
 				<div>
 					<input label="email" name="email"
 						required placeholder="email"
-						type="email"
+						type="email" onChange={({ target }) => setEmail(target.value)}
 					/>
 				</div>
 				<div>
-					<input label="password" name="password" required placeholder="password" />
+					<input label="password" name="password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
 				</div>
 				<input type="submit" value="Submit" />
 			</form>

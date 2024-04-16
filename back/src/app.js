@@ -6,6 +6,7 @@ const patientRouter = require("./routes/patient");
 const providerRouter = require("./routes/provider");
 const visitRouter = require("./routes/visits");
 const userRouter = require("./routes/users");
+const loginRouter = require("./routes/login");
 const app = express();
 
 app.use(express.static("dist"));
@@ -22,6 +23,7 @@ app.use("/api/patients", patientRouter);
 app.use("/api/providers", providerRouter);
 app.use("/api/visits", visitRouter);
 app.use("/api/users", userRouter);
+app.use("/api/login", loginRouter);
 
 /* final catch-all route to index.html defined last */
 app.get("/*", (req, res) => {
