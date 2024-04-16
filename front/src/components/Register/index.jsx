@@ -1,13 +1,30 @@
 import { NavLink, useNavigate } from "react-router-dom";
-
+import userService from "../../services/Users";
+import { useState } from 'react';
 const Register = () => {
 
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+
+
+
 	const navigate = useNavigate();
-	const handleSubmit = (event) => {
-		// TODO: implement logic for sending the form submission to the back end and verifying
-		// the information
+
+	const handleSubmit = async (event) => {
 		event.preventDefault();
-		navigate('/dashboard');
+
+		try {
+			const user = await userService.register({
+				email, password,
+			});
+			setEmail('');
+			setPassword('');
+			navigate('/login');
+
+		} catch (exception) {
+			console.log(exception);
+		}
+
 	};
 
 	return (<>
@@ -20,11 +37,11 @@ const Register = () => {
 				<div>
 					<input label="email" name="email"
 						required placeholder="email"
-						type="email"
+						type="email" autoComplete="username" onChange={({ target }) => setEmail(target.value)}
 					/>
 				</div>
 				<div>
-					<input label="password" name="password" required placeholder="password" type="password" />
+					<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
 				</div>
 				<input type="submit" value="Submit" />
 			</form>
