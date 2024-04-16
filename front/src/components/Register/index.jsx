@@ -25,7 +25,7 @@ const Register = () => {
 				</div>
 				<input type="submit" value="Submit" />
 			</form>
-			<div>Not a user already? Click here to <NavLink to="/register/">register</NavLink></div>
+			<div>Already a user? Click here to <NavLink to="/login/">login</NavLink></div>
 		</div>
 	</>);
 };
