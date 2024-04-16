@@ -2,9 +2,10 @@
 
 ### Setup the backend
 
-#### Step 1: Update MongoDB URI
+#### Step 1: Update Environment variables
 
 Update the "MONGODB_URI" field with the URI of your MongoDB database.
+Update the "SECRET" field with a string for signing jwt
 
 #### Step 2: Install Backend Dependencies
 

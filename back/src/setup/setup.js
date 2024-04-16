@@ -4,12 +4,13 @@ const Patient = require("../models/patient");
 const Provider = require("../models/provider");
 const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit");
-
+const User = require("../models/user");
+const bcrypt = require("bcrypt");
 const fs = require("fs");
 const { parse } = require("csv-parse");
 
 const NUM_PROVIDERS = 50;
-const NUM_PATIENTS = 50;
+const NUM_PATIENTS = 100;
 const NUM_VISITS = 100;
 const DIAGNOSES_PER_PATIENT = 5;
 
@@ -38,6 +39,7 @@ async function savePatients() {
 		}
 		await Promise.allSettled(promises);
 		console.log("All patients saved");
+		return Promise.resolve();
 	} catch (error) {
 		console.error("Error fetching diagnoses:", error.message);
 	}
@@ -63,6 +65,8 @@ async function saveProviders() {
 
 		await Promise.allSettled(promises);
 		console.log("All providers saved");
+		return Promise.resolve();
+
 	} catch (error) {
 		console.error("Error saving providers:", error.message);
 	}
@@ -88,6 +92,26 @@ async function readAddresses() {
 	});
 }
 
+async function createAdmin() {
+	const saltRounds = 10;
+	const passwordHash = await bcrypt.hash("password", saltRounds);
+
+	const user = new User(
+		{
+			name: "James Dittmar",
+			email: "admin@admin.com",
+			passwordHash: passwordHash
+		}
+	);
+
+	user.save()
+		.then(() => {
+			//console.log("Adding user", user);
+		})
+		.catch((error) => {
+			console.log("Error adding user to database:", error.message);
+		});
+}
 
 async function saveVisits() {
 
@@ -112,12 +136,12 @@ async function saveVisits() {
 				},
 				patient: result[i]._id
 			});
-
 			const promise = visit.save()
 				.then(() => {
 					//console.log("Adding visit", visit);
 				})
 				.catch((error) => {
+					//console.log(visit);
 					console.log("Error adding visit to database:", error.message);
 				});
 
@@ -136,6 +160,10 @@ async function generateCollections() {
 		// Connect to the database first
 		await db.connectDB();
 		console.log("Connected to the database");
+
+		// do not need to await for user creation, it has no other dependencies
+
+		createAdmin();
 
 		// Run both functions concurrently
 		await Promise.allSettled([savePatients(), saveProviders()]);
