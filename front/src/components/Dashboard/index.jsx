@@ -6,6 +6,7 @@ import Visits from "../Visits";
 import Overview from "../Overview";
 import SidebarMainLayout from "../SidebarMainLayout";
 import Header from "../Header";
+import ProtectedRoute from "../ProtectedRoute";
 
 const Dashboard = () => {
 
@@ -14,11 +15,27 @@ const Dashboard = () => {
 		<>
 			<Header />
 			<Routes>
-				<Route path='/' element={<SidebarMainLayout sidebar={<Navbar />} main={<Overview />} />} />
-				<Route path='/patients' element={<SidebarMainLayout sidebar={<Navbar />} main={<Patients />} />} />
-				<Route path='/providers' element={<SidebarMainLayout sidebar={<Navbar />} main={<Providers />} />} />
-				<Route path='/visits' element={<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />} />
-			</Routes>
+				<Route path='/' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Overview />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/patients' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Patients />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/providers' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Providers />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/visits' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />
+					</ProtectedRoute>
+				} />
+			</Routes >
 		</>
 	);
 };

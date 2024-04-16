@@ -9,7 +9,7 @@ function App() {
 				<Route path='*' element={<Landing />} />
 			</Routes>
 		</BrowserRouter>
-	)
+	);
 }
 
-export default App
+export default App;

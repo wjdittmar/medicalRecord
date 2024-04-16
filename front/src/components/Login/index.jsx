@@ -7,6 +7,8 @@ const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
+
+
 	const navigate = useNavigate();
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -15,6 +17,10 @@ const Login = () => {
 			const user = await loginService.login({
 				email, password,
 			});
+
+			window.localStorage.setItem(
+				'loggedUser', JSON.stringify(user)
+			);
 
 			setEmail('');
 			setPassword('');
@@ -33,11 +39,11 @@ const Login = () => {
 				<div>
 					<input label="email" name="email"
 						required placeholder="email"
-						type="email" onChange={({ target }) => setEmail(target.value)}
+						type="email" autoComplete="username" onChange={({ target }) => setEmail(target.value)}
 					/>
 				</div>
 				<div>
-					<input label="password" name="password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
+					<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
 				</div>
 				<input type="submit" value="Submit" />
 			</form>
