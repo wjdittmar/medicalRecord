@@ -1,6 +1,6 @@
 # medicalRecord
 
-Personal objectives for this project:
+## Personal objectives for this project:
 
 - Demonstrate the ability to take feature requirements and translate them into a minimum viable product
 - Showcase understanding of basic HTML / CSS
@@ -8,38 +8,11 @@ Personal objectives for this project:
 - Showcase ability to utilize version control (Git)
 - Demonstrate basic user management using token-based authentication
 
-Product Requirements:
+## Possible additional features:
 
-### Patient
+- Integration with an existing electronic health record system (e.g. Epic on FHIR)
+- Different access privileges for different user levels (e.g. provider, administrator, patient)
+- CI/CD deployment pipeline
+- End-to-end testing
 
-- firstName
-- lastName
-- dob (Date type -- e.g. 2020-05-11T20:14:14.796Z)
-- email
-- phone (xxx-xxx-xxxx)
-- preferredLanguage (ISO 639-1 language code)
-- preExistingConditions (diagnosis[])
-- sex
-
-### Diagnosis
-
-- ICD10 code
-- Description
-
-### Providers
-
-- firstName
-- lastName
-- email
-- phone (xxx-xxx-xxxx)
-- licenses (license[])
-- license
-  - {license_id, state}
-
-### Visit
-
-- patient (Patient[])
-- encounterDate (Date type -- e.g. 2020-05-11T20:14:14.796Z)
-- providerNotes
-- address
-  - { address1, address2, city, state, zipCode }
+See the individual README.md files in the back/ and front/ directories for an overview of each individual component
