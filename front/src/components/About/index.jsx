@@ -1,4 +1,6 @@
 const About = () => (
-	<h2>About</h2>
+	<>
+		<img width="350px" src="../../nexmed-logo.png" />
+	</>
 );
 export default About;
