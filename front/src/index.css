@@ -119,20 +119,20 @@ div.nav {
 
 .side {
   background-color: #f7f7f7;
-  min-width: 14%;
   flex: 1;
+  max-width: 15%;
 }
 
 div.main {
   display: flex;
   flex-direction: column;
-  width: 86%;
   justify-content: space-evenly;
   align-items: stretch;
   background: #fff;
   box-shadow: 0 0 20px 3px #96beee26;
   border-radius: 6px;
   margin: 1rem 3rem 3rem 1rem;
+  flex: 1;
 }
 
 header {
@@ -199,4 +199,11 @@ th {
   border: 1px solid transparent;
   width: 32px;
   height: 32px;
+}
+
+@media only screen and (max-width: 480px) {
+  #root {
+    font-size: 0.5rem;
+    /* styles for devices with a minimum screen width of 480px */
+  }
 }
