@@ -1,7 +1,7 @@
-import { useNavigate } from 'react-router-dom';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-const Login = () => {
+const Register = () => {
+
 	const navigate = useNavigate();
 	const handleSubmit = (event) => {
 		// TODO: implement logic for sending the form submission to the back end and verifying
@@ -13,7 +13,7 @@ const Login = () => {
 	return (<>
 		<div>
 			<form onSubmit={handleSubmit}>
-				<h2>Login</h2>
+				<h2>Register</h2>
 				<div>
 					<input label="email" name="email"
 						required placeholder="email"
@@ -29,4 +29,4 @@ const Login = () => {
 		</div>
 	</>);
 };
-export default Login;
+export default Register;
