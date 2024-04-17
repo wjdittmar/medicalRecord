@@ -15,6 +15,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -32,6 +33,11 @@ h1 {
   line-height: 1.1;
 }
 
+h2 {
+  font-size: 2.5em;
+  margin-bottom: 0;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -39,9 +45,11 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
   transition: border-color 0.25s;
+  color: #fff;
+  background: #105586;
+  box-shadow: 0 2px 0 rgba(5, 95, 255, 0.1);
 }
 button:hover {
   border-color: #646cff;
@@ -49,19 +57,6 @@ button:hover {
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
 div.twoColumn {
@@ -156,6 +151,10 @@ table {
 }
 div.pagination {
   text-align: center;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 8px 0px;
 }
 td {
   text-align: center;
@@ -189,7 +188,6 @@ th {
   float: right;
   cursor: pointer;
   border-radius: 50%;
-
   position: relative;
   display: inline-flex;
   justify-content: center;
@@ -209,4 +207,65 @@ th {
     font-size: 0.5rem;
     /* styles for devices with a minimum screen width of 480px */
   }
+}
+
+hr {
+  margin: 25px 0px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* form elements */
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+.formContainer {
+  min-width: 50%;
+}
+
+.inputWrapper {
+  padding: 12px 11px;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 10px;
+  background: #ffffff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #d9d9d9;
+  margin-bottom: 12px;
+  display: flex;
+}
+
+input {
+  padding: 0;
+  font-size: inherit;
+  border: none;
+  border-radius: 0;
+  outline: none;
+  background: transparent;
+  flex: 1;
+}
+
+.inputWrapperContainer {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+}
+
+label {
+  font-weight: 600;
+  font-size: 1 rem;
+  margin-bottom: 10px;
+}
+
+label.required::before {
+  display: inline-block;
+  margin-inline-end: 4px;
+  color: #ff4d4f;
+  font-size: 14px;
+  font-family: SimSun, sans-serif;
+  line-height: 1;
+  content: "*";
 }

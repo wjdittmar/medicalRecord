@@ -28,24 +28,37 @@ const Register = () => {
 	};
 
 	return (<>
-		<div>
+		<div className="formContainer">
 			<form onSubmit={handleSubmit}>
 				<h2>Register</h2>
-				<div>
-					<input type="text" id="name" name="name" placeholder="name" onChange={({ target }) => setName(target.value)} />
+				<hr />
+				<div className="inputWrapperContainer">
+					<label title="Name" className="required">Name</label>
+					<span className="inputWrapper">
+						<input label="name" name="name"
+							required placeholder="name"
+							type="name" autoComplete="name" onChange={({ target }) => setName(target.value)}
+						/>
+					</span>
 				</div>
-				<div>
-					<input label="email" name="email"
-						required placeholder="email"
-						type="email" autoComplete="username" onChange={({ target }) => setEmail(target.value)}
-					/>
+				<div className="inputWrapperContainer">
+					<label title="Email" className="required">Email</label>
+					<span className="inputWrapper">
+						<input label="email" name="email"
+							required placeholder="email"
+							type="email" autoComplete="email" onChange={({ target }) => setEmail(target.value)}
+						/>
+					</span>
 				</div>
-				<div>
-					<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
+				<div className="inputWrapperContainer">
+					<label title="Password" className="required">Password</label>
+					<div className='inputWrapper'>
+						<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
+					</div>
 				</div>
-				<input type="submit" value="Submit" />
+				<button type="submit" value="Submit">Submit</button>
 			</form>
-			<div>Already a user? Click here to <NavLink to="/login/">login</NavLink></div>
+			<p>Already a user? Click here to <NavLink to="/login/">login</NavLink></p>
 		</div>
 	</>);
 };
