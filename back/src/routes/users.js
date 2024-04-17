@@ -9,16 +9,21 @@ usersRouter.post("/", async (request, response) => {
 
 	const saltRounds = 10;
 	const passwordHash = await bcrypt.hash(password, saltRounds);
-	console.log(passwordHash);
 	const user = new User({
 		email,
 		name,
 		passwordHash,
 	});
 
-	const savedUser = await user.save();
+	try {
+		const savedUser = await user.save();
 
-	response.status(201).json(savedUser);
+		response.status(201).json(savedUser);
+	}
+	catch (exception) {
+		console.log(exception);
+		response.status(400).json({ error: "duplicate email" });
+	}
 });
 
 usersRouter.get("/", async (request, response) => {
