@@ -82,11 +82,6 @@ div.twoColumn > div.right {
 
 div.sidebarMain {
   display: flex;
-  height: 100vh;
-}
-
-div.sidebarMain > div.main {
-  padding: 2rem;
 }
 
 .side > * {
@@ -129,8 +124,9 @@ div.main {
   background: #fff;
   box-shadow: 0 0 20px 3px #96beee26;
   border-radius: 6px;
-  margin: 1rem 3rem 3rem 1rem;
+  padding: 2rem;
   flex: 1;
+  margin: 15px 30px;
 }
 
 header {
@@ -146,9 +142,7 @@ div.logo {
 div.logout {
   margin: 0 2rem;
 }
-table {
-  flex: 1;
-}
+
 div.pagination {
   text-align: center;
   display: flex;
@@ -156,13 +150,28 @@ div.pagination {
   gap: 20px;
   padding: 8px 0px;
 }
-td {
-  text-align: center;
-  padding: 10px;
+
+/* table styling */
+
+table {
+  flex: 1;
 }
+
+td,
 th {
-  font-size: 1.5rem;
+  padding: 16px;
+  text-align: start;
 }
+tr > td {
+  border-bottom: 1px solid #f0f0f0;
+}
+
+th {
+  background: #fafafa;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+/* end table styling */
 
 .card {
   /* Add shadows to create the "card" effect */
