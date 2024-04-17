@@ -2,7 +2,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import userService from "../../services/Users";
 import { useState } from 'react';
 const Register = () => {
-
+	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 
@@ -15,7 +15,7 @@ const Register = () => {
 
 		try {
 			const user = await userService.register({
-				email, password,
+				email, name, password,
 			});
 			setEmail('');
 			setPassword('');
@@ -32,7 +32,7 @@ const Register = () => {
 			<form onSubmit={handleSubmit}>
 				<h2>Register</h2>
 				<div>
-					<input type="text" id="name" name="name" placeholder="name" />
+					<input type="text" id="name" name="name" placeholder="name" onChange={({ target }) => setName(target.value)} />
 				</div>
 				<div>
 					<input label="email" name="email"
