@@ -1,7 +1,6 @@
 #root {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
-    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 16px;
@@ -14,6 +13,7 @@ a {
   font-weight: 500;
   color: #646cff;
   text-decoration: inherit;
+  cursor: pointer;
 }
 
 a:hover {
@@ -82,6 +82,13 @@ div.twoColumn > div.right {
 
 div.sidebarMain {
   display: flex;
+  flex: 1;
+}
+
+a.active {
+  color: #1640d6;
+  background-color: #e6efff;
+  border-radius: 10px;
 }
 
 .side > * {
@@ -99,11 +106,6 @@ div.nav {
   list-style: none;
 }
 
-/* TODO: maybe a better way to space these out? */
-
-.side li {
-  margin: 8.25rem 0;
-}
 .side a {
   padding: 0.5rem;
   color: black;
