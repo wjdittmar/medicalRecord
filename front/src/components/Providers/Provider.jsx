@@ -12,8 +12,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
 
 const Provider = ({ provider }) => {
-	console.log(provider);
-
 	const [open, setOpen] = useState(false);
 
 	const { firstName, lastName, email } = provider; // Destructure firstName from provider prop

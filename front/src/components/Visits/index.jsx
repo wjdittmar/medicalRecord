@@ -27,6 +27,7 @@ const Visits = () => {
 						<th>Address</th>
 						<th>Date</th>
 						<th>Visit Notes</th>
+						<th></th>
 					</tr>
 				</thead>
 				<tbody>
