@@ -32,7 +32,7 @@ const Patients = () => {
 				</thead>
 				<tbody>
 					{currentPatients.map((patient) => (
-						<tr key={patient._id}><Patient patient={patient} /></tr>
+						<Patient key={patient._id} patient={patient} />
 					))}
 				</tbody>
 			</table >

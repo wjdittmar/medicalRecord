@@ -18,7 +18,6 @@ const Patient = ({ patient }) => {
 	const [open, setOpen] = useState(false);
 
 	const { firstName, lastName, email } = patient; // Destructure firstName from provider prop
-
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
 	};
@@ -29,7 +28,7 @@ const Patient = ({ patient }) => {
 
 	return (
 
-		<React.Fragment>
+		<tr key={patient._id}>
 			<td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> ...</a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
@@ -40,7 +39,6 @@ const Patient = ({ patient }) => {
 							</Avatar>
 						</ListItemAvatar>
 						<ListItemText primary={`${firstName} ${lastName}`} />
-
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -75,11 +73,9 @@ const Patient = ({ patient }) => {
 						<ListItemText primary={`${getFullLanguage(patient.preferredLanguage)}`} />
 					</ListItem>
 					<ListItem>
-
-
 						<List>
 							{patient.preExistingConditions.map((condition) => (
-								<ListItem key={condition.id}>
+								<ListItem key={condition._id}>
 									<ListItemAvatar>
 										<Avatar>
 											<MedicalInformationIcon />
@@ -90,8 +86,16 @@ const Patient = ({ patient }) => {
 							))}
 						</List>
 					</ListItem>
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<LanguageIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary={`${getFullLanguage(patient.preferredLanguage)}`} />
+					</ListItem>
 				</List>
 			</Drawer>
-		</React.Fragment>);
+		</tr>);
 };
 export default Patient;
