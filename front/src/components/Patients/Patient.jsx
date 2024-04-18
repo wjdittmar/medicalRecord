@@ -16,7 +16,6 @@ import CakeIcon from '@mui/icons-material/Cake';
 
 const Patient = ({ patient }) => {
 	const [open, setOpen] = useState(false);
-	console.log(patient);
 
 	const { firstName, lastName, email } = patient; // Destructure firstName from provider prop
 
