@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import loginService from "../../services/Login";
 import { useState } from 'react';
 import Notification from '../Notification';
-
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -42,6 +41,7 @@ const Login = () => {
 	};
 
 	return (<>
+
 		<div className="formContainer">
 			<form onSubmit={handleSubmit}>
 				<h2>Login</h2>
