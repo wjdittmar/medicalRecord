@@ -10,6 +10,7 @@
 
 ## Possible additional features:
 
+- Convert front/backend to typescript
 - Integration with an existing electronic health record system (e.g. Epic on FHIR)
 - Different access privileges for different user levels (e.g. provider, administrator, patient)
 - CI/CD deployment pipeline

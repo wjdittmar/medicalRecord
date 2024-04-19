@@ -6,9 +6,26 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from "@mui/material/ListItemIcon";
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const Navbar = () => {
 	// TODO: create an object array with the name of the tab and the icon that should be used
 
+	let navArray = [{
+		linkName: "Patients",
+		icon: <PersonIcon />
+	},
+	{
+		linkName: "Providers",
+		icon: <MedicalInformationIcon />
+	},
+	{
+		linkName: "Visits",
+		icon: <CalendarMonthIcon />
+	}
+	];
+
+	console.log(navArray[0].icon);
 	return (
 		<List>
 			<ListItem>
@@ -19,13 +36,14 @@ const Navbar = () => {
 					<ListItemText primary="Overview" />
 				</ListItemButton>
 			</ListItem>
-			{['Patients', 'Providers', 'Visits'].map((text, index) => (
-				<ListItem key={text}>
-					<ListItemButton button component={NavLink} to={`/dashboard/${text.toLowerCase()}`}>
+
+			{navArray.map(({ linkName, icon }) => (
+				<ListItem key={linkName}>
+					<ListItemButton button component={NavLink} to={`/dashboard/${linkName.toLowerCase()}`}>
 						<ListItemIcon>
-							<PersonIcon />
+							{icon}
 						</ListItemIcon>
-						<ListItemText primary={text} />
+						<ListItemText primary={linkName} />
 					</ListItemButton>
 				</ListItem>
 			))}
