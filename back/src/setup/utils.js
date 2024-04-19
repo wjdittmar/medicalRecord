@@ -28,7 +28,7 @@ function createRandomPatient() {
 
 function createRandomVisit() {
 	return {
-		encounterDate: faker.helpers.arrayElement([faker.date.soon(), faker.date.recent()]),
+		encounterDate: faker.helpers.arrayElement([faker.date.soon(), faker.date.past()]),
 		providerNotes: faker.hacker.phrase()
 	};
 }

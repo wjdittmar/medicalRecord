@@ -9,7 +9,6 @@ import PersonIcon from '@mui/icons-material/Person';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 const Navbar = () => {
-	// TODO: create an object array with the name of the tab and the icon that should be used
 
 	let navArray = [{
 		linkName: "Patients",
@@ -24,8 +23,6 @@ const Navbar = () => {
 		icon: <CalendarMonthIcon />
 	}
 	];
-
-	console.log(navArray[0].icon);
 	return (
 		<List>
 			<ListItem>
