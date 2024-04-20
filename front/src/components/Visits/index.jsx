@@ -6,7 +6,7 @@ import visitService from "../../services/Visits";
 const Visits = () => {
 	const [visits, setVisits] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const resultsPerPage = 10;
+	const resultsPerPage = 7;
 
 	useEffect(() => {
 		visitService.getAll().then(visits => setVisits(visits));

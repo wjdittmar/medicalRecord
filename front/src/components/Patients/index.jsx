@@ -7,7 +7,7 @@ import patientService from "../../services/Patients";
 const Patients = () => {
 	const [patients, setPatients] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const resultsPerPage = 10;
+	const resultsPerPage = 7;
 
 	useEffect(() => {
 		patientService.getAll().then(patients => setPatients(patients));

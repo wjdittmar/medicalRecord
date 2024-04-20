@@ -12,7 +12,7 @@ const Dashboard = () => {
 
 	// TODO: can maybe create a new component that includes a route to simplify the subsequent route definitions so that they do not have nested elements
 	return (
-		<>
+		<div className="fullPage">
 			<Header />
 			<Routes>
 				<Route path='/' element={
@@ -36,7 +36,7 @@ const Dashboard = () => {
 					</ProtectedRoute>
 				} />
 			</Routes >
-		</>
+		</div>
 	);
 };
 export default Dashboard;

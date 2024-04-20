@@ -6,7 +6,7 @@ import providerService from "../../services/Providers";
 const Providers = () => {
 	const [providers, setProviders] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
-	const resultsPerPage = 10;
+	const resultsPerPage = 7;
 
 	useEffect(() => {
 		providerService.getAll().then(providers => setProviders(providers));

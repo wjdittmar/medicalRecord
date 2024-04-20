@@ -86,14 +86,6 @@ const Patient = ({ patient }) => {
 							))}
 						</List>
 					</ListItem>
-					<ListItem>
-						<ListItemAvatar>
-							<Avatar>
-								<LanguageIcon />
-							</Avatar>
-						</ListItemAvatar>
-						<ListItemText primary={`${getFullLanguage(patient.preferredLanguage)}`} />
-					</ListItem>
 				</List>
 			</Drawer>
 		</tr>);
