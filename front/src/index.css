@@ -52,6 +52,7 @@ h1 {
 h2 {
   font-size: 2.5em;
   margin-bottom: 0;
+  margin-top: 0;
 }
 
 button {
@@ -231,6 +232,10 @@ form {
   flex-direction: column;
 }
 
+form.create {
+  padding: 35px 50px;
+}
+
 .formContainer {
   min-width: 50%;
 }
@@ -279,6 +284,8 @@ label.required::before {
   line-height: 1;
   content: "*";
 }
+
+/* end form elements */
 
 *:focus:not(:focus-visible) {
   outline: none;
