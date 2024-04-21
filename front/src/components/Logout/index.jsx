@@ -29,13 +29,12 @@ const Logout = () => {
 				<IconButton
 					onClick={handleClick}
 					size="small"
-					sx={{ ml: 2 }}
 					aria-controls={open ? 'account-menu' : undefined}
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
 				>
 					<Avatar sx={{ width: 32, height: 32 }}>M</Avatar>
-					<KeyboardArrowDownIcon color="info" />
+					<KeyboardArrowDownIcon />
 				</IconButton>
 
 			</Tooltip>

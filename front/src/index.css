@@ -133,6 +133,8 @@ div.nav {
   background-color: #f7f7f7;
   flex: 1;
   max-width: 15%;
+  margin-top: 1rem;
+  padding-left: 1rem;
 }
 
 div.main {
@@ -151,7 +153,7 @@ div.main {
 header {
   display: flex;
   justify-content: space-between;
-  padding: 0 2rem;
+  padding: 1rem 2rem;
   align-items: center;
   flex: 0 0 48px;
   width: 100%;
@@ -160,7 +162,7 @@ header {
 }
 
 div.logout {
-  margin: 0 4rem;
+  margin: 0 3rem;
 }
 div.pagination {
   text-align: center;
@@ -276,4 +278,8 @@ label.required::before {
   font-family: SimSun, sans-serif;
   line-height: 1;
   content: "*";
+}
+
+*:focus:not(:focus-visible) {
+  outline: none;
 }
