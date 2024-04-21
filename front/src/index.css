@@ -155,12 +155,10 @@ header {
   align-items: center;
   flex: 0 0 48px;
   width: 100%;
-  background: #1e1f21;
+  background: #f7f7f7;
+  border-bottom: 1px solid #edeae9;
 }
 
-div.logo {
-  margin: 0 2rem;
-}
 div.logout {
   margin: 0 4rem;
 }
