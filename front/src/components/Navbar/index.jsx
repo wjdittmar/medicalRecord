@@ -26,7 +26,7 @@ const Navbar = () => {
 	return (
 		<List>
 			<ListItem>
-				<ListItemButton button component={NavLink} to={`/dashboard`} end >
+				<ListItemButton component={NavLink} to={`/dashboard`} end >
 					<ListItemIcon>
 						<DashboardIcon />
 					</ListItemIcon>
@@ -36,7 +36,7 @@ const Navbar = () => {
 
 			{navArray.map(({ linkName, icon }) => (
 				<ListItem key={linkName}>
-					<ListItemButton button component={NavLink} to={`/dashboard/${linkName.toLowerCase()}`}>
+					<ListItemButton component={NavLink} to={`/dashboard/${linkName.toLowerCase()}`}>
 						<ListItemIcon>
 							{icon}
 						</ListItemIcon>
