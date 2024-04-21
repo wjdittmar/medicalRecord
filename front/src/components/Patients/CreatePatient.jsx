@@ -28,7 +28,7 @@ export default function CreatePatient() {
 	// ICD10 diagnoses and send an array of ICD10 codes to the server
 
 	return (<form className="create" onSubmit={handleSubmit}>
-		<h2>New Patient</h2>
+		<h3>New Patient</h3>
 		<hr />
 		<div className="inputWrapperContainer">
 			<label title="Name" className="required">Name</label>

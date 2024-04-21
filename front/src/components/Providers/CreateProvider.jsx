@@ -19,7 +19,7 @@ export default function CreateProvider() {
 	};
 
 	return (<form className="create" onSubmit={handleSubmit}>
-		<h2>New Provider</h2>
+		<h3>New Provider</h3>
 		<hr />
 		<div className="inputWrapperContainer">
 			<label title="Name" className="required">Name</label>
