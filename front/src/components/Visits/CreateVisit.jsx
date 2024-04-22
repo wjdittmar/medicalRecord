@@ -51,13 +51,11 @@ export default function CreateVisit() {
 			<hr />
 			<div className="inputWrapperContainer">
 				<label title="Name" className="required">Patient Name</label>
-				<span className="inputWrapper">
-					<Autocomplete options={patients}
-						renderInput={(params) => <TextField {...params} label="Patient"
-						/>} sx={{ flexGrow: 1 }} value={whichPatient} onChange={(event, newPatient) => {
-							setwhichPatient(newPatient);
-						}} />
-				</span>
+				<Autocomplete options={patients}
+					renderInput={(params) => <TextField {...params} label="Patient"
+					/>} sx={{ flexGrow: 1, border: "none" }} value={whichPatient} onChange={(event, newPatient) => {
+						setwhichPatient(newPatient);
+					}} />
 			</div>
 			<div className="inputWrapperContainer">
 				<label className="required" htmlFor="street-address">Street address</label>
@@ -75,7 +73,7 @@ export default function CreateVisit() {
 				</span>
 			</div>
 			<div className="inputWrapperContainer">
-				<label htmlFor="city">City</label>
+				<label htmlFor="city" className="required">City</label>
 				<span className="inputWrapper">
 					<input required type="text" id="city" name="city" autoComplete="address-level2" enterKeyHint="next"
 						onChange={({ target }) => setCity(target.value)} />
@@ -147,21 +145,18 @@ export default function CreateVisit() {
 				</span>
 			</div>
 			<div className="inputWrapperContainer">
-				<span className="inputWrapper">
-					<LocalizationProvider dateAdapter={AdapterDayjs}>
-						<DatePicker label="Date of visit"
-							value={visitDate}
-							onChange={(newValue) => setVisitDate(newValue)}
-						/>
-					</LocalizationProvider>
-				</span>
+				<LocalizationProvider dateAdapter={AdapterDayjs}>
+					<DatePicker label="Date of visit"
+						value={visitDate}
+						onChange={(newValue) => setVisitDate(newValue)}
+						sx={{ border: "none" }}
+					/>
+				</LocalizationProvider>
 			</div>
 			<div className="inputWrapperContainer">
 				<label htmlFor="city">Visit Notes</label>
-				<span className="inputWrapper">
-					<textarea id="visitNotes" name="visitNotes"
-						onChange={({ target }) => setVisitNotes(target.value)} />
-				</span>
+				<textarea id="visitNotes" className="inputWrapper" name="visitNotes"
+					onChange={({ target }) => setVisitNotes(target.value)} />
 			</div>
 
 			<button type="submit" value="Submit">Submit</button>

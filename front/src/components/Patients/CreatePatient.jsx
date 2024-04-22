@@ -69,14 +69,12 @@ export default function CreatePatient() {
 				</select>
 			</span>
 		</div>
-		<div className="inputWrapperContainer">
-			<LocalizationProvider dateAdapter={AdapterDayjs}>
-				<DatePicker label="Date of birth"
-					value={dob}
-					onChange={(newValue) => setDob(newValue)}
-				/>
-			</LocalizationProvider>
-		</div>
+		<LocalizationProvider dateAdapter={AdapterDayjs}>
+			<DatePicker label="Date of birth"
+				value={dob}
+				onChange={(newValue) => setDob(newValue)}
+			/>
+		</LocalizationProvider>
 		<button type="submit" value="Submit">Submit</button>
 	</form>);
 }
