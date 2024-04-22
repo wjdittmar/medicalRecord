@@ -1,10 +1,14 @@
 import axios from 'axios';
 const baseUrl = '/api/patients';
 
-import getToken from "../services/Auth";
+import authService from "../services/Auth";
 
 const getAll = () => {
-	const request = axios.get(baseUrl);
+	const config = {
+		headers: { Authorization: authService.getToken() },
+	};
+
+	const request = axios.get(baseUrl, config);
 	return request.then(response => response.data);
 };
 
