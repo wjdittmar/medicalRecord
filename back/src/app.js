@@ -7,16 +7,16 @@ const providerRouter = require("./routes/provider");
 const visitRouter = require("./routes/visits");
 const userRouter = require("./routes/users");
 const loginRouter = require("./routes/login");
+const middleware = require("./utils/middleware");
+
 const app = express();
 
 app.use(express.static("dist"));
 
 app.use(cors());
 app.use(express.json());
+app.use(middleware.tokenExtractor);
 
-app.get("/", (request, response) => {
-	response.send("<h1>Home Pages</h1>");
-});
 
 app.use("/api/diagnoses", diagnosesRouter);
 app.use("/api/patients", patientRouter);
