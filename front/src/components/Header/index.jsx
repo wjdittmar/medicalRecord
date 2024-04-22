@@ -9,6 +9,10 @@ import CreatePatient from '../Patients/CreatePatient';
 import CreateProvider from '../Providers/CreateProvider';
 import CreateVisit from '../Visits/CreateVisit';
 
+
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+
 function CreateEntryDialog(props) {
 	const { onClose, component, open } = props;
 
@@ -17,7 +21,7 @@ function CreateEntryDialog(props) {
 
 	switch (component) {
 		case 'Patient':
-			content = <CreatePatient />;
+			content = <CreatePatient onClose={onClose} />;
 			break;
 		case 'Provider':
 			content = <CreateProvider />;
@@ -43,10 +47,22 @@ export default function Header() {
 		setDialogOpen(true);
 	};
 
+
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+
+	const handleSnackbarClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setOpenSnackbar(false);
+	};
+
+
 	const handleDialogClose = () => {
 		setDialogOpen(false);
-		setwhichComponent(null);
 		handleClose();
+		setOpenSnackbar(true);
 	};
 
 
@@ -60,34 +76,47 @@ export default function Header() {
 		setAnchorEl(null);
 	};
 
-	return <header>
-		<Button
-			variant="contained"
-			endIcon={<AddCircleIcon />}
-			onClick={handleClick}
-		>
-			Create
-		</Button>
-		<Menu
-			id="create-menu"
-			anchorEl={anchorEl}
-			open={open}
-			onClose={handleClose}
-		>
-			<MenuItem onClick={() => handleDialogOpen("Patient")} disableRipple>
-				Patient
-			</MenuItem>
-			<MenuItem onClick={() => handleDialogOpen("Provider")} disableRipple>
-				Provider
-			</MenuItem>
-			<MenuItem onClick={() => handleDialogOpen("Visit")} disableRipple>
-				Visit
-			</MenuItem>
-		</Menu>
-		<CreateEntryDialog
-			open={dialogOpen}
-			onClose={handleDialogClose}
-			component={whichComponent}
-		/>
-		<Logout /></header>;
+	return <>
+		<header>
+			<Button
+				variant="contained"
+				endIcon={<AddCircleIcon />}
+				onClick={handleClick}
+			>
+				Create
+			</Button>
+			<Menu
+				id="create-menu"
+				anchorEl={anchorEl}
+				open={open}
+				onClose={handleClose}
+			>
+				<MenuItem onClick={() => handleDialogOpen("Patient")} disableRipple>
+					Patient
+				</MenuItem>
+				<MenuItem onClick={() => handleDialogOpen("Provider")} disableRipple>
+					Provider
+				</MenuItem>
+				<MenuItem onClick={() => handleDialogOpen("Visit")} disableRipple>
+					Visit
+				</MenuItem>
+			</Menu>
+			<CreateEntryDialog
+				open={dialogOpen}
+				onClose={handleDialogClose}
+				component={whichComponent}
+			/>
+			<Logout /></header>
+		<Snackbar open={openSnackbar} autoHideDuration={2000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+			<Alert
+				onClose={handleClose}
+				severity="success"
+				variant="filled"
+				sx={{ width: '100%' }}
+
+			>
+				Successfully created {whichComponent}!
+			</Alert>
+		</Snackbar>
+	</>;
 }

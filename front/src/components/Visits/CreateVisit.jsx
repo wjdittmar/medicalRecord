@@ -53,9 +53,10 @@ export default function CreateVisit() {
 				<label title="Name" className="required">Patient Name</label>
 				<Autocomplete options={patients}
 					renderInput={(params) => <TextField {...params} label="Patient"
-					/>} sx={{ flexGrow: 1, border: "none" }} value={whichPatient} onChange={(event, newPatient) => {
+					/>} sx={{ flex: 1, border: "none" }} value={whichPatient} onChange={(event, newPatient) => {
 						setwhichPatient(newPatient);
-					}} />
+					}}
+					isOptionEqualToValue={(option, value) => option.value === value.value} />
 			</div>
 			<div className="inputWrapperContainer">
 				<label className="required" htmlFor="street-address">Street address</label>
