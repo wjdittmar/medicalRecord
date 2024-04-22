@@ -1,23 +1,26 @@
-import React, { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import storageService from "../../services/Storage";
 
-const ProtectedRoute = (props) => {
+const ProtectedRoute = ({ children }) => {
 	const navigate = useNavigate();
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	const checkUserToken = () => {
-		const userToken = localStorage.getItem('loggedUser');
-		if (!userToken || userToken === 'undefined') {
-			setIsLoggedIn(false);
-			return navigate('/login');
-		}
-		setIsLoggedIn(true);
-	};
-	useEffect(() => {
-		checkUserToken();
-	}, [isLoggedIn]);
-	return (
-		isLoggedIn ? props.children : null
 
-	);
+	useEffect(() => {
+		const checkUserToken = () => {
+			try {
+				const currentUser = storageService.me();
+				if (!currentUser) {
+					navigate('/login');
+				}
+			} catch (error) {
+				console.error("Error checking user token:", error);
+			}
+		};
+
+		checkUserToken();
+	}, [navigate]);
+
+	return children;
 };
+
 export default ProtectedRoute;

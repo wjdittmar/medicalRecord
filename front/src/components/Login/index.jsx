@@ -3,6 +3,8 @@ import { NavLink } from "react-router-dom";
 import loginService from "../../services/Login";
 import { useState } from 'react';
 import Notification from '../Notification';
+import storageService from '../../services/Storage';
+import authService from "../../services/Auth";
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
@@ -25,10 +27,8 @@ const Login = () => {
 				email, password,
 			});
 
-			window.localStorage.setItem(
-				'loggedUser', JSON.stringify(user)
-			);
-
+			storageService.saveUser(user);
+			authService.setToken(user.token);
 			setEmail('');
 			setPassword('');
 			navigate('/dashboard');
