@@ -13,7 +13,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import LanguageIcon from '@mui/icons-material/Language';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import CakeIcon from '@mui/icons-material/Cake';
-
+import VisibilityIcon from '@mui/icons-material/Visibility';
 const Patient = ({ patient }) => {
 	const [open, setOpen] = useState(false);
 
@@ -29,7 +29,7 @@ const Patient = ({ patient }) => {
 	return (
 
 		<tr key={patient._id}>
-			<td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> ...</a></td>
+			<td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
 					<ListItem>

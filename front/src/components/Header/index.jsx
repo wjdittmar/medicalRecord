@@ -62,7 +62,7 @@ export default function Header() {
 	const handleDialogClose = () => {
 		setDialogOpen(false);
 		handleClose();
-		setOpenSnackbar(true);
+
 	};
 
 
@@ -74,6 +74,7 @@ export default function Header() {
 
 	const handleClose = () => {
 		setAnchorEl(null);
+		setOpenSnackbar(true);
 	};
 
 	return <>

@@ -10,6 +10,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import BusinessIcon from '@mui/icons-material/Business';
 import NotesIcon from '@mui/icons-material/Notes';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const Visit = ({ visit }) => {
 
@@ -23,7 +24,7 @@ const Visit = ({ visit }) => {
 	const { address, encounterDate, providerNotes } = visit; // Destructure firstName from visit prop
 	const date = new Date(encounterDate);
 	return (<>
-		<tr><td>{address.address1}</td><td>{formatter.format(date)}</td><td>{providerNotes}</td><td><a onClick={toggleDrawer(true)}> ...</a></td></tr>
+		<tr><td>{address.address1}</td><td>{formatter.format(date)}</td><td>{providerNotes}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td></tr>
 		<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 			<List sx={{ maxWidth: 480 }}>
 				<ListItem>

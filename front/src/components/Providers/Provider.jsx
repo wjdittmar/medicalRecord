@@ -10,6 +10,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
 import MedicalServicesIcon from '@mui/icons-material/MedicalServices';
+import VisibilityIcon from '@mui/icons-material/Visibility';
 
 const Provider = ({ provider }) => {
 	const [open, setOpen] = useState(false);
@@ -21,7 +22,7 @@ const Provider = ({ provider }) => {
 	};
 
 	return (
-		<tr key={provider._id}><td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> ...</a></td>
+		<tr key={provider._id}><td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
 					<ListItem>

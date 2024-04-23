@@ -55,6 +55,10 @@ h2 {
   margin-top: 0;
 }
 
+h3 {
+  margin: 0;
+}
+
 button[type="submit"] {
   margin-top: 15px;
   border-radius: 8px;

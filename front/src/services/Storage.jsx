@@ -15,7 +15,7 @@ const logoutUser = () => {
 
 const me = () => {
 	const user = loadUser();
-	return user ? user.email : null;
+	return user ? user.name : null;
 };
 
 export default { saveUser, loadUser, logoutUser, me };
