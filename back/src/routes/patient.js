@@ -3,6 +3,8 @@ const patientRouter = require("express").Router();
 const Patient = require("../models/patient");
 const jwt = require("jsonwebtoken");
 
+const { check, validationResult } = require("express-validator");
+
 patientRouter.get("/", async (request, response) => {
 	// make sure we are authorized to fetch
 	const decodedToken = jwt.verify(request.token, process.env.SECRET);
@@ -16,7 +18,10 @@ patientRouter.get("/", async (request, response) => {
 });
 
 // TODO: validate / sanitize input
-patientRouter.post("/", async (request, response) => {
+patientRouter.post("/", [
+	check("name").not().isEmpty().isLength({ min: 5 }).withMessage("Name must have more than 5 characters"),
+], async (request, response) => {
+	const errors = validationResult(request);
 	const decodedToken = jwt.verify(request.token, process.env.SECRET);
 	if (!decodedToken.id) {
 		return response.status(401).json({ error: "token invalid" });
@@ -27,15 +32,22 @@ patientRouter.post("/", async (request, response) => {
 		firstName: body.name.split(" ")[0],
 		lastName: body.name.split(" ")[1],
 		phone: body.phone,
-		preferredLanguage: body.language,
+		preferredLanguage: body.preferredLanguage,
 		dob: body.dob,
 		email: body.email,
-
+		sex: body.sex
 	});
 
-	const savedPatient = await patient.save();
+	if (!errors.isEmpty()) {
+		return response.status(422).jsonp(errors.array());
+	}
+	else {
 
-	response.status(201).json(savedPatient);
+		const savedPatient = await patient.save();
+
+		response.status(201).json(savedPatient);
+	}
+
 });
 
 module.exports = patientRouter;

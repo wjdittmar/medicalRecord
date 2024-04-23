@@ -12,8 +12,8 @@ export default function CreatePatient({ onClose }) {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [phone, setPhone] = useState('');
-	const [language, setLanguage] = useState('');
-	const [sex, setSex] = useState('');
+	const [preferredLanguage, setpreferredLanguage] = useState('en');
+	const [sex, setSex] = useState('male');
 	const [dob, setDob] = useState(dayjs('2022-04-17'));
 
 	const handleSubmit = async (event) => {
@@ -24,7 +24,7 @@ export default function CreatePatient({ onClose }) {
 				name,
 				email,
 				phone,
-				language,
+				preferredLanguage,
 				sex,
 				dob
 			};
@@ -78,11 +78,11 @@ export default function CreatePatient({ onClose }) {
 					<label title="Language" className="required">Preferred language</label>
 					<span className="inputWrapper">
 						<select label="language" name="language"
-							required onChange={({ target }) => setLanguage(target.value)}
+							required onChange={({ target }) => setpreferredLanguage(target.value)}
 						>
-							<option lang="en" value="english"> English</option>
-							<option lang="es" value="Español "> Español </option>
-							<option lang="fr" value="francais">Français</option>
+							<option lang="en" value="en"> English</option>
+							<option lang="es" value="es "> Español </option>
+							<option lang="fr" value="fr">Français</option>
 						</select>
 					</span>
 				</div>
