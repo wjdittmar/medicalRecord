@@ -30,7 +30,7 @@ const Logout = () => {
 		authService.setToken('');
 		navigate('/login');
 	};
-	const [name, setName] = useState(null);
+	const [name, setName] = useState('');
 
 
 	return (
@@ -43,7 +43,8 @@ const Logout = () => {
 					aria-haspopup="true"
 					aria-expanded={open ? 'true' : undefined}
 				>
-					<Avatar sx={{ width: 32, height: 32 }}>{`${name.split(' ')[0][0]}${name.split(' ')[1][0]}`}</Avatar>
+					<Avatar sx={{ width: 32, height: 32 }}>{name && name.split(' ')[0][0]}{name && name.split(' ')[1] && name.split(' ')[1][0]}</Avatar>
+
 					<KeyboardArrowDownIcon />
 				</IconButton>
 
