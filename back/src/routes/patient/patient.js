@@ -1,5 +1,5 @@
 const patientRouter = require("express").Router();
-const Patient = require("../models/patient");
+const Patient = require("../../models/patient");
 const jwt = require("jsonwebtoken");
 const schema = require("./patientSchema");
 
