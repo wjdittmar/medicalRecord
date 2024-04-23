@@ -32,7 +32,7 @@ function CreateEntryDialog(props) {
 		default:
 			content = null;
 	}
-	return (<Dialog onClose={onClose} open={open}>
+	return (<Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
 		{content}
 	</Dialog>);
 

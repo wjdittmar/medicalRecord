@@ -6,6 +6,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import patientService from "../../services/Patients";
 
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 export default function CreatePatient({ onClose }) {
 
@@ -15,6 +17,20 @@ export default function CreatePatient({ onClose }) {
 	const [preferredLanguage, setpreferredLanguage] = useState('en');
 	const [sex, setSex] = useState('male');
 	const [dob, setDob] = useState(dayjs('2022-04-17'));
+	const [exception, setException] = useState('');
+
+
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+
+	const handleSnackbarClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+		setOpenSnackbar(false);
+	};
+
+
+
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -30,11 +46,12 @@ export default function CreatePatient({ onClose }) {
 			};
 			// handle form submission to server
 
-			patientService.create(patientObject);
+			await patientService.create(patientObject);
 			onClose();
 
 		} catch (exception) {
-			console.log(exception);
+			setException(exception.message);
+			setOpenSnackbar(true);
 		}
 
 	};
@@ -108,6 +125,16 @@ export default function CreatePatient({ onClose }) {
 				</div>
 				<button type="submit" value="Submit">Submit</button>
 			</form>
+			<Snackbar open={openSnackbar} autoHideDuration={2000} onClose={handleSnackbarClose} anchorOrigin={{ vertical: "bottom", horizontal: "center" }}>
+				<Alert
+					onClose={handleSnackbarClose}
+					severity="error"
+					variant="filled"
+					sx={{ width: '100%' }}
 
+				>
+					Error! {exception}
+				</Alert>
+			</Snackbar>
 		</>);
 }

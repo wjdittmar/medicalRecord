@@ -17,8 +17,23 @@ const create = async (newObject) => {
 		headers: { Authorization: authService.getToken() },
 	};
 
-	const response = await axios.post(baseUrl, newObject, config);
-	return response.data;
+	try {
+		const response = await axios.post(baseUrl, newObject, config);
+		return response.data;
+	} catch (error) {
+		if (error.response) {
+			console.log(error.response.data);
+			console.log(error.response.status);
+			console.log(error.response.headers);
+			throw new Error(error.response.data.message); // Throw an error with the response data
+		} else if (error.request) {
+			console.log(error.request);
+			throw new Error('No response received from the server');
+		} else {
+			console.log('Error', error.message);
+			throw new Error('Request failed: ' + error.message);
+		}
+	}
 };
 
 
