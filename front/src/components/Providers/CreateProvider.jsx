@@ -1,5 +1,7 @@
-
 import { useState } from "react";
+
+// TODO need to pass down providers state to this component so that 
+// when we create a new provider the providers page knows to re-render the list of providers
 export default function CreateProvider() {
 
 	const [name, setName] = useState('');

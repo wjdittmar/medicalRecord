@@ -8,6 +8,9 @@ import patientService from '../../services/Patients';
 import visitService from '../../services/Visits';
 import { Snackbar, Alert } from '@mui/material';
 
+// TODO need to pass down visits state to this component so that 
+// when we create a new visit the visits page knows to re-render the list of visits
+
 export default function CreateVisit({ onClose }) {
 	const [formData, setFormData] = useState({
 		patient: '',
@@ -71,41 +74,45 @@ export default function CreateVisit({ onClose }) {
 				</div>
 				<div className="inputWrapperContainer">
 					<label className="required" htmlFor="street-address">Street address</label>
-					<input
-						type="text"
-						id="street-address"
-						name="street-address"
-						autoComplete="street-address"
-						required
-						enterKeyHint="next"
-						value={formData.address.address1}  // Access the address1 property
-						onChange={(event) => setFormData({
-							...formData,
-							address: {  // Spread the existing address object
-								...formData.address,  // Preserve other address properties
-								address1: event.target.value  // Update the address1 property
-							}
-						})}
-					/>
+					<span className="inputWrapper">
+						<input
+							type="text"
+							id="street-address"
+							name="street-address"
+							autoComplete="street-address"
+							required
+							enterKeyHint="next"
+							value={formData.address.address1}  // Access the address1 property
+							onChange={(event) => setFormData({
+								...formData,
+								address: {  // Spread the existing address object
+									...formData.address,  // Preserve other address properties
+									address1: event.target.value  // Update the address1 property
+								}
+							})}
+						/>
+					</span>
 				</div>
 				<div className="inputWrapperContainer">
 					<label htmlFor="city" className="required">City</label>
-					<input
-						type="text"
-						id="city"
-						name="city"
-						autoComplete="address-level2"
-						required
-						enterKeyHint="next"
-						value={formData.city}
-						onChange={(event) => setFormData({
-							...formData,
-							address: {  // Spread the existing address object
-								...formData.address,  // Preserve other address properties
-								city: event.target.value  // Update the address1 property
-							}
-						})}
-					/>
+					<span className="inputWrapper">
+						<input
+							type="text"
+							id="city"
+							name="city"
+							autoComplete="address-level2"
+							required
+							enterKeyHint="next"
+							value={formData.city}
+							onChange={(event) => setFormData({
+								...formData,
+								address: {  // Spread the existing address object
+									...formData.address,  // Preserve other address properties
+									city: event.target.value  // Update the address1 property
+								}
+							})}
+						/>
+					</span>
 				</div>
 				<div className="inputWrapperContainer">
 					<label htmlFor="state" className="required">State</label>

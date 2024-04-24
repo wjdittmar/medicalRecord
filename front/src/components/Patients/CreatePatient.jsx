@@ -8,6 +8,10 @@ import { Snackbar, Alert } from '@mui/material';
 // TODO : add a text input field that will autocomplete that will search through all of the
 // ICD10 diagnoses and send an array of ICD10 codes to the server
 
+
+// TODO need to pass down patients state to this component so that 
+// when we create a new patient the patients page knows to re-render the list of patients
+
 export default function CreatePatient({ onClose }) {
 	const [formData, setFormData] = useState({
 		name: '',
