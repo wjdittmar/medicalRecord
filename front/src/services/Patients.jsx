@@ -12,6 +12,25 @@ const getAll = () => {
 	return request.then(response => response.data);
 };
 
+const getTotalNumber = () => {
+	const config = {
+		headers: { Authorization: authService.getToken() },
+	};
+
+	const request = axios.get(baseUrl + "/total", config);
+	return request.then(response => response.data);
+};
+
+const getNumberOlderThanAge = (age) => {
+	const config = {
+		headers: { Authorization: authService.getToken() },
+		params: { age } // Pass age as a query parameter
+	};
+
+	const request = axios.get(`${baseUrl}/older-than`, config);
+	return request.then(response => response.data);
+};
+
 const create = async (newObject) => {
 	const config = {
 		headers: { Authorization: authService.getToken() },
@@ -39,4 +58,4 @@ const create = async (newObject) => {
 
 
 
-export default { getAll, create };
+export default { getAll, create, getTotalNumber, getNumberOlderThanAge };

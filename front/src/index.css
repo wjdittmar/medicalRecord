@@ -81,6 +81,8 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+/* layout styling */
+
 div.twoColumn {
   display: flex;
   justify-content: space-around;
@@ -107,6 +109,21 @@ div.sidebarMain {
   flex: 1;
   overflow-y: auto;
 }
+
+div.threeColumn {
+  display: flex;
+}
+
+div.threeColumn > div.left,
+div.threeColumn > div.middle,
+div.threeColumn > div.right {
+  flex: 1;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: 0.3s;
+  border-radius: 5px; /* 5px rounded corners */
+  padding: 10px 15px;
+}
+/* end layout styling */
 
 a.active {
   color: #1640d6;

@@ -1,23 +1,11 @@
+import ThreeColumnLayout from "../ThreeColumnLayout";
+import VisitSummary from "../Visits/Summary";
+import PatientSummary from "../Providers/Summary";
+import ProviderSummary from "../Patients/Summary";
 const Overview = () => {
-	return <><h2>Overview</h2>
-		<div className="card">
-			<div className="container">
-				<h4><b>Provider Card</b></h4>
-				<p>Provider Summary Statistic</p>
-			</div>
-		</div>
-		<div className="card">
-			<div className="container">
-				<h4><b>Patient Card</b></h4>
-				<p>Patient Summary Statistic</p>
-			</div>
-		</div>
-		<div className="card">
-			<div className="container">
-				<h4><b>Visit Card</b></h4>
-				<p>Visit Summary Statistic</p>
-			</div>
-		</div>
-	</>
+	return <>
+		<h2>Overview</h2>
+		<ThreeColumnLayout left={<ProviderSummary />} middle={<PatientSummary />} right={<VisitSummary />} />
+	</>;
 };
 export default Overview;
