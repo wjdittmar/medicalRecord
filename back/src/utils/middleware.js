@@ -1,3 +1,5 @@
+const jwt = require("jsonwebtoken");
+
 const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
 	if (authorization && authorization.startsWith("Bearer ")) {
@@ -6,6 +8,22 @@ const tokenExtractor = (request, response, next) => {
 	next();
 };
 
+// Middleware to verify token
+const verifyToken = (request, response, next) => {
+	const token = request.token;
+	try {
+		const decodedToken = jwt.verify(token, process.env.SECRET);
+		if (!decodedToken.id) {
+			return response.status(401).json({ error: "Token invalid" });
+		}
+		next();
+	} catch (error) {
+		return response.status(401).json({ error: "Token invalid" });
+	}
+};
+
+
 module.exports = {
-	tokenExtractor
+	tokenExtractor,
+	verifyToken
 };

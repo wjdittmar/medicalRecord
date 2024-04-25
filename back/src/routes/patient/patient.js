@@ -1,21 +1,7 @@
 const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
-const jwt = require("jsonwebtoken");
 const schema = require("./patientSchema");
-
-// Middleware to verify token
-const verifyToken = (request, response, next) => {
-	const token = request.token;
-	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET);
-		if (!decodedToken.id) {
-			return response.status(401).json({ error: "Token invalid" });
-		}
-		next();
-	} catch (error) {
-		return response.status(401).json({ error: "Token invalid" });
-	}
-};
+const { verifyToken } = require("../../utils/middleware");
 
 // Endpoint to get the total number of patients
 patientRouter.get("/total", verifyToken, async (request, response) => {

@@ -2,14 +2,44 @@ const providerRouter = require("express").Router();
 const Provider = require("../../models/provider");
 const schema = require("./providerSchema");
 const jwt = require("jsonwebtoken");
+const { verifyToken } = require("../../utils/middleware");
 
-providerRouter.get("/", (request, response) => {
+providerRouter.get("/total", verifyToken, async (request, response) => {
+	try {
+		const totalProviders = await Provider.countDocuments();
+		console.log(totalProviders)
+		response.json({ totalProviders });
+	} catch (error) {
+		response.status(500).json({ error: error.message });
+	}
+});
+
+
+providerRouter.get("/", verifyToken, (request, response) => {
 	Provider.find({}).then(provider => {
 		response.json(provider);
 	});
 });
 
-providerRouter.post("/", async (request, response) => {
+providerRouter.get("/total", verifyToken, async (request, response) => {
+	try {
+		const totalProviders = await Provider.countDocuments();
+		response.json({ totalProviders });
+	} catch (error) {
+		response.status(500).json({ error: error.message });
+	}
+});
+
+providerRouter.get("/state", verifyToken, async (request, response) => {
+	try {
+		const stateProviders = await Provider.countDocuments({ "license.state": { $eq: request.query.state.toUpperCase() } });
+		response.json({ stateProviders });
+	} catch (error) {
+		response.status(500).json({ error: error.message });
+	}
+});
+
+providerRouter.post("/", verifyToken, async (request, response) => {
 	const decodedToken = jwt.verify(request.token, process.env.SECRET);
 	if (!decodedToken.id) {
 		return response.status(401).json({ error: "token invalid" });

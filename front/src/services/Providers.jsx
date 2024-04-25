@@ -1,19 +1,32 @@
 import axios from 'axios';
 const baseUrl = '/api/providers';
-
 import authService from "../services/Auth";
+
 const getAll = () => {
-	const request = axios.get(baseUrl);
+	const request = axios.get(baseUrl, authService.getConfig());
 	return request.then(response => response.data);
 };
 
-const create = async (newObject) => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
+const getTotalNumber = () => {
+	const request = axios.get(baseUrl + "/total", authService.getConfig());
+	return request.then(response => response.data);
+};
+
+const getNumberWithStateLicense = (state) => {
+
+	let config = {
+		...authService.getConfig(),
+		params: { state } // Pass age as a query parameter
 	};
 
+	const request = axios.get(`${baseUrl}/state`, config);
+	return request.then(response => response.data);
+};
+
+
+const create = async (newObject) => {
 	try {
-		const response = await axios.post(baseUrl, newObject, config);
+		const response = await axios.post(baseUrl, newObject, authService.getConfig());
 		return response.data;
 	} catch (error) {
 		if (error.response) {
@@ -33,4 +46,4 @@ const create = async (newObject) => {
 
 
 
-export default { getAll, create };
+export default { getAll, create, getTotalNumber, getNumberWithStateLicense };

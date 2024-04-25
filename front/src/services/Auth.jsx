@@ -11,4 +11,11 @@ const getToken = () => {
 	return Cookies.get('authorizationToken');
 };
 
-export default { getToken, setToken };
+const getConfig = () => {
+	return {
+		headers: { Authorization: getToken() }
+	};
+};
+
+
+export default { getConfig, setToken };

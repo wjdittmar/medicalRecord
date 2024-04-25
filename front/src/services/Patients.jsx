@@ -1,29 +1,22 @@
 import axios from 'axios';
 const baseUrl = '/api/patients';
-
 import authService from "../services/Auth";
 
-const getAll = () => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
-	};
 
-	const request = axios.get(baseUrl, config);
+const getAll = () => {
+	const request = axios.get(baseUrl, authService.getConfig());
 	return request.then(response => response.data);
 };
 
 const getTotalNumber = () => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
-	};
-
-	const request = axios.get(baseUrl + "/total", config);
+	const request = axios.get(baseUrl + "/total", authService.getConfig());
 	return request.then(response => response.data);
 };
 
 const getNumberOlderThanAge = (age) => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
+
+	let config = {
+		...authService.getConfig(),
 		params: { age } // Pass age as a query parameter
 	};
 
@@ -32,12 +25,9 @@ const getNumberOlderThanAge = (age) => {
 };
 
 const create = async (newObject) => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
-	};
 
 	try {
-		const response = await axios.post(baseUrl, newObject, config);
+		const response = await axios.post(baseUrl, newObject, authService.getConfig());
 		return response.data;
 	} catch (error) {
 		if (error.response) {
@@ -54,8 +44,5 @@ const create = async (newObject) => {
 		}
 	}
 };
-
-
-
 
 export default { getAll, create, getTotalNumber, getNumberOlderThanAge };

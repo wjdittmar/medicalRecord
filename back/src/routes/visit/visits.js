@@ -1,21 +1,7 @@
 const visitRouter = require("express").Router();
 const Visit = require("../../models/visit");
-const jwt = require("jsonwebtoken");
 const schema = require("./visitSchema");
-
-// Middleware to verify token
-const verifyToken = (request, response, next) => {
-	const token = request.token;
-	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET);
-		if (!decodedToken.id) {
-			return response.status(401).json({ error: "Token invalid" });
-		}
-		next();
-	} catch (error) {
-		return response.status(401).json({ error: "Token invalid" });
-	}
-};
+const { verifyToken } = require("../../utils/middleware");
 
 visitRouter.get("/", verifyToken, (request, response) => {
 	Visit.find({}).populate("patient", { firstName: 1, lastName: 1 }).then(provider => {
