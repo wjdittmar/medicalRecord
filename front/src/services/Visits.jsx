@@ -2,19 +2,21 @@ import axios from 'axios';
 const baseUrl = '/api/visits';
 import authService from "../services/Auth";
 
+
+const getConfig = () => {
+	return {
+		headers: { Authorization: authService.getToken() }
+	};
+};
+
 const getAll = () => {
-	const request = axios.get(baseUrl);
+	const request = axios.get(baseUrl, getConfig());
 	return request.then(response => response.data);
 };
 
-
 const create = async (newObject) => {
-	const config = {
-		headers: { Authorization: authService.getToken() },
-	};
-
 	try {
-		const response = await axios.post(baseUrl, newObject, config);
+		const response = await axios.post(baseUrl, newObject, getConfig());
 		return response.data;
 	} catch (error) {
 		if (error.response) {
@@ -32,6 +34,20 @@ const create = async (newObject) => {
 	}
 };
 
+const getTotalNumber = () => {
 
+	const request = axios.get(baseUrl + "/total", getConfig());
+	return request.then(response => response.data);
+};
 
-export default { getAll, create };
+const getVisitsBetween = (startDate, endDate) => {
+	const config = {
+		headers: { Authorization: authService.getToken() },
+		params: { startDate, endDate } // Pass age as a query parameter
+	};
+
+	const request = axios.get(`${baseUrl}/date-between`, config);
+	return request.then(response => response.data);
+};
+
+export default { getAll, create, getTotalNumber, getVisitsBetween };
