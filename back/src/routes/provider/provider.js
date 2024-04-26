@@ -7,7 +7,6 @@ const { verifyToken } = require("../../utils/middleware");
 providerRouter.get("/total", verifyToken, async (request, response) => {
 	try {
 		const totalProviders = await Provider.countDocuments();
-		console.log(totalProviders)
 		response.json({ totalProviders });
 	} catch (error) {
 		response.status(500).json({ error: error.message });

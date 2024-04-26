@@ -112,6 +112,8 @@ div.sidebarMain {
 
 div.threeColumn {
   display: flex;
+  flex-direction: column;
+  gap: 50px;
 }
 
 div.threeColumn > div.left,
