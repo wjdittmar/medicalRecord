@@ -26,7 +26,7 @@ const Logout = () => {
 
 	const navigate = useNavigate();
 	const handleLogout = () => {
-		storageService.saveUser();
+		storageService.logoutUser();
 		authService.setToken('');
 		navigate('/login');
 	};

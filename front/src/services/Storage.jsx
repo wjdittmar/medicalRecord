@@ -10,7 +10,7 @@ const loadUser = () => {
 };
 
 const logoutUser = () => {
-	localStorage.setItem(KEY, '');
+	localStorage.removeItem(KEY);
 };
 
 const me = () => {
