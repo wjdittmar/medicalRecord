@@ -23,7 +23,7 @@ const Landing = () => {
 
 		<Routes>
 			<Route path='/dashboard/*' element={<Dashboard />} />
-			<Route exact path='/' element={!isLoggedIn ? (<TwoColumnLayout left={<About />} right={<Login />} />) : (<Navigate replace to={"/dashboard"} />)} />
+			<Route path='/' element={!isLoggedIn ? (<TwoColumnLayout left={<About />} right={<Login />} />) : (<Navigate replace to={"/dashboard"} />)} />
 			<Route path='/login' element={<TwoColumnLayout left={<About />} right={<Login />} />} />
 			<Route path='/register' element={<TwoColumnLayout left={<About />} right={<Register />} />} />
 		</Routes>
