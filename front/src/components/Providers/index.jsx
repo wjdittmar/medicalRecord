@@ -18,6 +18,8 @@ const Providers = () => {
 	const endIndex = startIndex + resultsPerPage;
 	const currentProviders = providers.slice(startIndex, endIndex);
 
+	// TODO: implement serverside rendering with incremental static regeneration 
+	// so that these values are initially cached and only updated when there is a change to the database
 	return (
 		<>
 			<table>
