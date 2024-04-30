@@ -7,6 +7,7 @@ const providerRouter = require("./routes/provider/provider");
 const visitRouter = require("./routes/visit/visits");
 const userRouter = require("./routes/users");
 const loginRouter = require("./routes/login");
+const epicRouter = require("./routes/epic/epic");
 const middleware = require("./utils/middleware");
 
 const app = express();
@@ -24,6 +25,7 @@ app.use("/api/providers", providerRouter);
 app.use("/api/visits", visitRouter);
 app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
+app.use("/api/epic", epicRouter);
 
 /* final catch-all route to index.html defined last */
 app.get("/*", (req, res) => {

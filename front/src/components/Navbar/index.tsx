@@ -21,7 +21,11 @@ const Navbar = () => {
 	{
 		linkName: "Visits",
 		icon: <CalendarMonthIcon />
-	}
+	},
+	{
+		linkName: "Epic",
+		icon: <MedicalInformationIcon />
+	},
 	];
 	return (
 		<List>

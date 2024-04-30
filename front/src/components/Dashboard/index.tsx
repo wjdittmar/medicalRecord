@@ -8,6 +8,7 @@ import Overview from "../Overview";
 import SidebarMainLayout from "../SidebarMainLayout";
 import Header from "../Header";
 import ProtectedRoute from "../ProtectedRoute";
+import Epic from '../Epic';
 
 const Dashboard = () => {
 
@@ -34,6 +35,11 @@ const Dashboard = () => {
 				<Route path='/visits' element={
 					<ProtectedRoute>
 						<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/epic' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Epic />} />
 					</ProtectedRoute>
 				} />
 			</Routes >
