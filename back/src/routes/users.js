@@ -1,7 +1,7 @@
 const usersRouter = require("express").Router();
 const User = require("../models/user");
 const bcrypt = require("bcrypt");
-const { verifyToken } = require("../../utils/middleware");
+const { verifyToken } = require("../utils/middleware");
 
 // for creating a new user
 
@@ -23,7 +23,7 @@ usersRouter.post("/", verifyToken, async (request, response) => {
 	}
 	catch (exception) {
 		console.log(exception);
-		response.status(400).json({ error: "duplicate email" });
+		response.status(400).json({ error: "database email" });
 	}
 });
 
