@@ -1,4 +1,5 @@
-.env
+*.env
 node_modules
 back/src/data/sf_addresses.csv
 back/src/data/sf_addresses_100.csv
+*.pem

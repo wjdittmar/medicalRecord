@@ -1,7 +1,6 @@
 const providerRouter = require("express").Router();
 const Provider = require("../../models/provider");
 const schema = require("./providerSchema");
-const jwt = require("jsonwebtoken");
 const { verifyToken } = require("../../utils/middleware");
 
 providerRouter.get("/total", verifyToken, async (request, response) => {
@@ -39,10 +38,6 @@ providerRouter.get("/state", verifyToken, async (request, response) => {
 });
 
 providerRouter.post("/", verifyToken, async (request, response) => {
-	const decodedToken = jwt.verify(request.token, process.env.SECRET);
-	if (!decodedToken.id) {
-		return response.status(401).json({ error: "token invalid" });
-	}
 
 	const body = request.body;
 
