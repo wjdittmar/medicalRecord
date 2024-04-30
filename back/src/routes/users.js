@@ -1,6 +1,6 @@
 const usersRouter = require("express").Router();
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
+const User = require("../models/user");
 const { verifyToken } = require("../utils/middleware");
 
 // for creating a new user
