@@ -1,12 +1,13 @@
 const { globSync } = require("glob");
 const path = require("path");
+const { WebSocketServer } = require("ws");
 const config = require("./utils/config");
 const connect = require("./utils/db");
 const app = require("./app"); // The Express app
 
-// Use an async function to ensure proper sequencing
 async function startServer() {
 	try {
+
 		// Connect to the MongoDB database
 		await connect.connectDB();
 
@@ -20,11 +21,29 @@ async function startServer() {
 		app.listen(config.PORT, () => {
 			console.log(`Server running on port ${config.PORT}`);
 		});
+
+		// Start WebSocket server
+		const wss = new WebSocketServer({ port: config.WS_PORT });
+
+		wss.on("connection", function (ws, request) {
+
+			ws.on("error", console.error);
+
+			console.log("New client connected!");
+
+			ws.on("message", function (message) {
+				const parsedMessage = JSON.parse(message);
+				console.log(`Received message ${parsedMessage.recipient}`);
+			});
+
+			// ws.on("close", function () {
+			// });
+		});
+
 	} catch (error) {
 		console.error("Error starting server:", error);
 		process.exit(1); // Exit the process if an error occurs
 	}
 }
 
-// Call the async function to start the server
 startServer();

@@ -4,6 +4,7 @@ import Navbar from "../Navbar";
 import Patients from "../Patients";
 import Providers from "../Providers";
 import Visits from "../Visits";
+import Messages from "../Messages";
 import Overview from "../Overview";
 import SidebarMainLayout from "../SidebarMainLayout";
 import Header from "../Header";
@@ -34,6 +35,11 @@ const Dashboard = () => {
 				<Route path='/visits' element={
 					<ProtectedRoute>
 						<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/messages' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />
 					</ProtectedRoute>
 				} />
 			</Routes >
