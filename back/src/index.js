@@ -33,7 +33,7 @@ async function startServer() {
 
 			ws.on("message", function (message) {
 				const parsedMessage = JSON.parse(message);
-				console.log(`Received message ${parsedMessage.recipient}`);
+				console.log(`Received message ${message}`);
 			});
 
 			// ws.on("close", function () {

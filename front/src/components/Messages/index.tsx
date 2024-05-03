@@ -4,20 +4,25 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
 import providerService from '../../services/Providers';
+import storageService from '../../services/Storage';
 
 const Messages = () => {
 
 	const { sendMessage, lastMessage, readyState } = useWebSocket(`ws://${location.hostname}:8000`);
 	const [formData, setFormData] = useState({
 		recipient: '',
-		message: '',
+		body: '',
 		subject: '',
 	});
 	const [recipients, setRecipients] = useState([]);
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		sendMessage(JSON.stringify(formData));
+		sendMessage(JSON.stringify({
+			...formData,
+			sendDate: Date.now(),
+			sender: storageService.getCurrentUserID()
+		}));
 	};
 
 	useEffect(() => {
@@ -67,8 +72,8 @@ const Messages = () => {
 						<textarea
 							id="visitNotes"
 							name="visitNotes"
-							value={formData.message}
-							onChange={(event) => setFormData({ ...formData, message: event.target.value })}
+							value={formData.body}
+							onChange={(event) => setFormData({ ...formData, body: event.target.value })}
 						/>
 					</span>
 				</div>
