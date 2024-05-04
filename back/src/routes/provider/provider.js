@@ -1,7 +1,9 @@
 const providerRouter = require("express").Router();
+
 const Provider = require("../../models/provider");
 const schema = require("./providerSchema");
 const { verifyToken } = require("../../utils/middleware");
+const { createUser } = require("../users");
 
 providerRouter.get("/total", verifyToken, async (request, response) => {
 	try {
@@ -12,9 +14,9 @@ providerRouter.get("/total", verifyToken, async (request, response) => {
 	}
 });
 
-
 providerRouter.get("/", verifyToken, (request, response) => {
-	Provider.find({}).then(provider => {
+
+	Provider.find({}).populate("user", { email: 1, name: 1, phone: 1 }).then(provider => {
 		response.json(provider);
 	});
 });
@@ -41,29 +43,25 @@ providerRouter.post("/", verifyToken, async (request, response) => {
 
 	const body = request.body;
 
-	const { error, value } = schema.validate(body);
-	const provider = new Provider({
-		firstName: body.name.split(" ")[0],
-		lastName: body.name.split(" ")[1],
-		phone: body.phone,
-		email: body.email,
-		license: {
-			state: body.license.split(' ')[0],
-			license_id: body.license.split(' ')[1]
-		}
-	});
+	try {
+		// when you create a new provider,
+		// you must also create a new user
 
-	if (error) {
-		const { details } = error;
-		return response.status(422).json({
-			success: false,
-			result: null,
-			message: details[0]?.message,
+		const savedUser = await createUser({ ...body, password: body.password });
+
+		const provider = new Provider({
+			user: savedUser._id,
+			license: body.license
 		});
-	}
+		const { error, value } = schema.validate(provider);
+		const savedProvider = await provider.save();
 
-	const savedProvider = await provider.save();
-	response.status(201).json(savedProvider);
+		response.status(201).json(savedProvider);
+	}
+	catch (error) {
+		console.log(error);
+		response.status(500).json({ error: "Internal server error" });
+	}
 
 });
 
