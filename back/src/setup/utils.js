@@ -2,15 +2,17 @@ const { faker } = require("@faker-js/faker");
 
 
 function createRandomProvider() {
+	const user = createRandomUser(); // a provider is a user + license field
 	return {
-		email: faker.internet.email(),
-		firstName: faker.person.firstName(),
-		lastName: faker.person.lastName(),
+		license: faker.helpers.fromRegExp("A[1-9]{7}") + faker.location.state({ abbreviated: true })
+	};
+}
+
+function createRandomUser() {
+	return {
+		name: faker.person.firstName() + " " + faker.person.lastName(),
 		phone: faker.helpers.fromRegExp("[1-9]{3}-[1-9]{3}-[1-9]{4}"),
-		license: {
-			license_id: faker.helpers.fromRegExp("A[1-9]{7}"),
-			state: faker.location.state({ abbreviated: true })
-		}
+		email: faker.internet.email()
 	};
 }
 
@@ -35,5 +37,6 @@ function createRandomVisit() {
 module.exports = {
 	createRandomProvider,
 	createRandomPatient,
-	createRandomVisit
+	createRandomVisit,
+	createRandomUser
 };

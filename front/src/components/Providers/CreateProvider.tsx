@@ -4,10 +4,11 @@ import providerService from "../../services/Providers";
 
 export default function CreateProvider({ onClose }) {
 	const [formData, setFormData] = useState({
-		name: '', // de-structure the name on the back end
+		name: '',
 		email: '',
 		phone: '',
-		license: '' // de-structure the license on the back end 
+		license: '',
+		password: ''
 	});
 
 	const [exception, setException] = useState('');
@@ -40,7 +41,6 @@ export default function CreateProvider({ onClose }) {
 					<label title="Name" className="required">Name</label>
 					<span className="inputWrapper">
 						<input
-							label="name"
 							name="name"
 							required
 							placeholder="name"
@@ -57,7 +57,6 @@ export default function CreateProvider({ onClose }) {
 					<label title="Email" className="required">Email</label>
 					<span className="inputWrapper">
 						<input
-							label="email"
 							name="email"
 							required
 							placeholder="email"
@@ -69,10 +68,21 @@ export default function CreateProvider({ onClose }) {
 					</span>
 				</div>
 				<div className="inputWrapperContainer">
+					<label title="Password" className="required">Password</label>
+					<span className="inputWrapper">
+						<input
+							name="password"
+							required
+							type="password"
+							value={formData.password}
+							onChange={(event) => setFormData({ ...formData, password: event.target.value })}
+						/>
+					</span>
+				</div>
+				<div className="inputWrapperContainer">
 					<label title="Phone" className="required">Phone number</label>
 					<span className="inputWrapper">
 						<input
-							label="phone"
 							name="phone"
 							required
 							placeholder="phone"
@@ -87,7 +97,6 @@ export default function CreateProvider({ onClose }) {
 					<label title="License" className="required">License Number</label>
 					<span className="inputWrapper">
 						<input
-							label="license"
 							name="license"
 							required
 							placeholder="license"

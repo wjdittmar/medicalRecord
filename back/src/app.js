@@ -5,7 +5,7 @@ const diagnosesRouter = require("./routes/diagnosis");
 const patientRouter = require("./routes/patient/patient");
 const providerRouter = require("./routes/provider/provider");
 const visitRouter = require("./routes/visit/visits");
-const userRouter = require("./routes/users");
+const { userRouter } = require("./routes/users");
 const loginRouter = require("./routes/login");
 const middleware = require("./utils/middleware");
 
