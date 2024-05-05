@@ -55,12 +55,9 @@ async function saveProviders() {
 		// but this is only done once for a small number of insertions so won't have a large impact
 		for (let i = 0; i < NUM_PROVIDERS; i++) {
 
-			const saltRounds = 10;
-			const passwordHash = await bcrypt.hash("pass", saltRounds);
-
 			const user = randomEntry.createRandomUser();
 			const randomProvider = randomEntry.createRandomProvider();
-			const savedUser = await createUser({ ...user, password: passwordHash });
+			const savedUser = await createUser({ ...user, password: "pass" });
 
 			const provider = new Provider({
 				user: savedUser._id,
