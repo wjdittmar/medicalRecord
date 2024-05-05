@@ -32,7 +32,7 @@ providerRouter.get("/total", verifyToken, async (request, response) => {
 
 providerRouter.get("/state", verifyToken, async (request, response) => {
 	try {
-		const stateProviders = await Provider.countDocuments({ "license.state": { $eq: request.query.state.toUpperCase() } });
+		const stateProviders = await Provider.countDocuments({ "license": { $regex: request.query.state.toUpperCase() } });
 		response.json({ stateProviders });
 	} catch (error) {
 		response.status(500).json({ error: error.message });
