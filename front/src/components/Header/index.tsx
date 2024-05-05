@@ -47,7 +47,7 @@ export default function Header() {
 	const handleDialogClose = (event, reason) => {
 		setDialogOpen(false);
 		setAnchorEl(null);
-		if (reason !== 'backdropClick') {
+		if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
 			setOpenSnackbar(true);
 		}
 	};
