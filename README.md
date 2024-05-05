@@ -8,11 +8,18 @@
 - Showcase ability to utilize version control (Git)
 - Demonstrate basic user management using token-based authentication
 
+## Todo:
+
+- Implement messaging using the WebSockets API
+- Add testing for the front/back end
+- Profile page for users
+- Different access privileges for different user levels (e.g. provider, administrator, patient)
+- Possible -- modified user interface for patients
+
 ## Possible additional features:
 
 - Convert front/backend to typescript
 - Integration with an existing electronic health record system (e.g. Epic on FHIR)
-- Different access privileges for different user levels (e.g. provider, administrator, patient)
 - CI/CD deployment pipeline
 - End-to-end testing
 
