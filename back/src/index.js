@@ -4,6 +4,7 @@ const { WebSocketServer } = require("ws");
 const config = require("./utils/config");
 const connect = require("./utils/db");
 const app = require("./app"); // The Express app
+const { handleWebSocketServer } = require("./services/websocketHandler");
 
 async function startServer() {
 	try {
@@ -23,22 +24,7 @@ async function startServer() {
 		});
 
 		// Start WebSocket server
-		const wss = new WebSocketServer({ port: config.WS_PORT });
-
-		wss.on("connection", function (ws, request) {
-
-			ws.on("error", console.error);
-
-			console.log("New client connected!");
-
-			ws.on("message", function (message) {
-				const parsedMessage = JSON.parse(message);
-				console.log(`Received message ${message}`);
-			});
-
-			// ws.on("close", function () {
-			// });
-		});
+		handleWebSocketServer();
 
 	} catch (error) {
 		console.error("Error starting server:", error);

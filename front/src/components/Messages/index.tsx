@@ -3,18 +3,27 @@ import useWebSocket from 'react-use-websocket';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 
-import providerService from '../../services/Providers';
+import authService from '../../services/Auth';
+import userService from '../../services/Users';
 import storageService from '../../services/Storage';
 
 const Messages = () => {
 
-	const { sendMessage, lastMessage, readyState } = useWebSocket(`ws://${location.hostname}:8000`);
+	// TODO: is this the correct way to pass the authorization token to the WebSockets service?
+	const token = authService.getToken().replace("Bearer ", "");
+	const { sendMessage } = useWebSocket(
+		`ws://${location.hostname}:8000?token=${token}`,
+		{
+			onMessage: (message) => console.log(`message is ${message.data}`)
+		}
+	);
 	const [formData, setFormData] = useState({
 		recipient: '',
 		body: '',
 		subject: '',
 	});
 	const [recipients, setRecipients] = useState([]);
+
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -26,12 +35,12 @@ const Messages = () => {
 	};
 
 	useEffect(() => {
-		providerService.getAll().then(providers => {
-			const restructuredProviders = providers.map(provider => ({
-				id: provider._id,
-				label: `${provider.firstName} ${provider.lastName}`
+		userService.getAll().then(users => {
+			const restructuredUsers = users.map(user => ({
+				id: user._id,
+				label: `${user.name}`
 			}));
-			setRecipients(restructuredProviders);
+			setRecipients(restructuredUsers);
 		});
 	}, []);
 
