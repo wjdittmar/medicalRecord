@@ -3,7 +3,7 @@ const Joi = require("joi");
 // TODO: could maybe do additional validation
 
 const schema = Joi.object({
-	patient: Joi.string().required(), //TODO how to validate that this exists in the database?
+	patient: Joi.string().hex().length(24),
 	address: Joi.object({
 		address1: Joi.string().required(),
 		city: Joi.string().required(),

@@ -2,6 +2,8 @@ import { useState, useEffect } from "react";
 import useWebSocket from 'react-use-websocket';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 import authService from '../../services/Auth';
 import userService from '../../services/Users';
@@ -9,12 +11,37 @@ import storageService from '../../services/Storage';
 
 const Messages = () => {
 
+	const [alertOpen, setAlertOpen] = useState(false);
+	const [sender, setSender] = useState('');
+
+	const handleAlertClose = (event, reason) => {
+		if (reason === 'clickaway') {
+			return;
+		}
+
+		setAlertOpen(false);
+	};
+
+	const handleMessage = (message) => {
+		setSender(message.data);
+		setAlertOpen(true);
+
+		// call the alert notification with the message data
+	};
+	const handleError = (event) => {
+		console.log(event);
+		// call the alert notification with the message data
+	};
+
+
 	// TODO: is this the correct way to pass the authorization token to the WebSockets service?
+
 	const token = authService.getToken().replace("Bearer ", "");
 	const { sendMessage } = useWebSocket(
 		`ws://${location.hostname}:8000?token=${token}`,
 		{
-			onMessage: (message) => console.log(`message is ${message.data}`)
+			onMessage: handleMessage,
+			onError: handleError
 		}
 	);
 	const [formData, setFormData] = useState({
@@ -88,6 +115,15 @@ const Messages = () => {
 				</div>
 				<button type="submit">Submit</button>
 			</form>
+			<Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
+				<Alert
+					onClose={handleAlertClose}
+					severity="success"
+					variant="filled"
+					sx={{ width: '100%' }}
+				> Message received from {sender}
+				</Alert>
+			</Snackbar >
 		</>
 	);
 };

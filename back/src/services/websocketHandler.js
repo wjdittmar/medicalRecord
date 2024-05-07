@@ -1,8 +1,9 @@
 const { WebSocketServer } = require("ws");
 const jwt = require("jsonwebtoken");
 const config = require("../utils/config");
+const { sendMessage } = require("./messageService");
 
-function handleWebSocketServer() {
+async function handleWebSocketServer() {
 	const wss = new WebSocketServer({ port: config.WS_PORT });
 	const clients = {}; // Map to store WebSocket instances by client ID
 
@@ -33,20 +34,30 @@ function handleWebSocketServer() {
 
 		console.log(`Client with ID ${clientId} connected`);
 
-		console.log(clients);
 		// note that this solution does not scale particularly well
 		// because if the node server is running on multiple
 		// processes or servers they would not be able to see clients
 		// that's OK though, because it will fail gracefully because it just
 		// won't notify them
 
-		ws.on("message", function (message) {
+		ws.on("message", async function (message) {
 			try {
 				console.log(`Received message ${message}`);
-				const { recipient, body } = JSON.parse(message.toString());
+				const messageObj = JSON.parse(message.toString());
+
+				// send a POST request to the messages endpoint rather than writing
+				// directly to the database, so that
+				// we can handle authentication using the existing HTTP middleware,
+				// in addition using an API endpoint is better for scalability
+				// because it is easier to have multiple API servers behind a single endpoint
+
+
+				// Send the message and wait for the response
+				const response = await sendMessage(messageObj, token);
+
 				// Check if the recipient is online and send the message
-				if (clients[recipient]) {
-					clients[recipient].send(body);
+				if (clients[messageObj.recipient]) {
+					clients[messageObj.recipient].send(response.sender.name);
 					console.log("Message sent to recipient");
 				} else {
 					console.log("Recipient is not online");
@@ -61,11 +72,7 @@ function handleWebSocketServer() {
 			delete clients[clientId];
 			console.log(`Client with ID ${clientId} disconnected`);
 		});
-
-
 	});
 }
-
-module.exports = { handleWebSocketServer };
 
 module.exports = { handleWebSocketServer };
