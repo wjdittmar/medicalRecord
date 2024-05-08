@@ -18,4 +18,9 @@ const me = () => {
 	return user ? user.name : null;
 };
 
-export default { saveUser, loadUser, logoutUser, me };
+const getCurrentUserID = () => {
+	const user = loadUser();
+	return user ? user.id : null;
+}
+
+export default { saveUser, loadUser, logoutUser, me, getCurrentUserID };

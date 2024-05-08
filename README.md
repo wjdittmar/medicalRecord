@@ -12,7 +12,6 @@
 
 - Implement messaging using the WebSockets API
 - Add testing for the front/back end
-- Profile page for users
 - Different access privileges for different user levels (e.g. provider, administrator, patient)
 - Possible -- modified user interface for patients
 
@@ -21,6 +20,8 @@
 - Convert front/backend to typescript
 - Integration with an existing electronic health record system (e.g. Epic on FHIR)
 - CI/CD deployment pipeline
+- Send registration email on sign-up with confirmation code
+- Profile page for users
 - End-to-end testing
 
 See the individual README.md files in the back/ and front/ directories for an overview of each individual component
