@@ -20,22 +20,23 @@ const Visits = () => {
 
 	return (
 		<>
-
-			<table>
-				<thead>
-					<tr>
-						<th>Address</th>
-						<th>Date</th>
-						<th>Visit Notes</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{currentVisits.map((visit) => (
-						<Visit key={visit._id} visit={visit} />
-					))}
-				</tbody>
-			</table>
+			<div className="tableContainer">
+				<table>
+					<thead>
+						<tr>
+							<th>Address</th>
+							<th>Date</th>
+							<th>Visit Notes</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{currentVisits.map((visit) => (
+							<Visit key={visit._id} visit={visit} />
+						))}
+					</tbody>
+				</table>
+			</div>
 			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);

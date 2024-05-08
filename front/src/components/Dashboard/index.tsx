@@ -4,6 +4,7 @@ import Navbar from "../Navbar";
 import Patients from "../Patients";
 import Providers from "../Providers";
 import Visits from "../Visits";
+import Messages from "../Messages";
 import Overview from "../Overview";
 import SidebarMainLayout from "../SidebarMainLayout";
 import Header from "../Header";
@@ -21,6 +22,7 @@ const Dashboard = () => {
 					<Route path='/patients/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Patients />} />} />
 					<Route path='/providers/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Providers />} />} />
 					<Route path='/visits/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />} />
+					<Route path='/messages/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />} />
 				</Route>
 			</Routes >
 		</div >

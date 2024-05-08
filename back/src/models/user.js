@@ -26,3 +26,6 @@ const userSchema = new mongoose.Schema({
 });
 
 module.exports = mongoose.model("User", userSchema);
+
+// TODO: create a reference to the provider type
+// because all providers must be users?

@@ -16,6 +16,7 @@ const verifyToken = (request, response, next) => {
 		if (!decodedToken.id) {
 			return response.status(401).json({ error: "Token invalid" });
 		}
+		request.decodedToken = decodedToken; // pass on the token so the other services can access it
 		next();
 	} catch (error) {
 		return response.status(401).json({ error: "Token invalid" });
