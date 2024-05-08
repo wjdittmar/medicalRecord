@@ -22,21 +22,23 @@ const Providers = () => {
 	// so that these values are initially cached and only updated when there is a change to the database
 	return (
 		<>
-			<table>
-				<thead>
-					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-						<th>Email</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{currentProviders.map((provider) => (
-						<Provider key={provider._id} provider={provider} />
-					))}
-				</tbody>
-			</table>
+			<div className="tableContainer">
+				<table>
+					<thead>
+						<tr>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Email</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{currentProviders.map((provider) => (
+							<Provider key={provider._id} provider={provider} />
+						))}
+					</tbody>
+				</table>
+			</div>
 			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);

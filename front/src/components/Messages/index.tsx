@@ -5,10 +5,21 @@ import useWebSocket from 'react-use-websocket';
 import storageService from '../../services/Storage';
 import authService from '../../services/Auth';
 import messageService from "../../services/Messages";
+import Pagination from '../Pagination';
 const Messages = () => {
 
 	const [alertOpen, setAlertOpen] = useState(false);
 	const [sender, setSender] = useState('');
+	const [currentPage, setCurrentPage] = useState(1);
+	const [messages, setMessages] = useState([]);
+	const resultsPerPage = 7;
+
+	// Recalculate pagination-related variables when patients change
+	const totalPages = Math.ceil(messages.length / resultsPerPage);
+	const startIndex = (currentPage - 1) * resultsPerPage;
+	const endIndex = startIndex + resultsPerPage;
+	const currentMessages = messages.slice(startIndex, endIndex);
+
 
 	const token = authService.getToken().replace("Bearer ", "");
 
@@ -30,7 +41,7 @@ const Messages = () => {
 		// call the alert notification with the message data
 	};
 
-	const [messages, setMessages] = useState([]);
+
 	useEffect(() => {
 		messageService.getByRecipient(storageService.getCurrentUserID())
 			.then(messages => {
@@ -41,7 +52,7 @@ const Messages = () => {
 			});
 	}, [alertOpen]);
 
-	const { sendMessage } = useWebSocket(
+	useWebSocket(
 		`ws://${location.hostname}:8000?token=${token}`,
 		{
 			onMessage: handleMessage,
@@ -51,20 +62,23 @@ const Messages = () => {
 
 	return (
 		<>
-			<table>
-				<thead>
-					<tr>
-						<th>Sender</th>
-						<th>Subject</th>
-						<th>Message</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{messages.map((message) => (
-						<tr> <td>{message.sender.name}</td> <td>{message.subject}</td> <td>{message.body}</td> </tr>))}
-				</tbody>
-			</table >
+			<div className="tableContainer">
+				<table>
+					<thead>
+						<tr>
+							<th>Sender</th>
+							<th>Subject</th>
+							<th>Message</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{currentMessages.map((message) => (
+							<tr key={message._id}><td>{message.sender.name}</td><td>{message.subject}</td><td>{message.body}</td></tr>))}
+					</tbody>
+				</table >
+			</div>
+			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 			<Snackbar open={alertOpen} autoHideDuration={3000} onClose={handleAlertClose} anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}>
 				<Alert
 					onClose={handleAlertClose}
