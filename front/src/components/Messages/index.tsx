@@ -6,7 +6,32 @@ import storageService from '../../services/Storage';
 import authService from '../../services/Auth';
 import messageService from "../../services/Messages";
 import Pagination from '../Pagination';
+// import { io } from 'socket.io-client';
+import { socket } from '../../socket';
+
 const Messages = () => {
+
+
+	const token = authService.getToken().replace("Bearer ", "");
+
+	socket.io.opts.query = {
+		token: token
+	};
+	socket.connect();
+
+	useEffect(() => {
+		function onMessage(message) {
+			setSender(message);
+			setAlertOpen(true);
+
+		}
+		socket.on('message', onMessage);
+
+		return () => {
+			socket.off('message', onMessage);
+		};
+	}, []);
+
 
 	const [alertOpen, setAlertOpen] = useState(false);
 	const [sender, setSender] = useState('');
@@ -21,7 +46,6 @@ const Messages = () => {
 	const currentMessages = messages.slice(startIndex, endIndex);
 
 
-	const token = authService.getToken().replace("Bearer ", "");
 
 	const handleAlertClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -29,18 +53,6 @@ const Messages = () => {
 		}
 		setAlertOpen(false);
 	};
-
-
-	const handleMessage = (message) => {
-		setSender(message.data);
-		setAlertOpen(true);
-		// call the alert notification with the message data
-	};
-	const handleError = (event) => {
-		console.log(event);
-		// call the alert notification with the message data
-	};
-
 
 	useEffect(() => {
 		messageService.getByRecipient(storageService.getCurrentUserID())
@@ -51,14 +63,6 @@ const Messages = () => {
 				console.error("Error fetching messages:", error);
 			});
 	}, [alertOpen]);
-
-	useWebSocket(
-		`ws://${location.hostname}:8000?token=${token}`,
-		{
-			onMessage: handleMessage,
-			onError: handleError
-		}
-	);
 
 	return (
 		<>

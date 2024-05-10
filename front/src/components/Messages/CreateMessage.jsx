@@ -3,14 +3,16 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import useWebSocket from 'react-use-websocket';
+// import io from 'socket.io-client'; // Import socket.io-client
 
 import authService from '../../services/Auth';
 import userService from '../../services/Users';
 import storageService from '../../services/Storage';
 
-export default function CreateMessage({ onClose }) {
+import { socket } from '../../socket';
 
+export default function CreateMessage({ onClose }) {
+	const [recipients, setRecipients] = useState([]);
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 	const [alertOpen, setAlertOpen] = useState(false);
@@ -31,42 +33,24 @@ export default function CreateMessage({ onClose }) {
 		subject: '',
 	});
 
-	const handleMessage = (message) => {
-		setSender(message.data);
-		setAlertOpen(true);
-
-		// call the alert notification with the message data
+	socket.io.opts.query = {
+		token: token
 	};
-	const handleError = (event) => {
-		console.log(event);
-		// call the alert notification with the message data
-	};
-
-
-	const [recipients, setRecipients] = useState([]);
-	const { sendMessage } = useWebSocket(
-		`ws://${location.hostname}:8000?token=${token}`,
-		{
-			onMessage: handleMessage,
-			onError: handleError
-		}
-	);
+	socket.connect();
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			sendMessage(JSON.stringify({
+			socket.emit('message', JSON.stringify({
 				...formData,
 				sendDate: Date.now(),
 				sender: storageService.getCurrentUserID()
 			}));
 			onClose();
-		}
-		catch (error) {
+		} catch (error) {
 			setException(error.message);
 			setOpenSnackbar(true);
 		}
-
 	};
 
 	useEffect(() => {
@@ -79,12 +63,11 @@ export default function CreateMessage({ onClose }) {
 		});
 	}, []);
 
-
 	return (
 		<>
 			<form className="create" onSubmit={handleSubmit}>
 				<div className="inputWrapperContainer">
-					<label htmlFor="recipient" className="required">Subject</label>
+					<label htmlFor="recipient" className="required">Recipient</label>
 					<Autocomplete
 						options={recipients}
 						renderInput={(params) => <TextField {...params} label="Recipient" />}

@@ -3,16 +3,16 @@ const jwt = require("jsonwebtoken");
 const config = require("../utils/config");
 const { sendMessage } = require("./messageService");
 
-async function handleWebSocketServer() {
-	const wss = new WebSocketServer({ port: config.WS_PORT });
+async function handleWebSocketServer(io) {
+	//const wss = new WebSocketServer({ noServer: true });
 	const clients = {}; // Map to store WebSocket instances by client ID
 
-	wss.on("connection", function (ws, request) {
-		const token = new URL(request.url, "http://localhost").searchParams.get("token");
-		console.log("New client connected!");
+	io.on("connection", (socket) => {
+
+		const token = new URL(socket.handshake.url, "http://localhost").searchParams.get("token");
 
 		if (!token) {
-			ws.close(1008, "Token missing");
+			socket.off("disconnect");
 			return;
 		}
 
@@ -20,7 +20,7 @@ async function handleWebSocketServer() {
 
 		// make sure the user has authorization to send the message
 		if (!decodedToken.id) {
-			ws.close(1008, "Invalid authorization header");
+			socket.close(1008, "Invalid authorization header");
 			return;
 		}
 
@@ -28,9 +28,10 @@ async function handleWebSocketServer() {
 		// to check if the recipient is online
 		// to give them a notification
 		const clientId = decodedToken.id;
-		clients[clientId] = ws; // Store WebSocket instance in the map
+		//clients[clientId] = socket; // Store WebSocket instance in the map
+		socket.join(clientId);
 
-		ws.on("error", console.error);
+		socket.on("error", console.error);
 
 		console.log(`Client with ID ${clientId} connected`);
 
@@ -40,10 +41,10 @@ async function handleWebSocketServer() {
 		// that's OK though, because it will fail gracefully because it just
 		// won't notify them
 
-		ws.on("message", async function (message) {
+		socket.on("message", async function (msg) {
 			try {
-				console.log(`Received message ${message}`);
-				const messageObj = JSON.parse(message.toString());
+				console.log(`Received message ${msg}`);
+				const messageObj = JSON.parse(msg.toString());
 
 				// send a POST request to the messages endpoint rather than writing
 				// directly to the database, so that
@@ -54,20 +55,14 @@ async function handleWebSocketServer() {
 
 				// Send the message and wait for the response
 				const response = await sendMessage(messageObj, token);
-
-				// Check if the recipient is online and send the message
-				if (clients[messageObj.recipient]) {
-					clients[messageObj.recipient].send(response.sender.name);
-					console.log("Message sent to recipient");
-				} else {
-					console.log("Recipient is not online");
-				}
+				// send the message to the recipient if they are online
+				io.to(messageObj.recipient).emit("message", response.sender.name);
 			} catch (error) {
 				console.error("Error processing message:", error);
 			}
 		});
 
-		ws.on("close", function () {
+		socket.on("close", function () {
 			// Remove the WebSocket instance from the clients map when the client disconnects
 			delete clients[clientId];
 			console.log(`Client with ID ${clientId} disconnected`);
