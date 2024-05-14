@@ -2,7 +2,7 @@ const messageRouter = require("express").Router();
 const Message = require("../../models/message");
 const { verifyToken } = require("../../utils/middleware");
 const schema = require("./messageSchema");
-
+const mongoose = require("mongoose");
 messageRouter.get("/", verifyToken, (request, response) => {
 	Message.find({}).then(message => {
 		response.json(message);
@@ -31,11 +31,60 @@ messageRouter.post("/", verifyToken, async (request, response) => {
 messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
 	try {
 		const recipient = request.query.recipient;
-		const messages = await Message.find({ recipient: { $eq: recipient } }).populate("sender", { name: 1 }).populate("recipient", { name: 1 });
-		response.json({ messages });
+		const page = parseInt(request.query.page, 10) || 1;
+		const ITEMS_PER_PAGE = 10;
+		const messages = await Message.aggregate([
+			{
+				$match: { recipient: new mongoose.Types.ObjectId(recipient) }
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "sender",
+					foreignField: "_id",
+					as: "sender"
+				}
+			},
+			{
+				$unwind: "$sender"
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "recipient",
+					foreignField: "_id",
+					as: "recipient"
+				}
+			},
+			{
+				$unwind: "$recipient"
+			},
+			{
+				$facet: {
+					metadata: [
+						{ $count: "totalCount" }
+					],
+					data: [
+						{ $skip: (page - 1) * ITEMS_PER_PAGE },
+						{ $limit: ITEMS_PER_PAGE }
+					]
+				}
+			}
+		]);
+
+		response.json({
+			messages: messages[0].data,
+			metadata: {
+				totalCount: messages[0].metadata[0].totalCount,
+				pageSize: ITEMS_PER_PAGE
+			}
+		});
 	} catch (error) {
+		console.log(error.message)
 		response.status(500).json({ error: error.message });
 	}
+
+
 });
 
 

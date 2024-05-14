@@ -3,10 +3,11 @@ const baseUrl = '/api/messages';
 import authService from "../services/Auth";
 
 
-const getByRecipient = (recipient) => {
+const getByRecipient = (recipient, page) => {
+
 	let config = {
 		...authService.getConfig(),
-		params: { recipient }
+		params: { recipient, page }
 	};
 
 	const request = axios.get(`${baseUrl}/toRecipient`, config);
