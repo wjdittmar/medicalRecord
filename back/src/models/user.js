@@ -8,8 +8,24 @@ const userSchema = new mongoose.Schema({
 		lowercase: true,
 		unique: true // this ensures the uniqueness of username
 	},
-	name: String,
-	passwordHash: String
+
+	phone: {
+		type: String,
+		trim: true,
+	},
+
+	name: {
+		type: String,
+		required: true
+	},
+
+	passwordHash: {
+		type: String,
+		required: true
+	}
 });
 
 module.exports = mongoose.model("User", userSchema);
+
+// TODO: create a reference to the provider type
+// because all providers must be users?

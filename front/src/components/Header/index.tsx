@@ -5,6 +5,8 @@ import Logout from "../Logout";
 import CreatePatient from '../Patients/CreatePatient';
 import CreateProvider from '../Providers/CreateProvider';
 import CreateVisit from '../Visits/CreateVisit';
+import CreateMessage from '../Messages/CreateMessage';
+
 import Alert from '@mui/material/Alert';
 
 // Component for creating patient, provider, or visit entry dialog
@@ -20,6 +22,9 @@ function CreateEntryDialog({ onClose, component, open }) {
 			break;
 		case 'Visit':
 			content = <CreateVisit onClose={onClose} />;
+			break;
+		case 'Message':
+			content = <CreateMessage onClose={onClose} />;
 			break;
 		default:
 			content = null;
@@ -47,7 +52,7 @@ export default function Header() {
 	const handleDialogClose = (event, reason) => {
 		setDialogOpen(false);
 		setAnchorEl(null);
-		if (reason !== 'backdropClick') {
+		if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
 			setOpenSnackbar(true);
 		}
 	};
@@ -89,6 +94,9 @@ export default function Header() {
 					</MenuItem>
 					<MenuItem onClick={() => handleDialogOpen("Visit")} disableRipple>
 						Visit
+					</MenuItem>
+					<MenuItem onClick={() => handleDialogOpen("Message")} disableRipple>
+						Message
 					</MenuItem>
 				</Menu>
 				<CreateEntryDialog

@@ -1,33 +1,16 @@
-### Patient
+# Overview of Back End
 
-- firstName
-- lastName
-- dob (Date type -- e.g. 2020-05-11T20:14:14.796Z)
-- email
-- phone (xxx-xxx-xxxx)
-- preferredLanguage (ISO 639-1 language code)
-- preExistingConditions (diagnosis[])
-- sex
+The backend is written in Mongo DB / Express.js with a REST API.
 
-### Diagnosis
+## Deployment
 
-- ICD10 code
-- Description
+Currently the deployment process is as follows:
 
-### Providers
+- Changes are made on the development server
+- The front end is built on the development serving by running npm run build:ui
+- The updated files (including the dist directory) are then pushed to the main repository on Git
+- Render is registered as a GitHub application in the main repository and is notified when there is a new commit
+- The new commit triggers a build on Render is deployed by building the frontend on the development server, pushing the files to a git Repository, and serving the frontend as a static directory on Render
 
-- firstName
-- lastName
-- email
-- phone (xxx-xxx-xxxx)
-- licenses (license[])
-- license
-  - {license_id, state}
-
-### Visit
-
-- patient (Patient[])
-- encounterDate (Date type -- e.g. 2020-05-11T20:14:14.796Z)
-- providerNotes
-- address
-  - { address1, address2, city, state, zipCode }
+The static directory is currently being fetched from the Git respository -- would be better to have this be built on Render, but will require additional configuration on Render.
+Exploring the possibility of using AWS with ECS to learn more about AWS and the industry standard for deployment of a scalable consumer-facing web application.

@@ -21,22 +21,23 @@ const Patients = () => {
 
 	return (
 		<>
-			<table>
-				<thead>
-					<tr>
-						<th>First Name</th>
-						<th>Last Name</th>
-						<th>Email</th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-					{currentPatients.map((patient) => (
-						<Patient key={patient._id} patient={patient} />
-					))}
-				</tbody>
-			</table >
-
+			<div className="tableContainer">
+				<table>
+					<thead>
+						<tr>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Email</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						{currentPatients.map((patient) => (
+							<Patient key={patient._id} patient={patient} />
+						))}
+					</tbody>
+				</table>
+			</div>
 			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);

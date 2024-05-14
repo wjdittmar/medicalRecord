@@ -1,3 +1,7 @@
+const bcrypt = require("bcrypt");
+const fs = require("fs");
+const { parse } = require("csv-parse");
+
 const randomEntry = require("./utils");
 const db = require("../utils/db");
 const Patient = require("../models/patient");
@@ -5,9 +9,7 @@ const Provider = require("../models/provider");
 const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit");
 const User = require("../models/user");
-const bcrypt = require("bcrypt");
-const fs = require("fs");
-const { parse } = require("csv-parse");
+const { createUser } = require("../routes/users");
 
 const NUM_PROVIDERS = 50;
 const NUM_PATIENTS = 100;
@@ -47,25 +49,23 @@ async function savePatients() {
 
 async function saveProviders() {
 	try {
-		// Run database operations
-		const promises = [];
 
+		// TODO: could do this as a bulk operation
+		// and may not need to block on provider.save to increase performance
+		// but this is only done once for a small number of insertions so won't have a large impact
 		for (let i = 0; i < NUM_PROVIDERS; i++) {
-			const provider = new Provider(randomEntry.createRandomProvider());
-			const promise = provider.save()
-				.then(() => {
-					// console.log("Adding provider", provider);
-				})
-				.catch((error) => {
-					console.log("Error adding provider to database:", error.message);
-				});
 
-			promises.push(promise);
+			const user = randomEntry.createRandomUser();
+			const randomProvider = randomEntry.createRandomProvider();
+			const savedUser = await createUser({ ...user, password: "pass" });
+
+			const provider = new Provider({
+				user: savedUser._id,
+				license: randomProvider.license
+			});
+			const savedProvider = await provider.save();
 		}
-
-		await Promise.allSettled(promises);
 		console.log("All providers saved");
-		return Promise.resolve();
 
 	} catch (error) {
 		console.error("Error saving providers:", error.message);

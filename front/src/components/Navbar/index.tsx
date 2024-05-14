@@ -8,6 +8,8 @@ import DashboardIcon from '@mui/icons-material/Dashboard';
 import PersonIcon from '@mui/icons-material/Person';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EmailIcon from '@mui/icons-material/Email';
+
 const Navbar = () => {
 
 	let navArray = [{
@@ -25,6 +27,10 @@ const Navbar = () => {
 	{
 		linkName: "Epic",
 		icon: <MedicalInformationIcon />
+	},
+	{
+		linkName: "Messages",
+		icon: <EmailIcon />
 	},
 	];
 	return (

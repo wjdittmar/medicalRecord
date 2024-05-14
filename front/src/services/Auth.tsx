@@ -18,4 +18,4 @@ const getConfig = () => {
 };
 
 
-export default { getConfig, setToken };
+export default { getConfig, setToken, getToken };

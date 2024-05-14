@@ -1,9 +1,9 @@
-import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import Navbar from "../Navbar";
 import Patients from "../Patients";
 import Providers from "../Providers";
 import Visits from "../Visits";
+import Messages from "../Messages";
 import Overview from "../Overview";
 import SidebarMainLayout from "../SidebarMainLayout";
 import Header from "../Header";
@@ -12,7 +12,6 @@ import Epic from '../Epic';
 
 const Dashboard = () => {
 
-	// TODO: can maybe create a new component that includes a route to simplify the subsequent route definitions so that they do not have nested elements
 	return (
 		<div className="fullPage">
 			<Header />
@@ -42,8 +41,14 @@ const Dashboard = () => {
 						<SidebarMainLayout sidebar={<Navbar />} main={<Epic />} />
 					</ProtectedRoute>
 				} />
-			</Routes >
-		</div>
+				<Route path='/messages' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />
+					</ProtectedRoute>
+				} />
+			</Routes>
+		</div >
 	);
 };
+
 export default Dashboard;

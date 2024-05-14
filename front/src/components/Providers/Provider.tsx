@@ -15,14 +15,14 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 const Provider = ({ provider }) => {
 	const [open, setOpen] = useState(false);
 
-	const { firstName, lastName, email } = provider; // Destructure firstName from provider prop
+	const { user, license } = provider;
 
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
 	};
 
 	return (
-		<tr key={provider._id}><td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
+		<tr key={provider._id}><td>{user.name.split(' ')[0]}</td><td>{user.name.split(' ')[1]}</td><td>{user.email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
 					<ListItem>
@@ -31,7 +31,7 @@ const Provider = ({ provider }) => {
 								<PersonIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={`${firstName} ${lastName}`} />
+						<ListItemText primary={`${user.name.split(' ')[0]} ${user.name.split(' ')[1]}`} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -39,7 +39,7 @@ const Provider = ({ provider }) => {
 								<PhoneIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={provider.phone} />
+						<ListItemText primary={user.phone} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -47,7 +47,7 @@ const Provider = ({ provider }) => {
 								<EmailIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={`${provider.email}`} />
+						<ListItemText primary={`${user.email}`} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -55,7 +55,7 @@ const Provider = ({ provider }) => {
 								<MedicalServicesIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={`${provider.license.state}:${provider.license.license_id}`} />
+						<ListItemText primary={`${license}`} />
 					</ListItem>
 
 				</List>
