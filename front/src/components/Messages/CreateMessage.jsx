@@ -9,6 +9,13 @@ import messageService from "../../services/Messages";
 import storageService from '../../services/Storage';
 
 export default function CreateMessage({ onClose }) {
+
+	const [formData, setFormData] = useState({
+		recipient: '',
+		body: '',
+		subject: '',
+	});
+
 	const [recipients, setRecipients] = useState([]);
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
@@ -20,11 +27,7 @@ export default function CreateMessage({ onClose }) {
 		setOpenSnackbar(false);
 	};
 
-	const [formData, setFormData] = useState({
-		recipient: '',
-		body: '',
-		subject: '',
-	});
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
@@ -44,13 +47,18 @@ export default function CreateMessage({ onClose }) {
 	};
 
 	useEffect(() => {
-		userService.getAll().then(users => {
-			const restructuredUsers = users.map(user => ({
-				id: user._id,
-				label: `${user.name}`
-			}));
-			setRecipients(restructuredUsers);
-		});
+		userService.getAll()
+			.then(users => {
+				const restructuredUsers = users.map(user => ({
+					id: user._id,
+					label: `${user.name}`
+				}));
+				setRecipients(restructuredUsers);
+			})
+			.catch(error => {
+				setException(error.message);
+				setOpenSnackbar(true);
+			});
 	}, []);
 
 	return (
