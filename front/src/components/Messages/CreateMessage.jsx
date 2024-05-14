@@ -3,22 +3,15 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-// import io from 'socket.io-client'; // Import socket.io-client
 
-import authService from '../../services/Auth';
 import userService from '../../services/Users';
+import messageService from "../../services/Messages";
 import storageService from '../../services/Storage';
-
-import { socket } from '../../socket';
 
 export default function CreateMessage({ onClose }) {
 	const [recipients, setRecipients] = useState([]);
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [alertOpen, setAlertOpen] = useState(false);
-	const [sender, setSender] = useState('');
-
-	const token = authService.getToken().replace("Bearer ", "");
 
 	const handleSnackbarClose = (event, reason) => {
 		if (reason === 'clickaway') {
@@ -32,20 +25,17 @@ export default function CreateMessage({ onClose }) {
 		body: '',
 		subject: '',
 	});
-
-	socket.io.opts.query = {
-		token: token
-	};
-	socket.connect();
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			socket.emit('message', JSON.stringify({
+			// add the send date and sender 
+			const updatedFormData = {
 				...formData,
 				sendDate: Date.now(),
 				sender: storageService.getCurrentUserID()
-			}));
+			};
+
+			await messageService.create(updatedFormData);
 			onClose();
 		} catch (error) {
 			setException(error.message);

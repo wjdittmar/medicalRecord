@@ -29,7 +29,7 @@ const Messages = () => {
 
 	useEffect(() => {
 		if (!isInitialMount.current) {
-			if (data && data.length > dataLength) {
+			if (data && data.messages.length > dataLength) {
 				setAlertOpen(true);
 			}
 		}
