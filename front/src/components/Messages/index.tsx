@@ -16,6 +16,10 @@ const Messages = () => {
 	const fetchData = async () => {
 		try {
 			const response = await messageService.getByRecipient(storageService.getCurrentUserID(), currentPage);
+			if (isInitialMount.current) {
+				isInitialMount.current = false;
+				setDataLength(response.messages.length);
+			}
 			return response;
 		} catch (error) {
 			throw new Error('Error fetching messages: ' + error.message);
@@ -31,10 +35,6 @@ const Messages = () => {
 	useEffect(() => {
 		if (!isInitialMount.current && data && data.messages.length > dataLength) {
 			setAlertOpen(true);
-		}
-		if (data && isInitialMount.current) {
-			isInitialMount.current = false;
-			setDataLength(data.messages.length);
 		}
 	}, [data]);
 

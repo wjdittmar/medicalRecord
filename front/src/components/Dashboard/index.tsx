@@ -10,6 +10,7 @@ import Header from "../Header";
 import ProtectedRoute from "../ProtectedRoute";
 
 const Dashboard = () => {
+
 	return (
 		<div className="fullPage">
 			<Header />
