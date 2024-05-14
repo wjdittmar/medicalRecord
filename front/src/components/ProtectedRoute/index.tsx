@@ -1,8 +1,6 @@
-import { Navigate, Outlet } from "react-router-dom";
 import storageService from "../../services/Storage";
-
-const ProtectedRoute = () => {
-	let currentUser;
+import { Navigate } from "react-router-dom";
+const ProtectedRoute = ({ children }) => {
 	try {
 		const currentUser = storageService.me();
 		if (!currentUser) {
@@ -11,11 +9,7 @@ const ProtectedRoute = () => {
 	} catch (error) {
 		console.error("Error checking user token:", error);
 	}
-
-	return (
-		<Outlet />
-	)
-
+	return children;
 };
 
 export default ProtectedRoute;

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from "react-router-dom";
 import Navbar from "../Navbar";
 import Patients from "../Patients";
@@ -11,21 +10,38 @@ import Header from "../Header";
 import ProtectedRoute from "../ProtectedRoute";
 
 const Dashboard = () => {
-
-	// TODO: can maybe create a new component that includes a route to simplify the subsequent route definitions so that they do not have nested elements
 	return (
 		<div className="fullPage">
 			<Header />
 			<Routes>
-				<Route element={<ProtectedRoute />}>
-					<Route path='/' element={<SidebarMainLayout sidebar={<Navbar />} main={<Overview />} />} />
-					<Route path='/patients/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Patients />} />} />
-					<Route path='/providers/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Providers />} />} />
-					<Route path='/visits/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />} />
-					<Route path='/messages/*' element={<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />} />
-				</Route>
-			</Routes >
-		</div >
+				<Route path='/' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Overview />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/patients' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Patients />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/providers' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Providers />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/visits' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/messages' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />
+					</ProtectedRoute>
+				} />
+			</Routes>
+		</div>
 	);
 };
+
 export default Dashboard;
