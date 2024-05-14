@@ -1,50 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
-import useWebSocket from 'react-use-websocket';
 import storageService from '../../services/Storage';
-import authService from '../../services/Auth';
 import messageService from "../../services/Messages";
 import Pagination from '../Pagination';
-// import { io } from 'socket.io-client';
-import { socket } from '../../socket';
+import { useQuery } from '@tanstack/react-query'
 
 const Messages = () => {
+	const [alertOpen, setAlertOpen] = useState(false);
+	const [currentPage, setCurrentPage] = useState(1);
+	const [dataLength, setDataLength] = useState(0);
 
+	const { status, data, error, isFetching } = useQuery({
+		queryKey: ['messages'],
+		queryFn: async () => {
+			const res = await messageService.getByRecipient(storageService.getCurrentUserID(), currentPage);
+			if (isInitialMount.current) {
+				isInitialMount.current = false;
+				setDataLength(res.messages.length);
+			}
+			return res
+		},
+		// Refetch the data every second
+		refetchInterval: 1000,
+	})
 
-	const token = authService.getToken().replace("Bearer ", "");
-
-	socket.io.opts.query = {
-		token: token
-	};
-	socket.connect();
+	const isInitialMount = useRef(true);
 
 	useEffect(() => {
-		function onMessage(message) {
-			setSender(message);
-			setAlertOpen(true);
-
+		if (!isInitialMount.current) {
+			if (data && data.messages.length > dataLength) {
+				setAlertOpen(true);
+			}
 		}
-		socket.on('message', onMessage);
+	}, [data]);
 
-		return () => {
-			socket.off('message', onMessage);
-		};
-	}, []);
-
-
-	const [alertOpen, setAlertOpen] = useState(false);
-	const [sender, setSender] = useState('');
-	const [currentPage, setCurrentPage] = useState(1);
-	const [messages, setMessages] = useState([]);
-	const resultsPerPage = 7;
-
-	// Recalculate pagination-related variables when patients change
-	const totalPages = Math.ceil(messages.length / resultsPerPage);
-	const startIndex = (currentPage - 1) * resultsPerPage;
-	const endIndex = startIndex + resultsPerPage;
-	const currentMessages = messages.slice(startIndex, endIndex);
-
+	const totalPages = data ? (data.metadata ? Math.ceil(data.metadata.totalCount / data.metadata.pageSize) : 1) : 1;
+	const currentMessages = data ? data.messages : [];
 
 
 	const handleAlertClose = (event, reason) => {
@@ -53,16 +45,6 @@ const Messages = () => {
 		}
 		setAlertOpen(false);
 	};
-
-	useEffect(() => {
-		messageService.getByRecipient(storageService.getCurrentUserID())
-			.then(messages => {
-				setMessages(messages.messages);
-			})
-			.catch(error => {
-				console.error("Error fetching messages:", error);
-			});
-	}, [alertOpen]);
 
 	return (
 		<>
@@ -73,12 +55,18 @@ const Messages = () => {
 							<th>Sender</th>
 							<th>Subject</th>
 							<th>Message</th>
-							<th></th>
 						</tr>
 					</thead>
 					<tbody>
-						{currentMessages.map((message) => (
-							<tr key={message._id}><td>{message.sender.name}</td><td>{message.subject}</td><td>{message.body}</td></tr>))}
+						{status === 'pending' ? (
+							<tr><td>...</td><td>...</td><td>...</td></tr>
+						) : status === 'error' ? (
+							<tr>Error: {error.message}<td>...</td><td>...</td><td>...</td></tr>
+						) : (
+
+							currentMessages.map((message) => (
+								<tr key={message._id}><td>{message.sender.name}</td><td>{message.subject}</td><td>{message.body}</td></tr>))
+						)}
 					</tbody>
 				</table >
 			</div>
@@ -89,7 +77,7 @@ const Messages = () => {
 					severity="success"
 					variant="filled"
 					sx={{ width: '100%' }}
-				> Message received from {sender}
+				> New Message!
 				</Alert>
 			</Snackbar >
 		</>

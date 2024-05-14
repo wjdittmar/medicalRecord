@@ -25,3 +25,4 @@
 - End-to-end testing
 
 See the individual README.md files in the back/ and front/ directories for an overview of each individual component
+# mred
