@@ -264,6 +264,7 @@ hr {
 form {
   display: flex;
   flex-direction: column;
+  overflow-y: hidden;
 }
 
 form.create {
@@ -283,7 +284,6 @@ form.create {
   border-width: 1px;
   border-style: solid;
   border-color: #d9d9d9;
-  margin-bottom: 12px;
   display: flex;
 }
 
@@ -304,6 +304,7 @@ select {
 .inputWrapperContainer {
   display: flex;
   flex-direction: column;
+  margin-bottom: 12px;
 }
 
 label {
