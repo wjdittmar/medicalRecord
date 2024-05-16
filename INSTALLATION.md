@@ -21,11 +21,26 @@ Then run the following to install the dependencies
 npm install
 ```
 
-#### Step 3: Run the Backend Server
+#### Step 3: Populate the icd10 codes collection
 
 Import the ICD10 codes from data/icd10cm-codes-April-2024.txt into the icd10 codes collection using "icd10code" and "disease" as the column headers -- see https://www.mongodb.com/developer/products/mongodb/mongoimport-guide/
 
-#### Step 4: Run the Backend Server
+#### Step 4: Setup the EPIC integration
+
+- Follow the instructions at https://fhir.epic.com/Documentation?docId=oauth2&section=BackendOAuth2Guide to create a public/private key pair
+- Upload the private key PEM string to the "EPIC_KEY" environment variable
+- Create an app on the EPIC FHIR website (https://fhir.epic.com/Developer/Create) and select "Backend Systems" as the Application audience
+- Add all of the R4 APIs on the app creation page
+- Upload the public JWT signing key that you created earlier on the app creation page.
+- Finalize the app on the app creation page and agree to the terms and conditions. Make note of the "non-production client ID" and update the EPIC_CLIENT_ID environment variable with this value
+
+#### Step 5 (optional): Populate the database with test entries for patients, providers, visits
+
+```bash
+npm run setup
+```
+
+#### Step 6: Run the Backend Server
 
 Run the following command to start the backend server:
 
