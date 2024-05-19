@@ -8,6 +8,7 @@
 - Showcase ability to utilize version control (Git)
 - Demonstrate basic user management using token-based authentication
 - Demonstrate use of the reactQuery library
+- Demonstrate ability to develop a Node.js backend to authenticate and interact with the Epic FHIR API, leveraging OAuth 2.0 for secure access token retrieval and patient data querying
 
 ## Todo:
 
@@ -16,9 +17,7 @@
 
 ## Possible additional features:
 
-- Modified user interface for patients
 - Convert front/backend to typescript
-- Integration with an existing electronic health record system (e.g. Epic on FHIR)
 - CI/CD deployment pipeline
 - Send registration email on sign-up with confirmation code
 - Profile page for users
