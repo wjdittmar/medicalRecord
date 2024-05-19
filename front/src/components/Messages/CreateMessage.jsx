@@ -63,7 +63,7 @@ export default function CreateMessage({ onClose }) {
 
 	return (
 		<>
-			<form className="create" onSubmit={handleSubmit}>
+			<form className="createModal" onSubmit={handleSubmit}>
 				<div className="inputWrapperContainer">
 					<label htmlFor="recipient" className="required">Recipient</label>
 					<Autocomplete

@@ -58,7 +58,7 @@ export default function CreateVisit({ onClose }) {
 
 	return (
 		<>
-			<form className="create" onSubmit={handleSubmit}>
+			<form className="createModal" onSubmit={handleSubmit}>
 				<h3>New Visit</h3>
 				<hr />
 				<div className="inputWrapperContainer">
@@ -212,9 +212,9 @@ export default function CreateVisit({ onClose }) {
 					</span>
 				</div>
 				<div className="inputWrapperContainer">
+					<label className="required">Date of Visit</label>
 					<LocalizationProvider dateAdapter={AdapterDayjs}>
 						<DatePicker
-							label="Date of visit"
 							value={formData.encounterDate}
 							onChange={(newValue) => setFormData({ ...formData, encounterDate: newValue })}
 							sx={{ border: 'none' }}

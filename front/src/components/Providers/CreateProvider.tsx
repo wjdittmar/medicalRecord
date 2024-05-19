@@ -34,7 +34,7 @@ export default function CreateProvider({ onClose }) {
 
 	return (
 		<>
-			<form className="create" onSubmit={handleSubmit}>
+			<form className="createModal" onSubmit={handleSubmit}>
 				<h3>New Provider</h3>
 				<hr />
 				<div className="inputWrapperContainer">
