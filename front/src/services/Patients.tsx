@@ -24,6 +24,16 @@ const getNumberOlderThanAge = (age) => {
 	return request.then(response => response.data);
 };
 
+const findByDemographic = (demoData) => {
+	let config = {
+		...authService.getConfig(),
+		params: demoData  // Pass age as a query parameter
+	};
+	const request = axios.get(`${baseUrl}/search`, config);
+	return request.then(response => response.data);
+
+}
+
 const create = async (newObject) => {
 
 	try {
@@ -45,4 +55,4 @@ const create = async (newObject) => {
 	}
 };
 
-export default { getAll, create, getTotalNumber, getNumberOlderThanAge };
+export default { getAll, create, getTotalNumber, getNumberOlderThanAge, findByDemographic };

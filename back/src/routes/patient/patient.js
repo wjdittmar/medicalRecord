@@ -39,6 +39,23 @@ patientRouter.get("/", verifyToken, async (request, response) => {
 	}
 });
 
+// Endpoint to find patients by demographic data
+patientRouter.get('/search', (req, res) => {
+	const { name, ssn, dob, zip } = req.query;
+	console.log(name, ssn, dob, zip);
+	// Implement the search logic here
+	// Filter patients based on the provided query parameters
+	// const filteredPatients = patients.filter(patient => {
+	// 	return (
+	// 		(!name || patient.name.toLowerCase().includes(name.toLowerCase())) &&
+	// 		(!ssn || patient.ssn.includes(ssn)) &&
+	// 		(!dob || patient.dob.includes(dob)) &&
+	// 		(!zip || patient.zip.includes(zip))
+	// 	);
+	// });
+	// res.json(filteredPatients);
+});
+
 // Endpoint to create a new patient
 patientRouter.post("/", verifyToken, async (request, response) => {
 	try {
