@@ -9,6 +9,7 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import EmailIcon from '@mui/icons-material/Email';
 import Avatar from '@mui/material/Avatar';
+import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import LanguageIcon from '@mui/icons-material/Language';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
@@ -17,7 +18,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 const Patient = ({ patient }) => {
 	const [open, setOpen] = useState(false);
 
-	const { firstName, lastName, email } = patient; // Destructure firstName from provider prop
+	const { user } = patient;
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
 	};
@@ -29,7 +30,7 @@ const Patient = ({ patient }) => {
 	return (
 
 		<tr key={patient._id}>
-			<td>{firstName}</td><td>{lastName}</td><td>{email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
+			<td>{user.name}</td><td>{user.email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
 					<ListItem>
@@ -38,7 +39,7 @@ const Patient = ({ patient }) => {
 								<PersonIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={`${firstName} ${lastName}`} />
+						<ListItemText primary={`${user.name}`} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -46,7 +47,15 @@ const Patient = ({ patient }) => {
 								<PhoneIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={patient.phone} />
+						<ListItemText primary={user.phone} />
+					</ListItem>
+					<ListItem>
+						<ListItemAvatar>
+							<Avatar>
+								<LockIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary={patient.ssn} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -54,7 +63,7 @@ const Patient = ({ patient }) => {
 								<EmailIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary={`${patient.email}`} />
+						<ListItemText primary={`${user.email}`} />
 					</ListItem>
 					<ListItem>
 						<ListItemAvatar>
@@ -72,20 +81,16 @@ const Patient = ({ patient }) => {
 						</ListItemAvatar>
 						<ListItemText primary={`${getFullLanguage(patient.preferredLanguage)}`} />
 					</ListItem>
-					<ListItem>
-						<List>
-							{patient.preExistingConditions.map((condition) => (
-								<ListItem key={condition._id}>
-									<ListItemAvatar>
-										<Avatar>
-											<MedicalInformationIcon />
-										</Avatar>
-									</ListItemAvatar>
-									<ListItemText primary={`${condition.disease}`} />
-								</ListItem>
-							))}
-						</List>
-					</ListItem>
+					{patient.preExistingConditions.map((condition) => (
+						<ListItem key={condition._id}>
+							<ListItemAvatar>
+								<Avatar>
+									<MedicalInformationIcon />
+								</Avatar>
+							</ListItemAvatar>
+							<ListItemText primary={`${condition.disease}`} />
+						</ListItem>
+					))}
 				</List>
 			</Drawer>
 		</tr>);

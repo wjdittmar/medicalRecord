@@ -16,6 +16,8 @@ export default function CreatePatient({ onClose }) {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
+		password: '',
+		ssn: '',
 		phone: '',
 		preferredLanguage: 'en',
 		sex: 'male',
@@ -84,6 +86,31 @@ export default function CreatePatient({ onClose }) {
 							autoComplete="email"
 							value={formData.email}
 							onChange={handleChange}
+						/>
+					</span>
+				</div>
+				<div className="inputWrapperContainer">
+					<label title="ssn" className="required">SSN</label>
+					<span className="inputWrapper">
+						<input
+							name="ssn"
+							required
+							placeholder="ssn"
+							type="ssn"
+							value={formData.ssn}
+							onChange={handleChange}
+						/>
+					</span>
+				</div>
+				<div className="inputWrapperContainer">
+					<label title="Password" className="required">Password</label>
+					<span className="inputWrapper">
+						<input
+							name="password"
+							required
+							type="password"
+							value={formData.password}
+							onChange={(event) => setFormData({ ...formData, password: event.target.value })}
 						/>
 					</span>
 				</div>

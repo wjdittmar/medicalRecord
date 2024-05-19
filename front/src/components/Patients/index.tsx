@@ -18,15 +18,13 @@ const Patients = () => {
 	const startIndex = (currentPage - 1) * resultsPerPage;
 	const endIndex = startIndex + resultsPerPage;
 	const currentPatients = patients.slice(startIndex, endIndex);
-
 	return (
 		<>
 			<div className="tableContainer">
 				<table>
 					<thead>
 						<tr>
-							<th>First Name</th>
-							<th>Last Name</th>
+							<th>Name</th>
 							<th>Email</th>
 							<th></th>
 						</tr>

@@ -2,6 +2,7 @@ const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
 const schema = require("./patientSchema");
 const { verifyToken } = require("../../utils/middleware");
+const { createUser } = require("../users");
 
 // Endpoint to get the total number of patients
 patientRouter.get("/total", verifyToken, async (request, response) => {
@@ -32,17 +33,37 @@ patientRouter.get("/older-than", verifyToken, async (request, response) => {
 // Endpoint to get all patients
 patientRouter.get("/", verifyToken, async (request, response) => {
 	try {
-		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 });
+		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 }).populate("user", { email: 1, name: 1, phone: 1 });
+		console.log(patients);
 		response.json(patients);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
 	}
 });
 
+// Endpoint to find patients by demographic data
+patientRouter.get('/search', (req, res) => {
+	const { name, ssn, dob, zip } = req.query;
+	console.log(name, ssn, dob, zip);
+	// Implement the search logic here
+	// Filter patients based on the provided query parameters
+	// const filteredPatients = patients.filter(patient => {
+	// 	return (
+	// 		(!name || patient.name.toLowerCase().includes(name.toLowerCase())) &&
+	// 		(!ssn || patient.ssn.includes(ssn)) &&
+	// 		(!dob || patient.dob.includes(dob)) &&
+	// 		(!zip || patient.zip.includes(zip))
+	// 	);
+	// });
+	// res.json(filteredPatients);
+});
+
 // Endpoint to create a new patient
 patientRouter.post("/", verifyToken, async (request, response) => {
 	try {
 		const body = request.body;
+		const { name, phone, email, password } = request.body;
+		const { preferredLanguage, dob, sex, ssn } = request.body;
 		const { error, value } = schema.validate(body);
 		if (error) {
 			return response.status(422).json({
@@ -52,14 +73,17 @@ patientRouter.post("/", verifyToken, async (request, response) => {
 			});
 		}
 
+		// when you create a new patient,
+		// you must also create a new user
+
+		const savedUser = await createUser({ name, email, phone, password });
+
 		const patient = new Patient({
-			firstName: body.name.split(" ")[0],
-			lastName: body.name.split(" ")[1] || "",
-			phone: body.phone,
-			preferredLanguage: body.preferredLanguage,
-			dob: body.dob,
-			email: body.email,
-			sex: body.sex
+			user: savedUser._id,
+			preferredLanguage,
+			dob,
+			sex,
+			ssn
 		});
 
 		const savedPatient = await patient.save();

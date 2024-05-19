@@ -328,3 +328,15 @@ label.required::before {
 *:focus:not(:focus-visible) {
   outline: none;
 }
+
+/* patient search grid elements */
+
+div.patientSearchGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 2fr;
+}
+
+div.patientSearchGrid label {
+  display: block;
+}

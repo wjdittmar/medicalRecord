@@ -8,6 +8,8 @@ const schema = Joi.object({
 	preferredLanguage: Joi.string().required(),
 	dob: Joi.date().required(),
 	sex: Joi.string().required(),
+	ssn: Joi.string().required(),
+	password: Joi.string().required(),
 	email: Joi.string().email().required()
 });
 
