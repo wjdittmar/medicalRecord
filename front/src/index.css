@@ -267,7 +267,7 @@ form {
   overflow-y: hidden;
 }
 
-form.create {
+form.createModal {
   padding: 35px 50px;
 }
 

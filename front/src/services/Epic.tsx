@@ -1,18 +1,17 @@
 import axios from 'axios';
 import authService from "../services/Auth";
 
-// Define header and payload
-
 const baseUrl = '/api/epic';
 
-const getToken = () => {
-	const request = axios.get(baseUrl, authService.getConfig());
-	return request.then(response => response.data);
+const getPatient = async (data) => {
+	const config = {
+		...authService.getConfig(),
+		params: data
+
+	};
+	const response = await axios.get(baseUrl, config);
+	return response.data;
 
 };
 
-export default { getToken };
-
-// Sign the JWT
-
-
+export default { getPatient };

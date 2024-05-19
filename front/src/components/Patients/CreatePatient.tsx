@@ -53,7 +53,7 @@ export default function CreatePatient({ onClose }) {
 
 	return (
 		<>
-			<form className="create" onSubmit={handleSubmit}>
+			<form className="createModal" onSubmit={handleSubmit}>
 				<h3>New Patient</h3>
 				<hr />
 				{/* Input fields */}

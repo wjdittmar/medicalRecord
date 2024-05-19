@@ -25,13 +25,13 @@ const Navbar = () => {
 		icon: <CalendarMonthIcon />
 	},
 	{
-		linkName: "Epic",
-		icon: <MedicalInformationIcon />
-	},
-	{
 		linkName: "Messages",
 		icon: <EmailIcon />
 	},
+		//{
+		// 	linkName: "Epic",
+		// 	icon: <MedicalInformationIcon />
+		// },
 	];
 	return (
 		<List>

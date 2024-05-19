@@ -36,14 +36,14 @@ const Dashboard = () => {
 						<SidebarMainLayout sidebar={<Navbar />} main={<Visits />} />
 					</ProtectedRoute>
 				} />
-				<Route path='/epic' element={
-					<ProtectedRoute>
-						<SidebarMainLayout sidebar={<Navbar />} main={<Epic />} />
-					</ProtectedRoute>
-				} />
 				<Route path='/messages' element={
 					<ProtectedRoute>
 						<SidebarMainLayout sidebar={<Navbar />} main={<Messages />} />
+					</ProtectedRoute>
+				} />
+				<Route path='/epic' element={
+					<ProtectedRoute>
+						<SidebarMainLayout sidebar={<Navbar />} main={<Epic />} />
 					</ProtectedRoute>
 				} />
 			</Routes>
