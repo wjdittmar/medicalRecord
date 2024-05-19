@@ -4,9 +4,20 @@ const schema = require("./visitSchema");
 const { verifyToken } = require("../../utils/middleware");
 
 visitRouter.get("/", verifyToken, (request, response) => {
-	Visit.find({}).populate("patient", { firstName: 1, lastName: 1 }).then(provider => {
-		response.json(provider);
-	});
+	Visit.find({})
+		.populate({
+			path: 'patient',
+			populate: {
+				path: 'user',
+				select: 'name'
+			}
+		})
+		.then(visits => {
+			response.json(visits);
+		})
+		.catch(err => {
+			response.status(500).json({ error: err.message });
+		});
 });
 
 visitRouter.post("/", verifyToken, async (request, response) => {

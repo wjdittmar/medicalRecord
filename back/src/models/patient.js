@@ -2,17 +2,10 @@
 const mongoose = require("mongoose");
 
 const patientSchema = new mongoose.Schema({
-	firstName: {
-		type: String,
-		trim: true,
-	},
-	lastName: {
-		type: String,
-		trim: true,
-	},
-	phone: {
-		type: String,
-		trim: true,
+	user: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "User",
+		required: true
 	},
 	preferredLanguage: {
 		type: String,
@@ -22,12 +15,11 @@ const patientSchema = new mongoose.Schema({
 		{ type: mongoose.Schema.Types.ObjectId, ref: "Diagnosis" }
 	],
 	dob: Date,
-	email: {
+	sex: String,
+	ssn: {
 		type: String,
-		trim: true,
-		lowercase: true,
-	},
-	sex: String
+		unique: true
+	}
 });
 
 module.exports = mongoose.model("Patient", patientSchema);

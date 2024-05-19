@@ -32,7 +32,7 @@ export default function CreateVisit({ onClose }) {
 		patientService.getAll().then(patients => {
 			const restructuredPatients = patients.map(patient => ({
 				id: patient._id,
-				label: `${patient.firstName} ${patient.lastName}`
+				label: `${patient.user.name}`
 			}));
 			setPatients(restructuredPatients);
 		});
