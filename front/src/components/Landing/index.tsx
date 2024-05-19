@@ -16,9 +16,6 @@ const Landing = () => {
 		}
 	}, [navigate]);
 
-
-
-
 	return (<>
 
 		<Routes>

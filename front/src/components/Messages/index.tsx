@@ -6,7 +6,6 @@ import storageService from '../../services/Storage';
 import messageService from "../../services/Messages";
 import Pagination from '../Pagination';
 
-
 const Messages = () => {
 	const [alertOpen, setAlertOpen] = useState(false);
 	const [currentPage, setCurrentPage] = useState(1);

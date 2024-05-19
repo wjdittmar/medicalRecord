@@ -28,6 +28,10 @@ const Navbar = () => {
 		linkName: "Messages",
 		icon: <EmailIcon />
 	},
+		//{
+		// 	linkName: "Epic",
+		// 	icon: <MedicalInformationIcon />
+		// },
 	];
 	return (
 		<List>
