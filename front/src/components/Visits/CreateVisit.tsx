@@ -15,10 +15,10 @@ export default function CreateVisit({ onClose }) {
 	const [formData, setFormData] = useState({
 		patient: '',
 		address: {
-			address1: '',
+			line: '',
 			city: '',
 			state: 'CA',
-			zipCode: ''
+			postalCode: ''
 		},
 		providerNotes: '',
 		encounterDate: dayjs('2022-04-17'),
@@ -82,12 +82,12 @@ export default function CreateVisit({ onClose }) {
 							autoComplete="street-address"
 							required
 							enterKeyHint="next"
-							value={formData.address.address1}  // Access the address1 property
+							value={formData.address.line}  // Access the address1 property
 							onChange={(event) => setFormData({
 								...formData,
 								address: {  // Spread the existing address object
 									...formData.address,  // Preserve other address properties
-									address1: event.target.value  // Update the address1 property
+									line: event.target.value  // Update the address1 property
 								}
 							})}
 						/>
@@ -200,12 +200,12 @@ export default function CreateVisit({ onClose }) {
 							name="postal-code"
 							autoComplete="postal-code"
 							enterKeyHint="next"
-							value={formData.zipCode}
+							value={formData.postalCode}
 							onChange={(event) => setFormData({
 								...formData,
 								address: {  // Spread the existing address object
 									...formData.address,  // Preserve other address properties
-									zipCode: event.target.value  // Update the address1 property
+									postalCode: event.target.value  // Update the address1 property
 								}
 							})}
 						/>

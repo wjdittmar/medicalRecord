@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require("mongoose");
+const addressSchema = require("./address");
 
 const patientSchema = new mongoose.Schema({
 	user: {
@@ -19,7 +20,8 @@ const patientSchema = new mongoose.Schema({
 	ssn: {
 		type: String,
 		unique: true
-	}
+	},
+	address: addressSchema
 });
 
 module.exports = mongoose.model("Patient", patientSchema);

@@ -5,10 +5,11 @@ const Joi = require("joi");
 const schema = Joi.object({
 	patient: Joi.string().hex().length(24),
 	address: Joi.object({
-		address1: Joi.string().required(),
+		line: Joi.string().required(),
 		city: Joi.string().required(),
 		state: Joi.string().required(),
-		zipCode: Joi.number().required()
+		postalCode: Joi.number().required(),
+		country: Joi.string().required()
 	}).required(),
 	encounterDate: Joi.date().required(),
 	providerNotes: Joi.string()

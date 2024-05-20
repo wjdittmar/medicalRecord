@@ -24,7 +24,7 @@ const Visit = ({ visit }) => {
 	const { address, encounterDate, providerNotes } = visit;
 	const date = new Date(encounterDate);
 	return (<>
-		<tr><td>{address.address1}</td><td>{formatter.format(date)}</td><td>{providerNotes}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td></tr>
+		<tr><td>{address.line}</td><td>{formatter.format(date)}</td><td>{providerNotes}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td></tr>
 		<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 			<List sx={{ maxWidth: 480 }}>
 				<ListItem>
@@ -49,12 +49,12 @@ const Visit = ({ visit }) => {
 							<BusinessIcon />
 						</Avatar>
 					</ListItemAvatar>
-					<ListItemText primary={`${visit.address.address1}`} />
+					<ListItemText primary={`${visit.address.line}`} />
 				</ListItem>
 				<ListItem>
 					<ListItemAvatar>
 					</ListItemAvatar>
-					<ListItemText primary={`${visit.address.city}, ${visit.address.state} ${visit.address.zipCode} `} />
+					<ListItemText primary={`${visit.address.city}, ${visit.address.state} ${visit.address.postalCode} `} />
 				</ListItem>
 				<ListItem>
 					<ListItemAvatar>

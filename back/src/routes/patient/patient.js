@@ -34,7 +34,6 @@ patientRouter.get("/older-than", verifyToken, async (request, response) => {
 patientRouter.get("/", verifyToken, async (request, response) => {
 	try {
 		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 }).populate("user", { email: 1, name: 1, phone: 1 });
-		console.log(patients);
 		response.json(patients);
 	} catch (error) {
 		response.status(500).json({ error: error.message });
