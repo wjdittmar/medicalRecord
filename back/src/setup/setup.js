@@ -23,25 +23,31 @@ async function savePatients() {
 			{ $project: { _id: 1 } }
 		]);
 		const promises = [];
+
+		// TODO: this only reads 100 addresses, so will break if we try to change number of patients
+
+		const addresses = await readAddresses();
+
 		for (let i = 0; i < NUM_PATIENTS; i++) {
 			const user = randomEntry.createRandomUser();
 			const patientData = randomEntry.createRandomPatient();
 
 			const savedUser = await createUser({ ...user, password: "pass" });
 
-
-
 			const diagnoses = result.slice(i * DIAGNOSES_PER_PATIENT, (i + 1) * DIAGNOSES_PER_PATIENT);
 			const patient = new Patient({
 				user: savedUser._id,
 				...patientData,
+				address: {
+					line: addresses[i][0],
+					city: addresses[i][1],
+					state: addresses[i][2],
+					postalCode: addresses[i][3],
+					country: "US"
+				},
 				preExistingConditions: diagnoses.map(d => d._id)
 			});
 
-			// const patient = new Patient({
-			// 	...patientData,
-			// 	preExistingConditions: diagnoses.map(d => d._id)
-			// });
 			const promise = patient.save()
 				.then(() => {
 					//console.log("Adding patient", patient);
@@ -141,10 +147,11 @@ async function saveVisits() {
 			const visit = new Visit({
 				...randomEntry.createRandomVisit(),
 				address: {
-					address1: addresses[i][0],
+					line: addresses[i][0],
 					city: addresses[i][1],
 					state: addresses[i][2],
-					zipCode: addresses[i][3]
+					postalCode: addresses[i][3],
+					country: "US"
 				},
 				patient: result[i]._id
 			});
