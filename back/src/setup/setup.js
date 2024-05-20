@@ -29,8 +29,6 @@ async function savePatients() {
 
 			const savedUser = await createUser({ ...user, password: "pass" });
 
-
-
 			const diagnoses = result.slice(i * DIAGNOSES_PER_PATIENT, (i + 1) * DIAGNOSES_PER_PATIENT);
 			const patient = new Patient({
 				user: savedUser._id,
@@ -38,10 +36,6 @@ async function savePatients() {
 				preExistingConditions: diagnoses.map(d => d._id)
 			});
 
-			// const patient = new Patient({
-			// 	...patientData,
-			// 	preExistingConditions: diagnoses.map(d => d._id)
-			// });
 			const promise = patient.save()
 				.then(() => {
 					//console.log("Adding patient", patient);
