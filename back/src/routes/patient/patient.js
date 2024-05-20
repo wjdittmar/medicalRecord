@@ -53,7 +53,7 @@ patientRouter.get('/search', async (req, res) => {
 		query.dob = dob;
 	}
 	if (zip) {
-		query.zip = zip;
+		query['address.postalCode'] = zip;
 	}
 
 	try {
