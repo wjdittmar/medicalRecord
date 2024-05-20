@@ -1,5 +1,6 @@
 const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
+const User = require("../../models/user");
 const schema = require("./patientSchema");
 const { verifyToken } = require("../../utils/middleware");
 const { createUser } = require("../users");
@@ -41,21 +42,45 @@ patientRouter.get("/", verifyToken, async (request, response) => {
 });
 
 // Endpoint to find patients by demographic data
-patientRouter.get('/search', (req, res) => {
+patientRouter.get('/search', async (req, res) => {
 	const { name, ssn, dob, zip } = req.query;
-	console.log(name, ssn, dob, zip);
-	// Implement the search logic here
-	// Filter patients based on the provided query parameters
-	// const filteredPatients = patients.filter(patient => {
-	// 	return (
-	// 		(!name || patient.name.toLowerCase().includes(name.toLowerCase())) &&
-	// 		(!ssn || patient.ssn.includes(ssn)) &&
-	// 		(!dob || patient.dob.includes(dob)) &&
-	// 		(!zip || patient.zip.includes(zip))
-	// 	);
-	// });
-	// res.json(filteredPatients);
+	const query = {};
+
+	if (ssn) {
+		query.ssn = ssn;
+	}
+	if (dob) {
+		query.dob = dob;
+	}
+	if (zip) {
+		query.zip = zip;
+	}
+
+	try {
+		let userQuery = {};
+
+		if (name) {
+			userQuery.name = new RegExp(name, 'i'); // Case-insensitive regex search for name
+		}
+
+		// If name is provided, find matching users
+		if (name) {
+			const users = await User.find(userQuery, '_id').lean();
+			const userIds = users.map(user => user._id);
+
+			// Add user IDs to the patient query
+			query.user = { $in: userIds };
+		}
+		const patients = await Patient.find(query)
+			.populate('user', 'email name phone').populate("preExistingConditions", { icdcode: 1, disease: 1 })
+			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
+
+		res.json(patients);
+	} catch (error) {
+		res.status(500).json({ error: error.message });
+	}
 });
+
 
 // Endpoint to create a new patient
 patientRouter.post("/", verifyToken, async (request, response) => {
