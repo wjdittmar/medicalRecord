@@ -9,7 +9,7 @@ const schema = Joi.object({
 		city: Joi.string().required(),
 		state: Joi.string().required(),
 		postalCode: Joi.number().required(),
-		country: Joi.string().required()
+		country: Joi.string()
 	}).required(),
 	encounterDate: Joi.date().required(),
 	providerNotes: Joi.string()

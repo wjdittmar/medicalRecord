@@ -1,6 +1,14 @@
-import { useState } from "react";
-import { Snackbar, Alert } from '@mui/material';
-import providerService from "../../services/Providers";
+import { useState } from 'react';
+
+import Stack from '@mui/joy/Stack';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
+import DialogTitle from '@mui/joy/DialogTitle';
+
+import providerService from '../../services/Providers';
+import SnackbarAlert from '../common/SnackbarAlert';
 
 export default function CreateProvider({ onClose }) {
 	const [formData, setFormData] = useState({
@@ -14,13 +22,6 @@ export default function CreateProvider({ onClose }) {
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setOpenSnackbar(false);
-	};
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
@@ -32,103 +33,49 @@ export default function CreateProvider({ onClose }) {
 		}
 	};
 
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+		setFormData(prevFormData => ({
+			...prevFormData,
+			[name]: value
+		}));
+	};
+
 	return (
 		<>
 			<form className="createModal" onSubmit={handleSubmit}>
-				<h3>New Provider</h3>
+				<DialogTitle>New Provider</DialogTitle>
 				<hr />
-				<div className="inputWrapperContainer">
-					<label title="Name" className="required">Name</label>
-					<span className="inputWrapper">
-						<input
-							name="name"
-							required
-							placeholder="name"
-							type="name"
-							autoComplete="name"
-							value={formData.name}
-							onChange={(event) => {
-								setFormData({ ...formData, name: event.target.value });
-							}}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Email" className="required">Email</label>
-					<span className="inputWrapper">
-						<input
-							name="email"
-							required
-							placeholder="email"
-							type="email"
-							autoComplete="email"
-							value={formData.email}
-							onChange={(event) => setFormData({ ...formData, email: event.target.value })}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Password" className="required">Password</label>
-					<span className="inputWrapper">
-						<input
-							name="password"
-							required
-							type="password"
-							value={formData.password}
-							onChange={(event) => setFormData({ ...formData, password: event.target.value })}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Phone" className="required">Phone number</label>
-					<span className="inputWrapper">
-						<input
-							name="phone"
-							required
-							placeholder="phone"
-							type="tel"
-							autoComplete="tel"
-							value={formData.phone}
-							onChange={(event) => setFormData({ ...formData, phone: event.target.value })}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="License" className="required">License Number</label>
-					<span className="inputWrapper">
-						<input
-							name="license"
-							required
-							placeholder="license"
-							value={formData.license}
-							// TODO: validate data to make sure it is in the correct format, e.g. state number
-							onChange={(event) => {
-								setFormData({
-									...formData,
-									license: event.target.value
-								});
-							}}
-						/>
-					</span>
-				</div>
-
-				<button type="submit" value="Submit">Submit</button>
+				<Stack spacing={2}>
+					<FormControl>
+						<FormLabel required={true}>Name</FormLabel>
+						<Input required name="name" value={formData.name} onChange={handleChange} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Email</FormLabel>
+						<Input required type="email" name="email" value={formData.email} onChange={handleChange} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Password</FormLabel>
+						<Input required type="password" name="password" value={formData.password} onChange={handleChange} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Phone</FormLabel>
+						<Input required type="tel" name="phone" value={formData.phone} onChange={handleChange} />
+					</FormControl>
+					<FormControl>
+						<FormLabel>License Number</FormLabel>
+						<Input required name="license" value={formData.license} onChange={handleChange} />
+					</FormControl>
+					<Button type="submit">Submit</Button>
+				</Stack>
 			</form>
-			<Snackbar
+			<SnackbarAlert
 				open={openSnackbar}
-				autoHideDuration={2000}
-				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-			>
-				<Alert
-					onClose={handleSnackbarClose}
-					severity="error"
-					variant="filled"
-					sx={{ width: '100%' }}
-				>
-					Error! {exception}
-				</Alert>
-			</Snackbar>
+				message={`Error! ${exception}`}
+				onClose={() => { setOpenSnackbar(false); }}
+				type="error"
+			/>
 		</>
 	);
 }

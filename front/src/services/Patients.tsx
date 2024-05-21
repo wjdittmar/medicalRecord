@@ -27,7 +27,7 @@ const getNumberOlderThanAge = (age) => {
 const findByDemographic = (demoData) => {
 	let config = {
 		...authService.getConfig(),
-		params: demoData  // Pass age as a query parameter
+		params: demoData
 	};
 	const request = axios.get(`${baseUrl}/search`, config);
 	return request.then(response => response.data);

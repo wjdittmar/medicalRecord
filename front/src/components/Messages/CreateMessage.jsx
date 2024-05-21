@@ -1,15 +1,20 @@
 import { useState, useEffect } from "react";
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
 
+import Autocomplete from '@mui/joy/Autocomplete';
+import Stack from '@mui/joy/Stack';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Textarea from '@mui/joy/Textarea';
+import Button from '@mui/joy/Button';
+import DialogTitle from '@mui/joy/DialogTitle';
+
+import SnackbarAlert from '../common/SnackbarAlert';
 import userService from '../../services/Users';
 import messageService from "../../services/Messages";
 import storageService from '../../services/Storage';
 
 export default function CreateMessage({ onClose }) {
-
 	const [formData, setFormData] = useState({
 		recipient: '',
 		body: '',
@@ -20,24 +25,14 @@ export default function CreateMessage({ onClose }) {
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
 
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setOpenSnackbar(false);
-	};
-
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			// add the send date and sender 
 			const updatedFormData = {
 				...formData,
 				sendDate: Date.now(),
 				sender: storageService.getCurrentUserID()
 			};
-
 			await messageService.create(updatedFormData);
 			onClose();
 		} catch (error) {
@@ -64,60 +59,45 @@ export default function CreateMessage({ onClose }) {
 	return (
 		<>
 			<form className="createModal" onSubmit={handleSubmit}>
-				<div className="inputWrapperContainer">
-					<label htmlFor="recipient" className="required">Recipient</label>
-					<Autocomplete
-						options={recipients}
-						renderInput={(params) => <TextField {...params} label="Recipient" />}
-						sx={{ flex: 1, border: 'none' }}
-						onChange={(event, newRecipient) => setFormData({ ...formData, recipient: newRecipient.id })}
-						isOptionEqualToValue={(option, value) => option.value === value.value}
-					/>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="subject" className="required">Subject</label>
-					<span className="inputWrapper">
-						<input
-							type="text"
+				<DialogTitle>New Message</DialogTitle>
+				<hr />
+
+				<Stack spacing={2}>
+					<FormControl>
+						<FormLabel required={true} htmlFor="recipient">Recipient</FormLabel>
+						<Autocomplete
+							options={recipients}
+							onChange={(event, newRecipient) => setFormData({ ...formData, recipient: newRecipient ? newRecipient.id : '' })}
+							isOptionEqualToValue={(option, value) => option.id === value.id}
+						/>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true} htmlFor="subject">Subject</FormLabel>
+						<Input
 							id="subject"
-							name="subject"
-							enterKeyHint="next"
+							required
 							value={formData.subject}
-							onChange={(event) => setFormData({
-								...formData,
-								subject: event.target.value
-							})}
+							onChange={(event) => setFormData({ ...formData, subject: event.target.value })}
 						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="visitNotes">Body</label>
-					<span className="inputWrapper">
-						<textarea
-							id="visitNotes"
-							name="visitNotes"
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true} htmlFor="body">Body</FormLabel>
+						<Textarea
+							id="body"
 							value={formData.body}
-							onChange={(event) => setFormData({ ...formData, body: event.target.value })}
+							onChange={(event) => setFormData({ ...formData, body: event.target.value })} minRows={6} maxRows={12}
 						/>
-					</span>
-				</div>
-				<button type="submit">Submit</button>
-			</form>
-			<Snackbar
+					</FormControl>
+					<Button type="submit">Submit</Button>
+				</Stack>
+			</form >
+
+			<SnackbarAlert
 				open={openSnackbar}
-				autoHideDuration={2000}
-				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-			>
-				<Alert
-					onClose={handleSnackbarClose}
-					severity="error"
-					variant="filled"
-					sx={{ width: '100%' }}
-				>
-					Error! {exception}
-				</Alert>
-			</Snackbar>
+				message={`Error! ${exception}`}
+				onClose={() => { setOpenSnackbar(false); }}
+				type="error"
+			/>
 		</>
 	);
 }

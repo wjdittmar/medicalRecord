@@ -1,15 +1,22 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
+
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
+import Autocomplete from '@mui/joy/Autocomplete';
+import Stack from '@mui/joy/Stack';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Textarea from '@mui/joy/Textarea';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Button from '@mui/joy/Button';
+import DialogTitle from '@mui/joy/DialogTitle';
+
+import SnackbarAlert from '../common/SnackbarAlert';
 import patientService from '../../services/Patients';
 import visitService from '../../services/Visits';
-import { Snackbar, Alert } from '@mui/material';
-
-// TODO need to pass down visits state to this component so that 
-// when we create a new visit the visits page knows to re-render the list of visits
 
 export default function CreateVisit({ onClose }) {
 	const [formData, setFormData] = useState({
@@ -38,13 +45,6 @@ export default function CreateVisit({ onClose }) {
 		});
 	}, []);
 
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setOpenSnackbar(false);
-	};
-
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
@@ -56,200 +56,127 @@ export default function CreateVisit({ onClose }) {
 		}
 	};
 
+	const handleInputChange = (event, field) => {
+		const newAddress = { ...formData.address, [field]: event.target.value };
+		setFormData({ ...formData, address: newAddress });
+	};
+
+	const handleSelectChange = (event, targetVal, field) => {
+		const newAddress = { ...formData.address, [field]: targetVal };
+		setFormData({ ...formData, address: newAddress });
+	};
+
 	return (
 		<>
 			<form className="createModal" onSubmit={handleSubmit}>
-				<h3>New Visit</h3>
+				<DialogTitle>New Visit</DialogTitle>
 				<hr />
-				<div className="inputWrapperContainer">
-					<label title="Name" className="required">Patient Name</label>
-					<Autocomplete
-						options={patients}
-						renderInput={(params) => <TextField {...params} label="Patient" />}
-						sx={{ flex: 1, border: 'none' }}
-						value={formData.whichPatient}
-						onChange={(event, newPatient) => setFormData({ ...formData, patient: newPatient.id })}
-						isOptionEqualToValue={(option, value) => option.value === value.value}
-					/>
-				</div>
-				<div className="inputWrapperContainer">
-					<label className="required" htmlFor="street-address">Street address</label>
-					<span className="inputWrapper">
-						<input
-							type="text"
-							id="street-address"
-							name="street-address"
-							autoComplete="street-address"
-							required
-							enterKeyHint="next"
-							value={formData.address.line}  // Access the address1 property
-							onChange={(event) => setFormData({
-								...formData,
-								address: {  // Spread the existing address object
-									...formData.address,  // Preserve other address properties
-									line: event.target.value  // Update the address1 property
-								}
-							})}
+				<Stack spacing={2}>
+					<FormControl>
+						<FormLabel required={true}>Patient Name</FormLabel>
+						<Autocomplete
+							options={patients}
+							onChange={(event, newPatient) => setFormData({ ...formData, patient: newPatient ? newPatient.id : '' })}
+							isOptionEqualToValue={(option, value) => option.id === value.id}
 						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="city" className="required">City</label>
-					<span className="inputWrapper">
-						<input
-							type="text"
-							id="city"
-							name="city"
-							autoComplete="address-level2"
-							required
-							enterKeyHint="next"
-							value={formData.city}
-							onChange={(event) => setFormData({
-								...formData,
-								address: {  // Spread the existing address object
-									...formData.address,  // Preserve other address properties
-									city: event.target.value  // Update the address1 property
-								}
-							})}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="state" className="required">State</label>
-					<span className="inputWrapper">
-						<select
-							id="state"
-							name="state"
-							defaultValue="CA"
-							onChange={(event) => setFormData({
-								...formData,
-								address: {  // Spread the existing address object
-									...formData.address,  // Preserve other address properties
-									state: event.target.value  // Update the address1 property
-								}
-							})}
-
-						>
-							<option value="AL">Alabama</option>
-							<option value="AK">Alaska</option>
-							<option value="AZ">Arizona</option>
-							<option value="AR">Arkansas</option>
-							<option value="CA">California</option>
-							<option value="CO">Colorado</option>
-							<option value="CT">Connecticut</option>
-							<option value="DE">Delaware</option>
-							<option value="DC">District of Columbia</option>
-							<option value="FL">Florida</option>
-							<option value="GA">Georgia</option>
-							<option value="HI">Hawaii</option>
-							<option value="ID">Idaho</option>
-							<option value="IL">Illinois</option>
-							<option value="IN">Indiana</option>
-							<option value="IA">Iowa</option>
-							<option value="KS">Kansas</option>
-							<option value="KY">Kentucky</option>
-							<option value="LA">Louisiana</option>
-							<option value="ME">Maine</option>
-							<option value="MD">Maryland</option>
-							<option value="MA">Massachusetts</option>
-							<option value="MI">Michigan</option>
-							<option value="MN">Minnesota</option>
-							<option value="MS">Mississippi</option>
-							<option value="MO">Missouri</option>
-							<option value="MT">Montana</option>
-							<option value="NE">Nebraska</option>
-							<option value="NV">Nevada</option>
-							<option value="NH">New Hampshire</option>
-							<option value="NJ">New Jersey</option>
-							<option value="NM">New Mexico</option>
-							<option value="NY" >New York</option>
-							<option value="NC">North Carolina</option>
-							<option value="ND">North Dakota</option>
-							<option value="OH">Ohio</option>
-							<option value="OK">Oklahoma</option>
-							<option value="OR">Oregon</option>
-							<option value="PA">Pennsylvania</option>
-							<option value="RI">Rhode Island</option>
-							<option value="SC">South Carolina</option>
-							<option value="SD">South Dakota</option>
-							<option value="TN">Tennessee</option>
-							<option value="TX">Texas</option>
-							<option value="UT">Utah</option>
-							<option value="VT">Vermont</option>
-							<option value="VA">Virginia</option>
-							<option value="WA">Washington</option>
-							<option value="WV">West Virginia</option>
-							<option value="WI">Wisconsin</option>
-							<option value="WY">Wyoming</option>
-							<option value="AS">American Samoa</option>
-							<option value="GU">Guam</option>
-							<option value="MP">Northern Mariana Islands</option>
-							<option value="PR">Puerto Rico</option>
-							<option value="UM">United States Minor Outlying Islands</option>
-							<option value="VI">Virgin Islands</option>
-							<option value="NA">Not a US City</option>
-						</select>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="postal-code" className="required">ZIP Code</label>
-					<span className="inputWrapper">
-						<input
-							type="text"
-							id="postal-code"
-							name="postal-code"
-							autoComplete="postal-code"
-							enterKeyHint="next"
-							value={formData.postalCode}
-							onChange={(event) => setFormData({
-								...formData,
-								address: {  // Spread the existing address object
-									...formData.address,  // Preserve other address properties
-									postalCode: event.target.value  // Update the address1 property
-								}
-							})}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label className="required">Date of Visit</label>
-					<LocalizationProvider dateAdapter={AdapterDayjs}>
-						<DatePicker
-							value={formData.encounterDate}
-							onChange={(newValue) => setFormData({ ...formData, encounterDate: newValue })}
-							sx={{ border: 'none' }}
-						/>
-					</LocalizationProvider>
-				</div>
-				<div className="inputWrapperContainer">
-					<label htmlFor="visitNotes">Visit Notes</label>
-					<span className="inputWrapper">
-						<textarea
-							id="visitNotes"
-							name="visitNotes"
-							value={formData.providerNotes}
-							onChange={(event) => setFormData({ ...formData, providerNotes: event.target.value })}
-						/>
-					</span>
-				</div>
-				<button type="submit">Submit</button>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Street Address</FormLabel>
+						<Input required value={formData.address.line} onChange={(event) => handleInputChange(event, 'line')} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>City</FormLabel>
+						<Input required value={formData.address.city} onChange={(event) => handleInputChange(event, 'city')} />
+					</FormControl>
+					<FormControl >
+						<FormLabel required={true}>State</FormLabel>
+						<Select onChange={(event, targetVal) => handleSelectChange(event, targetVal, 'state')} required >
+							<Option value="AL">Alabama</Option>
+							<Option value="AK">Alaska</Option>
+							<Option value="AZ">Arizona</Option>
+							<Option value="AR">Arkansas</Option>
+							<Option value="CA">California</Option>
+							<Option value="CO">Colorado</Option>
+							<Option value="CT">Connecticut</Option>
+							<Option value="DE">Delaware</Option>
+							<Option value="DC">District of Columbia</Option>
+							<Option value="FL">Florida</Option>
+							<Option value="GA">Georgia</Option>
+							<Option value="HI">Hawaii</Option>
+							<Option value="ID">Idaho</Option>
+							<Option value="IL">Illinois</Option>
+							<Option value="IN">Indiana</Option>
+							<Option value="IA">Iowa</Option>
+							<Option value="KS">Kansas</Option>
+							<Option value="KY">Kentucky</Option>
+							<Option value="LA">Louisiana</Option>
+							<Option value="ME">Maine</Option>
+							<Option value="MD">Maryland</Option>
+							<Option value="MA">Massachusetts</Option>
+							<Option value="MI">Michigan</Option>
+							<Option value="MN">Minnesota</Option>
+							<Option value="MS">Mississippi</Option>
+							<Option value="MO">Missouri</Option>
+							<Option value="MT">Montana</Option>
+							<Option value="NE">Nebraska</Option>
+							<Option value="NV">Nevada</Option>
+							<Option value="NH">New Hampshire</Option>
+							<Option value="NJ">New Jersey</Option>
+							<Option value="NM">New Mexico</Option>
+							<Option value="NY" >New York</Option>
+							<Option value="NC">North Carolina</Option>
+							<Option value="ND">North Dakota</Option>
+							<Option value="OH">Ohio</Option>
+							<Option value="OK">Oklahoma</Option>
+							<Option value="OR">Oregon</Option>
+							<Option value="PA">Pennsylvania</Option>
+							<Option value="RI">Rhode Island</Option>
+							<Option value="SC">South Carolina</Option>
+							<Option value="SD">South Dakota</Option>
+							<Option value="TN">Tennessee</Option>
+							<Option value="TX">Texas</Option>
+							<Option value="UT">Utah</Option>
+							<Option value="VT">Vermont</Option>
+							<Option value="VA">Virginia</Option>
+							<Option value="WA">Washington</Option>
+							<Option value="WV">West Virginia</Option>
+							<Option value="WI">Wisconsin</Option>
+							<Option value="WY">Wyoming</Option>
+							<Option value="AS">American Samoa</Option>
+							<Option value="GU">Guam</Option>
+							<Option value="MP">Northern Mariana Islands</Option>
+							<Option value="PR">Puerto Rico</Option>
+							<Option value="UM">United States Minor Outlying Islands</Option>
+							<Option value="VI">Virgin Islands</Option>
+							<Option value="NA">Not a US City</Option>
+						</Select>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>ZIP Code</FormLabel>
+						<Input required value={formData.address.postalCode} onChange={(event) => handleInputChange(event, 'postalCode')} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Date of Visit</FormLabel>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DatePicker
+								value={formData.encounterDate}
+								onChange={(newValue) => setFormData({ ...formData, encounterDate: newValue })}
+							/>
+						</LocalizationProvider>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Visit Notes</FormLabel>
+						<Textarea value={formData.providerNotes} onChange={(event) => setFormData({ ...formData, providerNotes: event.target.value })} />
+					</FormControl>
+					<Button type="submit">Submit</Button>
+				</Stack>
 			</form>
-			{/* Snackbar for displaying error */}
-			<Snackbar
+			<SnackbarAlert
 				open={openSnackbar}
-				autoHideDuration={2000}
-				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-			>
-				<Alert
-					onClose={handleSnackbarClose}
-					severity="error"
-					variant="filled"
-					sx={{ width: '100%' }}
-				>
-					Error! {exception}
-				</Alert>
-			</Snackbar>
+				message={`Error! ${exception}`}
+				onClose={() => { setOpenSnackbar(false); }}
+				type="error"
+			/>
 		</>
 	);
 }

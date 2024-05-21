@@ -267,10 +267,6 @@ form {
   overflow-y: hidden;
 }
 
-form.createModal {
-  padding: 35px 50px;
-}
-
 .formContainer {
   min-width: 50%;
 }
@@ -296,6 +292,7 @@ input {
   background: transparent;
   flex: 1;
 }
+
 select {
   border: none;
   flex: 1;
@@ -321,6 +318,10 @@ label.required::before {
   font-family: SimSun, sans-serif;
   line-height: 1;
   content: "*";
+}
+
+.largeDialog .MuiDialog-paper {
+  width: 80%;
 }
 
 /* end form elements */
