@@ -1,48 +1,20 @@
 import { useState } from 'react';
+
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import { Button, Dialog, Menu, MenuItem, Snackbar } from '@mui/material';
+import Dropdown from '@mui/joy/Dropdown';
+import Menu from '@mui/joy/Menu';
+import MenuButton from '@mui/joy/MenuButton';
+import MenuItem from '@mui/joy/MenuItem';
+
+import SnackbarAlert from '../common/SnackbarAlert';
 import Logout from "../Logout";
-import CreatePatient from '../Patients/CreatePatient';
-import CreateProvider from '../Providers/CreateProvider';
-import CreateVisit from '../Visits/CreateVisit';
-import CreateMessage from '../Messages/CreateMessage';
-
-import Alert from '@mui/material/Alert';
-
-// Component for creating patient, provider, or visit entry dialog
-function CreateEntryDialog({ onClose, component, open }) {
-	let content;
-
-	switch (component) {
-		case 'Patient':
-			content = <CreatePatient onClose={onClose} />;
-			break;
-		case 'Provider':
-			content = <CreateProvider onClose={onClose} />;
-			break;
-		case 'Visit':
-			content = <CreateVisit onClose={onClose} />;
-			break;
-		case 'Message':
-			content = <CreateMessage onClose={onClose} />;
-			break;
-		default:
-			content = null;
-	}
-
-	return (
-		<Dialog onClose={onClose} open={open} fullWidth maxWidth="sm">
-			{content}
-		</Dialog>
-	);
-}
+import CreateEntryDialog from './CreateEntryDialog';
 
 // Main header component
 export default function Header() {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [whichComponent, setWhichComponent] = useState(null);
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-	const [anchorEl, setAnchorEl] = useState(null);
 
 	const handleDialogOpen = (component) => {
 		setWhichComponent(component);
@@ -50,77 +22,59 @@ export default function Header() {
 	};
 
 	const handleDialogClose = (event, reason) => {
+
 		setDialogOpen(false);
-		setAnchorEl(null);
 		if (reason !== 'backdropClick' && reason !== 'escapeKeyDown') {
 			setOpenSnackbar(true);
 		}
 	};
 
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setOpenSnackbar(false);
-	};
-
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-
-	const openMenu = Boolean(anchorEl);
-
 	return (
 		<>
 			<header>
-				<Button
-					variant="contained"
-					endIcon={<AddCircleIcon />}
-					onClick={handleClick}
-				>
-					Create
-				</Button>
-				<Menu
-					id="create-menu"
-					anchorEl={anchorEl}
-					open={openMenu}
-					onClose={handleDialogClose}
-				>
-					<MenuItem onClick={() => handleDialogOpen("Patient")} disableRipple>
-						Patient
-					</MenuItem>
-					<MenuItem onClick={() => handleDialogOpen("Provider")} disableRipple>
-						Provider
-					</MenuItem>
-					<MenuItem onClick={() => handleDialogOpen("Visit")} disableRipple>
-						Visit
-					</MenuItem>
-					<MenuItem onClick={() => handleDialogOpen("Message")} disableRipple>
-						Message
-					</MenuItem>
-				</Menu>
+				<Dropdown>
+					<MenuButton
+						endDecorator={<AddCircleIcon />}
+						color="primary"
+						variant="soft"
+					>
+						Create
+					</MenuButton>
+					<Menu
+						id="create-menu"
+						onClose={() => handleDialogClose}
+					>
+						<MenuItem onClick={() => handleDialogOpen("Patient")}>
+							Patient
+						</MenuItem>
+						<MenuItem onClick={() => handleDialogOpen("Provider")} >
+							Provider
+						</MenuItem>
+						<MenuItem onClick={() => handleDialogOpen("Visit")} >
+							Visit
+						</MenuItem>
+						<MenuItem onClick={() => handleDialogOpen("Message")} >
+							Message
+						</MenuItem>
+					</Menu>
+				</Dropdown>
 				<CreateEntryDialog
 					open={dialogOpen}
 					onClose={handleDialogClose}
 					component={whichComponent}
+					styleLarge={whichComponent === "Message" ? { width: "50%" } : {}}
+
 				/>
 				<Logout />
 			</header>
-			<Snackbar
+
+			<SnackbarAlert
 				open={openSnackbar}
-				autoHideDuration={2000}
-				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-			>
-				<Alert
-					onClose={handleDialogClose}
-					severity="success"
-					variant="filled"
-					sx={{ width: '100%' }}
-				>
-					Successfully created {whichComponent}!
-				</Alert>
-			</Snackbar>
+				message={`Successfully created ${whichComponent}!`}
+				onClose={() => { setOpenSnackbar(false); }}
+				type="success"
+			/>
+
 		</>
 	);
 }
