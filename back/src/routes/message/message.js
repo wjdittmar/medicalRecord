@@ -29,6 +29,7 @@ messageRouter.post("/", verifyToken, async (request, response) => {
 	}
 });
 messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
+
 	const ITEMS_PER_PAGE = 10;
 	try {
 		const recipient = request.query.recipient;

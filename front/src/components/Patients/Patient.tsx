@@ -30,7 +30,7 @@ const Patient = ({ patient }) => {
 	return (
 
 		<tr key={patient._id}>
-			<td>{user.name}</td><td>{user.email}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
+			<td>{user.name}</td><td>{patient.ssn}</td><td>{`${formatter.format(new Date(patient.dob))}`}</td><td>{patient.address.postalCode}</td><td><a onClick={toggleDrawer(true)}> <VisibilityIcon color="primary" /></a></td>
 			<Drawer open={open} anchor="right" onClose={toggleDrawer(false)}>
 				<List sx={{ maxWidth: 480 }}>
 					<ListItem>

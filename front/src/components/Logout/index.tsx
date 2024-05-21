@@ -1,24 +1,18 @@
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import Tooltip from '@mui/material/Tooltip';
-import IconButton from '@mui/material/IconButton';
-import Avatar from '@mui/material/Avatar';
-import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import Menu from '@mui/material/Menu';
+import { useNavigate } from 'react-router-dom';
+
+import Dropdown from '@mui/joy/Dropdown';
+import Menu from '@mui/joy/Menu';
+import MenuItem from '@mui/joy/MenuItem';
+import MenuButton from '@mui/joy/MenuButton';
+import Avatar from '@mui/joy/Avatar';
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
-import MenuItem from '@mui/material/MenuItem';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+
 import storageService from '../../services/Storage';
-import authService from "../../services/Auth";
+import authService from '../../services/Auth';
 
 const Logout = () => {
-	const [anchorEl, setAnchorEl] = useState(null);
-	const open = Boolean(anchorEl);
-	const handleClick = (event) => {
-		setAnchorEl(event.currentTarget);
-	};
-	const handleClose = () => {
-		setAnchorEl(null);
-	};
 
 	useEffect(() => {
 		setName(storageService.me());
@@ -32,39 +26,22 @@ const Logout = () => {
 	};
 	const [name, setName] = useState('');
 
-
 	return (
 		<div className="logout">
-			<Tooltip title="Account settings">
-				<IconButton
-					onClick={handleClick}
-					size="small"
-					aria-controls={open ? 'account-menu' : undefined}
-					aria-haspopup="true"
-					aria-expanded={open ? 'true' : undefined}
-				>
-					<Avatar sx={{ width: 32, height: 32 }}>{name && name.split(' ')[0][0]}{name && name.split(' ')[1] && name.split(' ')[1][0]}</Avatar>
-
+			<Dropdown>
+				<MenuButton>
+					<Avatar>{name && name.split(' ')[0][0]}{name && name.split(' ')[1] && name.split(' ')[1][0]}</Avatar>
 					<KeyboardArrowDownIcon />
-				</IconButton>
-
-			</Tooltip>
-			<Menu
-				id="demo-customized-menu"
-				MenuListProps={{
-					'aria-labelledby': 'demo-customized-button',
-				}}
-				anchorEl={anchorEl}
-				open={open}
-				onClose={handleClose}
-			>
-				<MenuItem onClick={handleLogout} disableRipple>
-					<ArrowRightAltIcon />
-					Log out
-				</MenuItem>
-			</Menu>
+				</MenuButton>
+				<Menu>
+					<MenuItem onClick={handleLogout}>
+						<ArrowRightAltIcon />
+						Log out
+					</MenuItem>
+				</Menu>
+			</Dropdown>
 		</div>
-
 	);
 };
+
 export default Logout;

@@ -1,9 +1,19 @@
 import { useState } from 'react';
 import dayjs from 'dayjs';
+
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import Stack from '@mui/joy/Stack';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
+import Button from '@mui/joy/Button';
+import DialogTitle from '@mui/joy/DialogTitle';
+
 import patientService from "../../services/Patients";
-import { Snackbar, Alert } from '@mui/material';
+import SnackbarAlert from '../common/SnackbarAlert';
 
 // TODO : add a text input field that will autocomplete that will search through all of the
 // ICD10 diagnoses and send an array of ICD10 codes to the server
@@ -25,13 +35,6 @@ export default function CreatePatient({ onClose }) {
 	});
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-
-	const handleSnackbarClose = (event, reason) => {
-		if (reason === 'clickaway') {
-			return;
-		}
-		setOpenSnackbar(false);
-	};
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -56,137 +59,69 @@ export default function CreatePatient({ onClose }) {
 	return (
 		<>
 			<form className="createModal" onSubmit={handleSubmit}>
-				<h3>New Patient</h3>
+				<DialogTitle>New Patient</DialogTitle>
 				<hr />
-				{/* Input fields */}
-				<div className="inputWrapperContainer">
-					<label title="Name" className="required">Name</label>
-					<span className="inputWrapper">
-						<input
-							label="name"
-							name="name"
-							required
-							placeholder="name"
-							type="text"
-							autoComplete="name"
-							value={formData.name}
-							onChange={handleChange}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Email" className="required">Email</label>
-					<span className="inputWrapper">
-						<input
-							label="email"
-							name="email"
-							required
-							placeholder="email"
-							type="email"
-							autoComplete="email"
-							value={formData.email}
-							onChange={handleChange}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="ssn" className="required">SSN</label>
-					<span className="inputWrapper">
-						<input
-							name="ssn"
-							required
-							placeholder="ssn"
-							type="ssn"
-							value={formData.ssn}
-							onChange={handleChange}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Password" className="required">Password</label>
-					<span className="inputWrapper">
-						<input
-							name="password"
-							required
-							type="password"
-							value={formData.password}
-							onChange={(event) => setFormData({ ...formData, password: event.target.value })}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Phone" className="required">Phone number</label>
-					<span className="inputWrapper">
-						<input
-							label="phone"
-							name="phone"
-							required
-							placeholder="phone"
-							type="tel"
-							autoComplete="tel"
-							value={formData.phone}
-							onChange={handleChange}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Language" className="required">Preferred language</label>
-					<span className="inputWrapper">
-						<select
-							label="language"
-							name="preferredLanguage"
-							required
-							value={formData.preferredLanguage}
-							onChange={handleChange}
-						>
-							<option value="en">English</option>
-							<option value="es">Español</option>
-							<option value="fr">Français</option>
-						</select>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Sex" className="required">Sex</label>
-					<span className="inputWrapper">
-						<select
-							label="sex"
+
+				<Stack spacing={2}>
+					<FormControl>
+						<FormLabel required={true}>Name</FormLabel>
+						<Input autoFocus required onChange={handleChange} value={formData.name} autoComplete="name" name="name" />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Email</FormLabel>
+						<Input required type="email" autoComplete="email" value={formData.email} onChange={handleChange} name="email" />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>SSN</FormLabel>
+						<Input required value={formData.ssn} onChange={handleChange} name="ssn" />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Password</FormLabel>
+						<Input type="password" name="password" required value={formData.password} autoComplete="new-password" onChange={handleChange} />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Phone</FormLabel>
+						<Input type="tel" required autoComplete="tel" value={formData.phone} onChange={handleChange} name="phone" />
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Preferred Language</FormLabel>
+						<Select
+							name="preferredLanguage" required value={formData.preferredLanguage} onChange={handleChange} >
+							<Option value="en">English</Option>
+							<Option value="es">Español</Option>
+							<Option value="fr">Français</Option>
+						</Select>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Sex</FormLabel>
+						<Select
 							name="sex"
 							required
 							value={formData.sex}
 							onChange={handleChange}
 						>
-							<option value="male">Male</option>
-							<option value="female">Female</option>
-						</select>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Date of Birth" className="required">Date of Birth</label>
-					<LocalizationProvider dateAdapter={AdapterDayjs}>
-						<DatePicker
-							value={formData.dob}
-							onChange={(newValue) => setFormData({ ...formData, dob: newValue })}
-						/>
-					</LocalizationProvider>
-				</div>
-				<button type="submit">Submit</button>
+							<Option value="male">Male</Option>
+							<Option value="female">Female</Option>
+						</Select>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Date of Birth</FormLabel>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<DatePicker
+								value={formData.dob}
+								onChange={(newValue) => setFormData({ ...formData, dob: newValue })}
+							/>
+						</LocalizationProvider>
+					</FormControl>
+					<Button type="submit">Submit</Button>
+				</Stack>
 			</form>
-			{/* Snackbar for displaying error */}
-			<Snackbar
+			<SnackbarAlert
 				open={openSnackbar}
-				autoHideDuration={2000}
-				onClose={handleSnackbarClose}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-			>
-				<Alert
-					onClose={handleSnackbarClose}
-					severity="error"
-					variant="filled"
-					sx={{ width: '100%' }}
-				>
-					Error! {exception}
-				</Alert>
-			</Snackbar>
+				message={`Error! ${exception}`}
+				onClose={() => { setOpenSnackbar(false); }}
+				type="error"
+			/>
 		</>
 	);
 }
