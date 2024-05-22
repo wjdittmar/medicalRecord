@@ -10,7 +10,14 @@ const schema = Joi.object({
 	sex: Joi.string().required(),
 	ssn: Joi.string().required(),
 	password: Joi.string().required(),
-	email: Joi.string().email().required()
+	email: Joi.string().email().required(),
+	address: Joi.object({
+		line: Joi.string().required(),
+		city: Joi.string().required(),
+		state: Joi.string().required(),
+		postalCode: Joi.number().required(),
+		country: Joi.string()
+	}).required(),
 });
 
 module.exports = schema;
