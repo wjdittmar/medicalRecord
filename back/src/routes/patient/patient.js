@@ -4,6 +4,7 @@ const User = require("../../models/user");
 const schema = require("./patientSchema");
 const { verifyToken } = require("../../utils/middleware");
 const { createUser } = require("../users");
+const { getDayRange } = require("../../utils/date");
 
 // Endpoint to get the total number of patients
 patientRouter.get("/total", verifyToken, async (request, response) => {
@@ -43,17 +44,18 @@ patientRouter.get("/", verifyToken, async (request, response) => {
 
 // Endpoint to find patients by demographic data
 patientRouter.get('/search', async (req, res) => {
-	const { name, ssn, dob, zip } = req.query;
+	const { name, ssn, dob, postalCode } = req.query;
 	const query = {};
 
 	if (ssn) {
 		query.ssn = ssn;
 	}
 	if (dob) {
-		query.dob = dob;
+		const { startOfDay, endOfDay } = getDayRange(dob);
+		query.dob = { $gte: startOfDay, $lte: endOfDay };
 	}
-	if (zip) {
-		query['address.postalCode'] = zip;
+	if (postalCode) {
+		query['address.postalCode'] = postalCode;
 	}
 
 	try {
@@ -86,7 +88,7 @@ patientRouter.get('/search', async (req, res) => {
 patientRouter.post("/", verifyToken, async (request, response) => {
 	try {
 		const body = request.body;
-		const { name, phone, email, password } = request.body;
+		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;
 		const { error, value } = schema.validate(body);
 		if (error) {
@@ -107,7 +109,8 @@ patientRouter.post("/", verifyToken, async (request, response) => {
 			preferredLanguage,
 			dob,
 			sex,
-			ssn
+			ssn,
+			address
 		});
 
 		const savedPatient = await patient.save();

@@ -44,7 +44,7 @@ const create = async (newObject) => {
 			console.log(error.response.data);
 			console.log(error.response.status);
 			console.log(error.response.headers);
-			throw new Error(error.response.data.message); // Throw an error with the response data
+			throw new Error(error.response.data.error); // Throw an error with the response data
 		} else if (error.request) {
 			console.log(error.request);
 			throw new Error('No response received from the server');
