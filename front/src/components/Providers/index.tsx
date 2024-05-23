@@ -3,23 +3,26 @@ import Provider from './Provider';
 import Pagination from '../Pagination';
 import providerService from "../../services/Providers";
 import Table from '@mui/joy/Table';
+
 const Providers = () => {
 	const [providers, setProviders] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
 	const resultsPerPage = 7;
 
 	useEffect(() => {
-		providerService.getAll().then(providers => setProviders(providers));
+		fetchProviders();
 	}, []);
 
-	// Recalculate pagination-related variables when providers change
+	const fetchProviders = async () => {
+		const providers = await providerService.getAll();
+		setProviders(providers);
+	};
+
 	const totalPages = Math.ceil(providers.length / resultsPerPage);
 	const startIndex = (currentPage - 1) * resultsPerPage;
 	const endIndex = startIndex + resultsPerPage;
 	const currentProviders = providers.slice(startIndex, endIndex);
 
-	// TODO: implement serverside rendering with incremental static regeneration 
-	// so that these values are initially cached and only updated when there is a change to the database
 	return (
 		<>
 			<Table borderAxis="bothBetween"
@@ -43,7 +46,7 @@ const Providers = () => {
 				</thead>
 				<tbody>
 					{currentProviders.map((provider) => (
-						<Provider key={provider._id} provider={provider} />
+						<Provider key={provider._id} provider={provider} onUpdate={fetchProviders} />
 					))}
 				</tbody>
 			</Table>

@@ -1,6 +1,7 @@
 const providerRouter = require("express").Router();
 
 const Provider = require("../../models/provider");
+const User = require("../../models/user");
 const schema = require("./providerSchema");
 const { verifyToken } = require("../../utils/middleware");
 const { createUser } = require("../users");
@@ -64,5 +65,44 @@ providerRouter.post("/", verifyToken, async (request, response) => {
 	}
 
 });
+
+providerRouter.put("/:id", verifyToken, async (request, response) => {
+	const id = request.params.id;
+	const body = request.body;
+
+	try {
+		// Find the provider by id
+		const provider = await Provider.findById(id);
+		if (!provider) {
+			return response.status(404).json({ error: "Provider not found" });
+		}
+
+		// Update the user associated with the provider
+		const updatedUser = await User.findByIdAndUpdate(
+			provider.user,
+			{
+				name: body.user.name,
+				email: body.user.email,
+				phone: body.user.phone,
+			},
+			{ new: true }
+		);
+
+		if (!updatedUser) {
+			return response.status(404).json({ error: "User not found" });
+		}
+
+		// Update the provider's license
+		provider.license = body.license;
+
+		const updatedProvider = await provider.save();
+
+		response.status(200).json(updatedProvider);
+	} catch (error) {
+		console.log(error);
+		response.status(500).json({ error: "Internal server error" });
+	}
+});
+
 
 module.exports = providerRouter;

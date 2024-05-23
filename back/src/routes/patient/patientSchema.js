@@ -1,22 +1,23 @@
 const Joi = require("joi");
 
-// TODO: could maybe do additional validation
-
 const schema = Joi.object({
-	name: Joi.string().required(),
-	phone: Joi.string().required(),
-	preferredLanguage: Joi.string().required(),
+	user: Joi.object({
+		_id: Joi.string().hex().length(24), // the reference to the user object
+		name: Joi.string().required(),
+		phone: Joi.string().required(),
+		email: Joi.string().email().required(),
+	}).required(),
+	preferredLanguage: Joi.string().trim().required(),
+	preExistingConditions: Joi.array().items(Joi.string().hex().length(24)),
 	dob: Joi.date().required(),
 	sex: Joi.string().required(),
 	ssn: Joi.string().required(),
-	password: Joi.string().required(),
-	email: Joi.string().email().required(),
 	address: Joi.object({
 		line: Joi.string().required(),
 		city: Joi.string().required(),
 		state: Joi.string().required(),
-		postalCode: Joi.number().required(),
-		country: Joi.string()
+		postalCode: Joi.string().required(),
+		country: Joi.string().required(),
 	}).required(),
 });
 

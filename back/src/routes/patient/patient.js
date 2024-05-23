@@ -120,4 +120,52 @@ patientRouter.post("/", verifyToken, async (request, response) => {
 	}
 });
 
+patientRouter.put("/:id", verifyToken, async (request, response) => {
+	const id = request.params.id;
+	const body = request.body;
+
+	try {
+		// TODO: fix validation
+		//const { error, value } = schema.validate(body);
+		// if (error) {
+		// 	return response.status(400).json({ error: error.details[0].message });
+		// }
+
+		// Find the patient by id
+		const patient = await Patient.findById(id).populate('preExistingConditions');
+		if (!patient) {
+			return response.status(404).json({ error: "Patient not found" });
+		}
+
+		// Update the user associated with the patient
+		const updatedUser = await User.findByIdAndUpdate(
+			patient.user,
+			{
+				name: body.user.name,
+				email: body.user.email,
+				phone: body.user.phone,
+			},
+			{ new: true }
+		);
+
+		if (!updatedUser) {
+			return response.status(404).json({ error: "User not found" });
+		}
+
+		// Update other patient fields
+		patient.dob = body.dob;
+		patient.ssn = body.ssn;
+		patient.sex = body.sex;
+		patient.preferredLanguage = body.preferredLanguage;
+		patient.address = body.address; // Update address
+
+		const updatedPatient = await patient.save();
+
+		response.status(200).json(updatedPatient);
+	} catch (error) {
+		console.log(error);
+		response.status(500).json({ error: "Internal server error" });
+	}
+});
+
 module.exports = patientRouter;

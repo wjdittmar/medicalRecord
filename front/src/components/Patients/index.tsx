@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import dayjs from 'dayjs';
@@ -16,7 +16,6 @@ import Table from '@mui/joy/Table';
 import Patient from './Patient';
 import Pagination from '../Pagination';
 import patientService from "../../services/Patients";
-
 
 const Patients = () => {
 	const [patients, setPatients] = useState([]);
@@ -43,6 +42,11 @@ const Patients = () => {
 		});
 	};
 
+	const fetchPatients = async () => {
+		const fetchedPatients = await patientService.getAll();
+		setPatients(fetchedPatients);
+	};
+
 	// Recalculate pagination-related variables when patients or currentPage change
 	const totalPages = Math.ceil(patients.length / resultsPerPage);
 	const startIndex = (currentPage - 1) * resultsPerPage;
@@ -51,8 +55,6 @@ const Patients = () => {
 
 	return (
 		<>
-
-
 			<Card variant="outlined" sx={{ mb: 4, p: 2 }}>
 				<CardContent>
 					<Typography level="h2" sx={{ mb: 2 }}>Search for a patient</Typography>
@@ -112,7 +114,7 @@ const Patients = () => {
 							</thead>
 							<tbody>
 								{currentPatients.map((patient) => (
-									<Patient key={patient._id} patient={patient} />
+									<Patient key={patient._id} patient={patient} onUpdate={handleSearch} />
 								))}
 							</tbody>
 						</Table>
