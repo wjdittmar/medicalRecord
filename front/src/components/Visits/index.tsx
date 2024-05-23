@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Visit from './Visit';
 import Pagination from '../Pagination';
 import visitService from "../../services/Visits";
-
+import Table from '@mui/joy/Table';
 const Visits = () => {
 	const [visits, setVisits] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -20,23 +20,31 @@ const Visits = () => {
 
 	return (
 		<>
-			<div className="tableContainer">
-				<table>
-					<thead>
-						<tr>
-							<th>Address</th>
-							<th>Date</th>
-							<th>Visit Notes</th>
-							<th></th>
-						</tr>
-					</thead>
-					<tbody>
-						{currentVisits.map((visit) => (
-							<Visit key={visit._id} visit={visit} />
-						))}
-					</tbody>
-				</table>
-			</div>
+			<Table borderAxis="bothBetween"
+				color="neutral"
+				size="md"
+				stripe="odd"
+				variant="outlined">
+				<colgroup>
+					<col span={1} style={{ width: "20%" }} />
+					<col span={1} style={{ width: "15%" }} />
+					<col span={1} style={{ width: "55%" }} />
+					<col span={1} style={{ width: "10%" }} />
+				</colgroup>
+				<thead>
+					<tr>
+						<th>Address</th>
+						<th>Date</th>
+						<th>Visit Notes</th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					{currentVisits.map((visit) => (
+						<Visit key={visit._id} visit={visit} />
+					))}
+				</tbody>
+			</Table>
 			<Pagination totalPages={totalPages} handlePagination={(page) => setCurrentPage(page)} />
 		</>
 	);

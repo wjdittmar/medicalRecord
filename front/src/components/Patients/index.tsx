@@ -24,7 +24,7 @@ const Patients = () => {
 	const [searchParams, setSearchParams] = useState({
 		name: '',
 		ssn: '',
-		dob: dayjs('2022-04-17'),
+		dob: null,
 		postalCode: ''
 	});
 	const [searched, setSearched] = useState(false);
