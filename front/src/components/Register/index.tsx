@@ -1,12 +1,21 @@
 import { NavLink, useNavigate } from "react-router-dom";
 import userService from "../../services/Users";
 import { useState } from 'react';
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import CardActions from '@mui/joy/CardActions';
+import Typography from '@mui/joy/Typography';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
+import Link from '@mui/joy/Link';
+import Divider from '@mui/joy/Divider';
+
 const Register = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-
-
 
 	const navigate = useNavigate();
 
@@ -14,52 +23,69 @@ const Register = () => {
 		event.preventDefault();
 
 		try {
-			const user = await userService.register({
+			await userService.register({
 				email, name, password,
 			});
+			setName('');
 			setEmail('');
 			setPassword('');
 			navigate('/login');
-
 		} catch (exception) {
 			console.log(exception);
 		}
-
 	};
 
-	return (<>
+	return (
 		<div className="formContainer">
-			<form onSubmit={handleSubmit}>
-				<h2>Register</h2>
-				<hr />
-				<div className="inputWrapperContainer">
-					<label title="Name" className="required">Name</label>
-					<span className="inputWrapper">
-						<input label="name" name="name"
-							required placeholder="name"
-							type="name" autoComplete="name" onChange={({ target }) => setName(target.value)}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Email" className="required">Email</label>
-					<span className="inputWrapper">
-						<input label="email" name="email"
-							required placeholder="email"
-							type="email" autoComplete="email" onChange={({ target }) => setEmail(target.value)}
-						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Password" className="required">Password</label>
-					<div className='inputWrapper'>
-						<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
-					</div>
-				</div>
-				<button type="submit" value="Submit">Submit</button>
-			</form>
-			<p>Already a user? Click here to <NavLink to="/login/">login</NavLink></p>
+			<Card variant="outlined" sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 2 }}>
+				<Typography level="h2" sx={{ mb: 2 }}>Register</Typography>
+				<Divider />
+				<form onSubmit={handleSubmit}>
+					<CardContent>
+						<FormControl sx={{ mb: 2 }}>
+							<FormLabel>Name</FormLabel>
+							<Input
+								name="name"
+								type="text"
+								required
+								placeholder="name"
+								autoComplete="name"
+								onChange={({ target }) => setName(target.value)}
+							/>
+						</FormControl>
+						<FormControl sx={{ mb: 2 }}>
+							<FormLabel>Email</FormLabel>
+							<Input
+								name="email"
+								type="email"
+								required
+								placeholder="email"
+								autoComplete="email"
+								onChange={({ target }) => setEmail(target.value)}
+							/>
+						</FormControl>
+						<FormControl sx={{ mb: 2 }}>
+							<FormLabel>Password</FormLabel>
+							<Input
+								name="password"
+								type="password"
+								required
+								placeholder="password"
+								autoComplete="current-password"
+								onChange={({ target }) => setPassword(target.value)}
+							/>
+						</FormControl>
+					</CardContent>
+					<CardActions>
+						<Button type="submit" sx={{ width: '100%' }}>Submit</Button>
+					</CardActions>
+				</form>
+				<Typography level="body2" sx={{ mt: 2, textAlign: 'center' }}>
+					Already a user? Click here to <Link component={NavLink} to="/login/">login</Link>
+				</Typography>
+			</Card>
 		</div>
-	</>);
+	);
 };
+
 export default Register;

@@ -5,12 +5,21 @@ import { useState } from 'react';
 import Notification from '../Notification';
 import storageService from '../../services/Storage';
 import authService from "../../services/Auth";
+import Card from '@mui/joy/Card';
+import CardContent from '@mui/joy/CardContent';
+import CardActions from '@mui/joy/CardActions';
+import Typography from '@mui/joy/Typography';
+import FormControl from '@mui/joy/FormControl';
+import FormLabel from '@mui/joy/FormLabel';
+import Input from '@mui/joy/Input';
+import Button from '@mui/joy/Button';
+import Link from '@mui/joy/Link';
+import Divider from '@mui/joy/Divider';
 
 const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [notification, setNotification] = useState(null);
-
 
 	const notifyError = (message, type = 'failure') => {
 		setNotification({ message, type });
@@ -41,32 +50,48 @@ const Login = () => {
 
 	};
 
-	return (<>
-
-		<div className="formContainer">
+	return (
+		<Card variant="outlined" sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 2 }}>
+			<Typography level="h2" sx={{ mb: 2 }}>Welcome!</Typography>
+			<Typography level="body-sm">
+				Login to your account
+			</Typography>
+			<Divider />
+			<Notification notification={notification} />
 			<form onSubmit={handleSubmit}>
-				<h2>Login</h2>
-				<hr />
-				<Notification notification={notification} />
-				<div className="inputWrapperContainer">
-					<label title="Email" className="required">Email</label>
-					<span className="inputWrapper">
-						<input label="email" name="email"
-							required placeholder="email"
-							type="email" autoComplete="email" onChange={({ target }) => setEmail(target.value)}
+				<CardContent>
+					<FormControl sx={{ mb: 2 }}>
+						<FormLabel>Email</FormLabel>
+						<Input
+							name="email"
+							type="email"
+							required
+							placeholder="email"
+							autoComplete="email"
+							onChange={({ target }) => setEmail(target.value)}
 						/>
-					</span>
-				</div>
-				<div className="inputWrapperContainer">
-					<label title="Password" className="required">Password</label>
-					<div className='inputWrapper'>
-						<input label="password" name="password" type="password" autoComplete="current-password" required placeholder="password" onChange={({ target }) => setPassword(target.value)} />
-					</div>
-				</div>
-				<button type="submit" value="Submit">Submit</button>
+					</FormControl>
+					<FormControl sx={{ mb: 2 }}>
+						<FormLabel>Password</FormLabel>
+						<Input
+							name="password"
+							type="password"
+							required
+							placeholder="password"
+							autoComplete="current-password"
+							onChange={({ target }) => setPassword(target.value)}
+						/>
+					</FormControl>
+				</CardContent>
+				<CardActions>
+					<Button type="submit" sx={{ width: '100%' }}>Submit</Button>
+				</CardActions>
 			</form>
-			<p>Not a user already? Click here to <NavLink to="/register/">register</NavLink></p>
-		</div>
-	</>);
+			<Typography level="body2" sx={{ mt: 2, textAlign: 'center' }}>
+				Not a user already? Click here to <Link component={NavLink} to="/register/">register</Link>
+			</Typography>
+		</Card>
+	);
 };
+
 export default Login;
