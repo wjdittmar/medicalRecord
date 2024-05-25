@@ -1,4 +1,4 @@
-import { verify } from "jsonwebtoken";
+const { verify } = require("jsonwebtoken");
 
 const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
