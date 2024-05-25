@@ -29,7 +29,7 @@ const Logout = () => {
 		<div className="logout">
 			<Dropdown>
 				<MenuButton>
-					<Avatar>{name && name.split(' ')[0][0]}{name && name.split(' ')[1] && name.split(' ')[1][0]}</Avatar>
+					<Avatar>{name && name.split(' ')[0][0].toUpperCase()}{name && name.split(' ')[1] && name.split(' ')[1][0].toUpperCase()}</Avatar>
 					<KeyboardArrowDownIcon />
 				</MenuButton>
 				<Menu>
