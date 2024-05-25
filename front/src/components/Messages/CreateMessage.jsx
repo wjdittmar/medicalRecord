@@ -12,7 +12,7 @@ import DialogTitle from '@mui/joy/DialogTitle';
 import SnackbarAlert from '../common/SnackbarAlert';
 import userService from '../../services/Users';
 import messageService from "../../services/Messages";
-import storageService from '../../services/Storage';
+import authService from '../../services/Auth';
 
 export default function CreateMessage({ onClose }) {
 	const [formData, setFormData] = useState({
@@ -27,7 +27,7 @@ export default function CreateMessage({ onClose }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-		const currentUser = storageService.loadUser();
+		const currentUser = authService.getUser();
 
 		try {
 			const updatedFormData = {

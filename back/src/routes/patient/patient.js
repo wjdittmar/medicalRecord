@@ -45,7 +45,7 @@ patientRouter.get("/", verifyTokenAndRole(["admin", "provider"]), async (request
 });
 
 // Endpoint to find patients by demographic data
-patientRouter.get('/search', verifyToken, async (req, res) => {
+patientRouter.get("/search", verifyToken, async (req, res) => {
 	const { name, ssn, dob, postalCode } = req.query;
 	const query = {};
 
@@ -57,26 +57,26 @@ patientRouter.get('/search', verifyToken, async (req, res) => {
 		query.dob = { $gte: startOfDay, $lte: endOfDay };
 	}
 	if (postalCode) {
-		query['address.postalCode'] = postalCode;
+		query["address.postalCode"] = postalCode;
 	}
 
 	try {
 		let userQuery = {};
 
 		if (name) {
-			userQuery.name = new RegExp(name, 'i'); // Case-insensitive regex search for name
+			userQuery.name = new RegExp(name, "i"); // Case-insensitive regex search for name
 		}
 
 		// If name is provided, find matching users
 		if (name) {
-			const users = await User.find(userQuery, '_id').lean();
+			const users = await User.find(userQuery, "_id").lean();
 			const userIds = users.map(user => user._id);
 
 			// Add user IDs to the patient query
 			query.user = { $in: userIds };
 		}
 		const patients = await Patient.find(query)
-			.populate('user', 'email name phone').populate("preExistingConditions", { icdcode: 1, disease: 1 })
+			.populate("user", "email name phone").populate("preExistingConditions", { icdcode: 1, disease: 1 })
 			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
 
 		res.json(patients);
@@ -92,19 +92,25 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 		const body = request.body;
 		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;
-		const { error, value } = schema.validate(body);
-		if (error) {
-			return response.status(422).json({
-				success: false,
-				result: null,
-				message: error.details[0]?.message,
-			});
-		}
+
 
 		// when you create a new patient,
 		// you must also create a new user
 
-		const savedUser = await createUser({ name, email, phone, password });
+		const savedUser = await createUser({ name, email, phone, password, role: "patient" });
+
+
+		// TODO: fix validation
+		// const { error, value } = schema.validate({
+		// 	user: savedUser,
+		//  });
+		// if (error) {
+		// 	return response.status(422).json({
+		// 		success: false,
+		// 		result: null,
+		// 		message: error.details[0]?.message,
+		// 	});
+		// }
 
 		const patient = new Patient({
 			user: savedUser._id,
@@ -118,6 +124,7 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 		const savedPatient = await patient.save();
 		response.status(201).json(savedPatient);
 	} catch (error) {
+		console.log(error);
 		response.status(500).json({ error: error.message });
 	}
 });
@@ -134,7 +141,7 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 		// }
 
 		// Find the patient by id
-		const patient = await Patient.findById(id).populate('preExistingConditions');
+		const patient = await Patient.findById(id).populate("preExistingConditions");
 		if (!patient) {
 			return response.status(404).json({ error: "Patient not found" });
 		}

@@ -1,21 +1,41 @@
+import axios from 'axios';
+import { jwtDecode } from "jwt-decode";
+import cookieService from './Cookie';
 
-import Cookies from "js-cookie";
-let token = null;
+const baseUrl = '/api/login';
 
-const setToken = newToken => {
-	token = `Bearer ${newToken}`;
-	Cookies.set('authorizationToken', token, { expires: 7, secure: true });
+const login = async (credentials) => {
+	const response = await axios.post(baseUrl, credentials);
+	const token = response.data;
+	cookieService.saveToken(token);
+	return jwtDecode(token); // Return decoded user info
 };
 
-const getToken = () => {
-	return Cookies.get('authorizationToken');
+const logout = () => {
+	cookieService.removeToken();
+};
+
+const getUser = () => {
+	const token = cookieService.getToken();
+	if (!token) return null;
+	try {
+		return jwtDecode(token);
+	} catch (error) {
+		console.error('Failed to decode token:', error);
+		return null;
+	}
 };
 
 const getConfig = () => {
+	const token = cookieService.getToken();
 	return {
-		headers: { Authorization: getToken() }
+		headers: { Authorization: `Bearer ${token}` },
 	};
 };
 
-
-export default { getConfig, setToken, getToken };
+export default {
+	login,
+	logout,
+	getUser,
+	getConfig,
+};

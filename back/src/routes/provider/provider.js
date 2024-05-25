@@ -48,13 +48,13 @@ providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (reque
 		// when you create a new provider,
 		// you must also create a new user
 
-		const savedUser = await createUser({ ...body, password: body.password });
+		const savedUser = await createUser({ ...body, password: body.password, role: "provider" });
 
 		const provider = new Provider({
 			user: savedUser._id,
 			license: body.license
 		});
-		const { error, value } = schema.validate(provider);
+		//const { error, value } = schema.validate(provider);
 		const savedProvider = await provider.save();
 
 		response.status(201).json(savedProvider);

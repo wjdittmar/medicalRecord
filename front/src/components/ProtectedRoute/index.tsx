@@ -1,9 +1,9 @@
 import { Navigate } from 'react-router-dom';
-import storageService from "../../services/Storage";
+import authService from "../../services/Auth";
 
 const ProtectedRoute = ({ children, allowedRoles }) => {
 	try {
-		const currentUser = storageService.loadUser();
+		const currentUser = authService.getUser();
 		if (!currentUser) {
 			return <Navigate to='/login' />;
 		}

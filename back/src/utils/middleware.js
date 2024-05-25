@@ -18,6 +18,7 @@ const verifyToken = (request, response, next) => {
 		request.decodedToken = decodedToken; // pass on the token so the other services can access it
 		next();
 	} catch (error) {
+		console.log("error");
 		return response.status(401).json({ error: "Token invalid" });
 	}
 };
@@ -25,7 +26,6 @@ const verifyToken = (request, response, next) => {
 const verifyRole = (roles) => {
 	return (req, res, next) => {
 		const token = req.token;
-
 		if (!token) {
 			return res.status(401).json({ error: "Token missing" });
 		}

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
-import { NavLink } from "react-router-dom";
-import loginService from "../../services/Login";
 import { useState } from 'react';
+import { NavLink } from "react-router-dom";
+import authService from '../../services/Auth';
 import Notification from '../Notification';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -18,63 +18,41 @@ const Login = () => {
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [notification, setNotification] = useState(null);
+	const navigate = useNavigate();
 
 	const notifyError = (message, type = 'failure') => {
 		setNotification({ message, type });
-		setTimeout(() => {
-			setNotification(null);
-		}, 2000);
+		setTimeout(() => setNotification(null), 2000);
 	};
 
-	const navigate = useNavigate();
 	const handleSubmit = async (event) => {
 		event.preventDefault();
-
 		try {
-			await loginService.login({
-				email, password,
-			});
+			await authService.login({ email, password });
 			setEmail('');
 			setPassword('');
 			navigate('/dashboard');
-
 		} catch (exception) {
 			console.log(exception);
-			notifyError(`Invalid credentials, try again.`);
+			notifyError('Invalid credentials, try again.');
 		}
 	};
 
 	return (
 		<Card variant="outlined" sx={{ maxWidth: 400, mx: 'auto', mt: 4, p: 2 }}>
 			<Typography level="h2" sx={{ mb: 2 }}>Welcome!</Typography>
-			<Typography level="body-sm">
-				Login to your account
-			</Typography>
+			<Typography level="body-sm">Login to your account</Typography>
 			<Divider />
 			<Notification notification={notification} />
 			<form onSubmit={handleSubmit}>
 				<CardContent>
 					<FormControl sx={{ mb: 2 }}>
 						<FormLabel>Email</FormLabel>
-						<Input
-							name="email"
-							type="email"
-							required
-							placeholder="email"
-							autoComplete="email"
-							onChange={({ target }) => setEmail(target.value)}
-						/>
+						<Input name="email" type="email" required placeholder="email" autoComplete="email" onChange={({ target }) => setEmail(target.value)} />
 					</FormControl>
 					<FormControl sx={{ mb: 2 }}>
 						<FormLabel>Password</FormLabel>
-						<Input
-							name="password"
-							type="password"
-							required
-							placeholder="password"
-							autoComplete="current-password"
-							onChange={({ target }) => setPassword(target.value)}
-						/>
+						<Input name="password" type="password" required placeholder="password" autoComplete="current-password" onChange={({ target }) => setPassword(target.value)} />
 					</FormControl>
 				</CardContent>
 				<CardActions>

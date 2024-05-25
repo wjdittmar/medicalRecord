@@ -33,6 +33,7 @@ loginRouter.post("/", async (request, response) => {
 			.send(token);
 	}
 	catch (error) {
+		console.log(error);
 		response.status(500).json({ error: error.message });
 	}
 });

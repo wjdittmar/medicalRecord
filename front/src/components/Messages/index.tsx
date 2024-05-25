@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import { useQuery } from '@tanstack/react-query'
-import storageService from '../../services/Storage';
+import authService from '../../services/Auth';
 import messageService from "../../services/Messages";
 import Pagination from '../Pagination';
 import Table from '@mui/joy/Table';
@@ -14,7 +14,7 @@ const Messages = () => {
 
 	const fetchData = async () => {
 		try {
-			const currentUser = storageService.loadUser();
+			const currentUser = authService.getUser();
 			const response = await messageService.getByRecipient(currentUser.id, currentPage);
 			if (isInitialMount.current) {
 				isInitialMount.current = false;
