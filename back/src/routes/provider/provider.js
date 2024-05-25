@@ -3,10 +3,10 @@ const providerRouter = require("express").Router();
 const Provider = require("../../models/provider");
 const User = require("../../models/user");
 const schema = require("./providerSchema");
-const { verifyToken } = require("../../utils/middleware");
+const { verifyTokenAndRole } = require("../../utils/middleware").default;
 const { createUser } = require("../users");
 
-providerRouter.get("/total", verifyToken, async (request, response) => {
+providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const totalProviders = await Provider.countDocuments();
 		response.json({ totalProviders });
@@ -15,14 +15,14 @@ providerRouter.get("/total", verifyToken, async (request, response) => {
 	}
 });
 
-providerRouter.get("/", verifyToken, (request, response) => {
+providerRouter.get("/", verifyTokenAndRole(["admin", "provider"]), (request, response) => {
 
 	Provider.find({}).populate("user", { email: 1, name: 1, phone: 1 }).then(provider => {
 		response.json(provider);
 	});
 });
 
-providerRouter.get("/total", verifyToken, async (request, response) => {
+providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const totalProviders = await Provider.countDocuments();
 		response.json({ totalProviders });
@@ -31,7 +31,7 @@ providerRouter.get("/total", verifyToken, async (request, response) => {
 	}
 });
 
-providerRouter.get("/state", verifyToken, async (request, response) => {
+providerRouter.get("/state", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const stateProviders = await Provider.countDocuments({ "license": { $regex: request.query.state.toUpperCase() } });
 		response.json({ stateProviders });
@@ -40,7 +40,7 @@ providerRouter.get("/state", verifyToken, async (request, response) => {
 	}
 });
 
-providerRouter.post("/", verifyToken, async (request, response) => {
+providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 
 	const body = request.body;
 
@@ -66,7 +66,7 @@ providerRouter.post("/", verifyToken, async (request, response) => {
 
 });
 
-providerRouter.put("/:id", verifyToken, async (request, response) => {
+providerRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	const id = request.params.id;
 	const body = request.body;
 

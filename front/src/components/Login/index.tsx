@@ -3,8 +3,6 @@ import { NavLink } from "react-router-dom";
 import loginService from "../../services/Login";
 import { useState } from 'react';
 import Notification from '../Notification';
-import storageService from '../../services/Storage';
-import authService from "../../services/Auth";
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
 import CardActions from '@mui/joy/CardActions';
@@ -33,21 +31,17 @@ const Login = () => {
 		event.preventDefault();
 
 		try {
-			const user = await loginService.login({
+			await loginService.login({
 				email, password,
 			});
-
-			storageService.saveUser(user);
-			authService.setToken(user.token);
 			setEmail('');
 			setPassword('');
 			navigate('/dashboard');
 
 		} catch (exception) {
-			console.log("wrong credentials");
+			console.log(exception);
 			notifyError(`Invalid credentials, try again.`);
 		}
-
 	};
 
 	return (

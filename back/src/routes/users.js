@@ -12,16 +12,19 @@ const createUser = async (userData) => {
 		email: userData.email,
 		name: userData.name,
 		phone: userData.phone,
-		passwordHash: passwordHash
+		passwordHash: passwordHash,
+		role: userData.role
 	});
 	return user.save();
 };
 
-userRouter.post("/", verifyToken, async (request, response) => {
-	const { email, name, password } = request.body;
+// don't need to be logged-in in order to register as a new user
 
+userRouter.post("/", async (request, response) => {
+	const { email, name, password } = request.body;
 	try {
-		const savedUser = await createUser({ email, name, password });
+		// default as a provider for new user creation
+		const savedUser = await createUser({ email, name, password, role: "provider" });
 		response.status(201).json(savedUser);
 	}
 	catch (exception) {

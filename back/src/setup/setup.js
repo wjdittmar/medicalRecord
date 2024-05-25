@@ -32,7 +32,7 @@ async function savePatients() {
 			const user = randomEntry.createRandomUser();
 			const patientData = randomEntry.createRandomPatient();
 
-			const savedUser = await createUser({ ...user, password: "pass" });
+			const savedUser = await createUser({ ...user, password: "pass", role: "patient" });
 
 			const diagnoses = result.slice(i * DIAGNOSES_PER_PATIENT, (i + 1) * DIAGNOSES_PER_PATIENT);
 			const patient = new Patient({
@@ -75,7 +75,7 @@ async function saveProviders() {
 
 			const user = randomEntry.createRandomUser();
 			const randomProvider = randomEntry.createRandomProvider();
-			const savedUser = await createUser({ ...user, password: "pass" });
+			const savedUser = await createUser({ ...user, password: "pass", role: "provider" });
 
 			const provider = new Provider({
 				user: savedUser._id,
@@ -118,7 +118,8 @@ async function createAdmin() {
 		{
 			name: "James Dittmar",
 			email: "admin@admin.com",
-			passwordHash: passwordHash
+			passwordHash: passwordHash,
+			role: "admin"
 		}
 	);
 

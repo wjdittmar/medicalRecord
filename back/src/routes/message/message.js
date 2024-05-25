@@ -1,10 +1,12 @@
 const messageRouter = require("express").Router();
 const Message = require("../../models/message");
-const { verifyToken } = require("../../utils/middleware");
+const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware").default;
 const schema = require("./messageSchema");
 const mongoose = require("mongoose");
 
-messageRouter.get("/", verifyToken, (request, response) => {
+// only admins should be able to see all messages
+
+messageRouter.get("/", verifyTokenAndRole(["admin"]), (request, response) => {
 	Message.find({}).then(message => {
 		response.json(message);
 	});

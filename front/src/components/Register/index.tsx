@@ -11,11 +11,15 @@ import Input from '@mui/joy/Input';
 import Button from '@mui/joy/Button';
 import Link from '@mui/joy/Link';
 import Divider from '@mui/joy/Divider';
+import SnackbarAlert from '../common/SnackbarAlert';
 
 const Register = () => {
 	const [name, setName] = useState('');
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
+	const [openSnackbar, setOpenSnackbar] = useState(false);
+	const [snackbarMessage, setSnackbarMessage] = useState('');
+	const [snackbarType, setSnackbarType] = useState('success');
 
 	const navigate = useNavigate();
 
@@ -29,9 +33,16 @@ const Register = () => {
 			setName('');
 			setEmail('');
 			setPassword('');
-			navigate('/login');
+			setSnackbarMessage('Registration successful! Navigating to login...');
+			setSnackbarType('success');
+			setOpenSnackbar(true);
+			setTimeout(() => {
+				navigate('/login');
+			}, 1000);
 		} catch (exception) {
-			console.log(exception);
+			setSnackbarMessage('Registration failed: ' + exception.message);
+			setSnackbarType('error');
+			setOpenSnackbar(true);
 		}
 	};
 
@@ -84,6 +95,12 @@ const Register = () => {
 					Already a user? Click here to <Link component={NavLink} to="/login/">login</Link>
 				</Typography>
 			</Card>
+			<SnackbarAlert
+				open={openSnackbar}
+				message={snackbarMessage}
+				onClose={() => setOpenSnackbar(false)}
+				type={snackbarType}
+			/>
 		</div>
 	);
 };

@@ -10,21 +10,22 @@ import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import storageService from '../../services/Storage';
-import authService from '../../services/Auth';
 
 const Logout = () => {
+	const navigate = useNavigate();
+	const [name, setName] = useState('');
 
 	useEffect(() => {
-		setName(storageService.me());
+		const currentUser = storageService.loadUser();
+		if (currentUser) {
+			setName(currentUser.name);
+		}
 	}, []);
 
-	const navigate = useNavigate();
 	const handleLogout = () => {
 		storageService.logoutUser();
-		authService.setToken('');
 		navigate('/login');
 	};
-	const [name, setName] = useState('');
 
 	return (
 		<div className="logout">

@@ -1,26 +1,33 @@
-const KEY = 'userKey';
+import { jwtDecode } from "jwt-decode";
 
-const saveUser = (user) => {
-	localStorage.setItem(KEY, JSON.stringify(user));
+const KEY = 'authorizationToken';
+
+const saveToken = (token) => {
+	localStorage.setItem(KEY, token);
+};
+
+const loadToken = () => {
+	return localStorage.getItem(KEY);
 };
 
 const loadUser = () => {
-	const user = localStorage.getItem(KEY);
-	return user ? JSON.parse(user) : null;
+	const token = loadToken();
+	if (!token) return null;
+	try {
+		const decodedToken = jwtDecode(token);
+		return decodedToken;
+	} catch (error) {
+		console.error('Failed to decode token:', error);
+		return null;
+	}
 };
 
 const logoutUser = () => {
 	localStorage.removeItem(KEY);
 };
 
-const me = () => {
-	const user = loadUser();
-	return user ? user.name : null;
+const getToken = () => {
+	return loadToken();
 };
 
-const getCurrentUserID = () => {
-	const user = loadUser();
-	return user ? user.id : null;
-}
-
-export default { saveUser, loadUser, logoutUser, me, getCurrentUserID };
+export default { saveToken, loadUser, logoutUser, getToken };

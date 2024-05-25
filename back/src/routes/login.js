@@ -22,13 +22,15 @@ loginRouter.post("/", async (request, response) => {
 		const userForToken = {
 			email: user.email,
 			id: user._id,
+			role: user.role,
+			name: user.name
 		};
 
-		const token = jwt.sign(userForToken, process.env.SECRET);
+		const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: "1h" });
 
 		response
 			.status(200)
-			.send({ token, email: user.email, name: user.name, id: user._id });
+			.send(token);
 	}
 	catch (error) {
 		response.status(500).json({ error: error.message });
