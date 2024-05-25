@@ -22,7 +22,9 @@ const userSchema = new mongoose.Schema({
 	passwordHash: {
 		type: String,
 		required: true
-	}
+	},
+
+	role: { type: String, enum: ["admin", "provider", "patient"], required: true } // Add role field
 });
 
 module.exports = mongoose.model("User", userSchema);

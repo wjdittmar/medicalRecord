@@ -14,7 +14,8 @@ const Messages = () => {
 
 	const fetchData = async () => {
 		try {
-			const response = await messageService.getByRecipient(storageService.getCurrentUserID(), currentPage);
+			const currentUser = storageService.loadUser();
+			const response = await messageService.getByRecipient(currentUser.id, currentPage);
 			if (isInitialMount.current) {
 				isInitialMount.current = false;
 				setDataLength(response.messages.length);

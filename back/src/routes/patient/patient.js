@@ -2,12 +2,13 @@ const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
 const User = require("../../models/user");
 const schema = require("./patientSchema");
-const { verifyToken } = require("../../utils/middleware");
+const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware").default;
 const { createUser } = require("../users");
 const { getDayRange } = require("../../utils/date");
 
-// Endpoint to get the total number of patients
-patientRouter.get("/total", verifyToken, async (request, response) => {
+// Endpoint to get the total number of patients should only be visible to admins
+
+patientRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const totalPatients = await Patient.countDocuments();
 		response.json({ totalPatients });
@@ -16,8 +17,9 @@ patientRouter.get("/total", verifyToken, async (request, response) => {
 	}
 });
 
-// Endpoint to get the number of patients older than a specified age
-patientRouter.get("/older-than", verifyToken, async (request, response) => {
+// Endpoint to get the number of patients older than a specified age should only be visible to admins
+
+patientRouter.get("/older-than", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const ageThreshold = parseInt(request.query.age); // Extract age threshold from query parameter
 		if (isNaN(ageThreshold)) {
@@ -33,7 +35,7 @@ patientRouter.get("/older-than", verifyToken, async (request, response) => {
 });
 
 // Endpoint to get all patients
-patientRouter.get("/", verifyToken, async (request, response) => {
+patientRouter.get("/", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 }).populate("user", { email: 1, name: 1, phone: 1 });
 		response.json(patients);
@@ -43,7 +45,7 @@ patientRouter.get("/", verifyToken, async (request, response) => {
 });
 
 // Endpoint to find patients by demographic data
-patientRouter.get('/search', async (req, res) => {
+patientRouter.get('/search', verifyToken, async (req, res) => {
 	const { name, ssn, dob, postalCode } = req.query;
 	const query = {};
 
@@ -85,7 +87,7 @@ patientRouter.get('/search', async (req, res) => {
 
 
 // Endpoint to create a new patient
-patientRouter.post("/", verifyToken, async (request, response) => {
+patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response) => {
 	try {
 		const body = request.body;
 		const { name, phone, email, password, address } = request.body;
@@ -120,7 +122,7 @@ patientRouter.post("/", verifyToken, async (request, response) => {
 	}
 });
 
-patientRouter.put("/:id", verifyToken, async (request, response) => {
+patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	const id = request.params.id;
 	const body = request.body;
 

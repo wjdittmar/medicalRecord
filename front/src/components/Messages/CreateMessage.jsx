@@ -27,11 +27,13 @@ export default function CreateMessage({ onClose }) {
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
+		const currentUser = storageService.loadUser();
+
 		try {
 			const updatedFormData = {
 				...formData,
 				sendDate: Date.now(),
-				sender: storageService.getCurrentUserID()
+				sender: currentUser.id
 			};
 			await messageService.create(updatedFormData);
 			onClose();

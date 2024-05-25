@@ -1,9 +1,9 @@
 const visitRouter = require("express").Router();
 const Visit = require("../../models/visit");
 const schema = require("./visitSchema");
-const { verifyToken } = require("../../utils/middleware");
+const { verifyTokenAndRole } = require("../../utils/middleware").default;
 
-visitRouter.get("/", verifyToken, (request, response) => {
+visitRouter.get("/", verifyTokenAndRole(["admin"]), (request, response) => {
 	Visit.find({})
 		.populate({
 			path: 'patient',
@@ -20,7 +20,7 @@ visitRouter.get("/", verifyToken, (request, response) => {
 		});
 });
 
-visitRouter.post("/", verifyToken, async (request, response) => {
+visitRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	const body = request.body;
 
 	const { error, value } = schema.validate(body);
@@ -46,7 +46,7 @@ visitRouter.post("/", verifyToken, async (request, response) => {
 });
 
 // Endpoint to get the total number of patients
-visitRouter.get("/total", verifyToken, async (request, response) => {
+visitRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const totalVisits = await Visit.countDocuments();
 		response.json({ totalVisits });
@@ -56,7 +56,7 @@ visitRouter.get("/total", verifyToken, async (request, response) => {
 });
 
 // Endpoint to get the number of patients older than a specified age
-visitRouter.get("/date-between", verifyToken, async (request, response) => {
+visitRouter.get("/date-between", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const startDate = new Date(request.query.startDate);
 		const endDate = new Date(request.query.endDate);

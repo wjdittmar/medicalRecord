@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import { verify } from "jsonwebtoken";
 
 const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
@@ -8,11 +8,10 @@ const tokenExtractor = (request, response, next) => {
 	next();
 };
 
-// Middleware to verify token
 const verifyToken = (request, response, next) => {
 	const token = request.token;
 	try {
-		const decodedToken = jwt.verify(token, process.env.SECRET);
+		const decodedToken = verify(token, process.env.SECRET);
 		if (!decodedToken.id) {
 			return response.status(401).json({ error: "Token invalid" });
 		}
@@ -23,8 +22,39 @@ const verifyToken = (request, response, next) => {
 	}
 };
 
+const verifyRole = (roles) => {
+	return (req, res, next) => {
+		const token = req.token;
 
-module.exports = {
+		if (!token) {
+			return res.status(401).json({ error: "Token missing" });
+		}
+
+		try {
+			const decodedToken = verify(token, process.env.SECRET);
+			if (!roles.includes(decodedToken.role)) {
+				return res.status(403).json({ error: "Access denied" });
+			}
+			req.decodedToken = decodedToken;
+			next();
+		} catch (error) {
+			return res.status(401).json({ error: "Token invalid" });
+		}
+	};
+};
+
+const verifyTokenAndRole = (roles) => {
+	return (req, res, next) => {
+		verifyToken(req, res, (err) => {
+			if (err) return next(err);
+			verifyRole(roles)(req, res, next);
+		});
+	};
+};
+
+export default {
 	tokenExtractor,
-	verifyToken
+	verifyToken,
+	verifyRole,
+	verifyTokenAndRole
 };
