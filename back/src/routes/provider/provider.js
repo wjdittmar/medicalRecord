@@ -3,7 +3,7 @@ const providerRouter = require("express").Router();
 const Provider = require("../../models/provider");
 const User = require("../../models/user");
 const schema = require("./providerSchema");
-const { verifyTokenAndRole } = require("../../utils/middleware").default;
+const { verifyTokenAndRole } = require("../../utils/middleware");
 const { createUser } = require("../users");
 
 providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {

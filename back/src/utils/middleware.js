@@ -52,7 +52,7 @@ const verifyTokenAndRole = (roles) => {
 	};
 };
 
-export default {
+module.exports = {
 	tokenExtractor,
 	verifyToken,
 	verifyRole,

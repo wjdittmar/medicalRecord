@@ -1,6 +1,6 @@
 const messageRouter = require("express").Router();
 const Message = require("../../models/message");
-const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware").default;
+const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware");
 const schema = require("./messageSchema");
 const mongoose = require("mongoose");
 

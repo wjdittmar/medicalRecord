@@ -2,7 +2,7 @@ const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
 const User = require("../../models/user");
 const schema = require("./patientSchema");
-const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware").default;
+const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware");
 const { createUser } = require("../users");
 const { getDayRange } = require("../../utils/date");
 
