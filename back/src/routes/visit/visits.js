@@ -1,7 +1,7 @@
 const visitRouter = require("express").Router();
 const Visit = require("../../models/visit");
 const schema = require("./visitSchema");
-const { verifyTokenAndRole } = require("../../utils/middleware");
+const { verifyTokenAndRole } = require("../../middleware/authMiddleware");
 const handleError = require("../../utils/errorHandler");
 
 visitRouter.get("/", verifyTokenAndRole(["admin", "provider"]), (request, response) => {

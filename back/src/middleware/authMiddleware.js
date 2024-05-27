@@ -1,7 +1,6 @@
 const { verify } = require("jsonwebtoken");
 const loggerService = require("../services/loggerService");
 
-
 const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
 	if (authorization && authorization.startsWith("Bearer ")) {

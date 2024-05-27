@@ -1,5 +1,5 @@
 const epicRouter = require("express").Router();
-const { verifyToken } = require("../../utils/middleware");
+const { verifyToken } = require("../../middleware/authMiddleware");
 const epicService = require("../../services/epicService");
 const { getFormattedDate } = require("../../utils/date");
 const loggerService = require("../../services/loggerService");

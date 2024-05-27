@@ -1,7 +1,7 @@
 const userRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
-const { verifyToken } = require("../utils/middleware");
+const { verifyToken } = require("../middleware/authMiddleware");
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
 
