@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const loginRouter = require("express").Router();
 const User = require("../models/user");
 
+const loggerService = require("../services/loggerService");
+
 loginRouter.post("/", async (request, response) => {
 
 	try {
@@ -14,10 +16,12 @@ loginRouter.post("/", async (request, response) => {
 			? false
 			: await bcrypt.compare(password, user.passwordHash);
 		if (!(user && passwordCorrect)) {
+			loggerService.logError({ email }, "Incorrect login attempt");
 			return response.status(401).json({
-				error: "invalid username or password"
+				message: "Invalid username or password"
 			});
 		}
+
 
 		const userForToken = {
 			email: user.email,
@@ -26,6 +30,8 @@ loginRouter.post("/", async (request, response) => {
 			name: user.name
 		};
 
+		loggerService.logInfo(userForToken, `User from ${request.get("Referrer")} logged in successfully`);
+
 		const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: "1h" });
 
 		response
@@ -33,7 +39,7 @@ loginRouter.post("/", async (request, response) => {
 			.send(token);
 	}
 	catch (error) {
-		console.log(error);
+		loggerService.logError(error);
 		response.status(500).json({ error: error.message });
 	}
 });

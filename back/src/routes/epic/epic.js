@@ -2,6 +2,7 @@ const epicRouter = require("express").Router();
 const { verifyToken } = require("../../utils/middleware");
 const epicService = require("../../services/epicService");
 const { getFormattedDate } = require("../../utils/date");
+const loggerService = require("../../services/loggerService");
 
 epicRouter.get("/", verifyToken, async (request, response) => {
 	try {
@@ -19,7 +20,7 @@ epicRouter.get("/", verifyToken, async (request, response) => {
 
 		response.status(200).json({ progressNotes, conditions });
 	} catch (error) {
-		console.error("Error fetching patient data:", error.message);
+		loggerService.logError("Error fetching patient data:", error.message);
 		response.status(500).json({ error: "Internal Server Error" });
 	}
 });

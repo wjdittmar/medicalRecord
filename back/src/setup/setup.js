@@ -10,6 +10,7 @@ const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit");
 const User = require("../models/user");
 const { createUser } = require("../routes/users");
+const loggerService = require("../services/loggerService");
 
 const NUM_PROVIDERS = 50;
 const NUM_PATIENTS = 100;
@@ -50,18 +51,18 @@ async function savePatients() {
 
 			const promise = patient.save()
 				.then(() => {
-					//console.log("Adding patient", patient);
+					//loggerService.logInfo("Adding patient", patient);
 				})
 				.catch((error) => {
-					console.log("Error adding patient to database:", error.message);
+					loggerService.logError("Error adding patient to database:", error.message);
 				});
 			promises.push(promise);
 		}
 		await Promise.allSettled(promises);
-		console.log("All patients saved");
+		loggerService.logInfo("All patients saved");
 		return Promise.resolve();
 	} catch (error) {
-		console.error("Error fetching diagnoses:", error.message);
+		loggerService.logError("Error fetching diagnoses:", error.message);
 	}
 }
 
@@ -83,10 +84,10 @@ async function saveProviders() {
 			});
 			const savedProvider = await provider.save();
 		}
-		console.log("All providers saved");
+		loggerService.logInfo("All providers saved");
 
 	} catch (error) {
-		console.error("Error saving providers:", error.message);
+		loggerService.logError("Error saving providers:", error.message);
 	}
 }
 
@@ -125,10 +126,10 @@ async function createAdmin() {
 
 	user.save()
 		.then(() => {
-			//console.log("Adding user", user);
+			//loggerService.logInfo("Adding user", user);
 		})
 		.catch((error) => {
-			console.log("Error adding user to database:", error.message);
+			loggerService.logError("Error adding user to database:", error.message);
 		});
 }
 
@@ -158,20 +159,20 @@ async function saveVisits() {
 			});
 			const promise = visit.save()
 				.then(() => {
-					//console.log("Adding visit", visit);
+					//loggerService.logInfo("Adding visit", visit);
 				})
 				.catch((error) => {
-					//console.log(visit);
-					console.log("Error adding visit to database:", error.message);
+					//loggerService.logInfo(visit);
+					loggerService.logError("Error adding visit to database:", error.message);
 				});
 
 			promises.push(promise);
 		}
 
 		await Promise.allSettled(promises);
-		console.log("All visits saved");
+		loggerService.logInfo("All visits saved");
 	} catch (error) {
-		console.error("Error saving visits:", error.message);
+		loggerService.logError("Error saving visits:", error.message);
 	}
 }
 
@@ -179,7 +180,7 @@ async function generateCollections() {
 	try {
 		// Connect to the database first
 		await db.connectDB();
-		console.log("Connected to the database");
+		loggerService.logInfo("Connected to the database");
 
 		// do not need to await for user creation, it has no other dependencies
 
@@ -193,9 +194,9 @@ async function generateCollections() {
 
 		// Disconnect from the database after both functions are done
 		await db.disconnectDB();
-		console.log("Disconnected from the database");
+		loggerService.logInfo("Disconnected from the database");
 	} catch (error) {
-		console.error("Error:", error.message);
+		loggerService.logError("Error:", error.message);
 		await db.disconnectDB();
 	}
 }

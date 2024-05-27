@@ -1,4 +1,6 @@
 const { verify } = require("jsonwebtoken");
+const loggerService = require("../services/loggerService");
+
 
 const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
@@ -18,7 +20,7 @@ const verifyToken = (request, response, next) => {
 		request.decodedToken = decodedToken; // pass on the token so the other services can access it
 		next();
 	} catch (error) {
-		console.log("error");
+		loggerService.logError("error");
 		return response.status(401).json({ error: "Token invalid" });
 	}
 };

@@ -2,6 +2,7 @@ const userRouter = require("express").Router();
 const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { verifyToken } = require("../utils/middleware");
+const loggerService = require("../services/loggerService");
 
 // for creating a new user
 
@@ -28,7 +29,8 @@ userRouter.post("/", async (request, response) => {
 		response.status(201).json(savedUser);
 	}
 	catch (exception) {
-		console.log(exception);
+		//loggerService.logError(exception);
+		loggerService.logError(exception.code);
 		response.status(500).json({ error: "Internal server error" });
 	}
 });

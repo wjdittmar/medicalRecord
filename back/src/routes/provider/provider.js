@@ -5,13 +5,15 @@ const User = require("../../models/user");
 const schema = require("./providerSchema");
 const { verifyTokenAndRole } = require("../../utils/middleware");
 const { createUser } = require("../users");
+const loggerService = require("../../services/loggerService");
+const handleError = require("../../utils/errorHandler");
 
 providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
 	try {
 		const totalProviders = await Provider.countDocuments();
 		response.json({ totalProviders });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -27,7 +29,7 @@ providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (r
 		const totalProviders = await Provider.countDocuments();
 		response.json({ totalProviders });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -36,7 +38,7 @@ providerRouter.get("/state", verifyTokenAndRole(["admin", "provider"]), async (r
 		const stateProviders = await Provider.countDocuments({ "license": { $regex: request.query.state.toUpperCase() } });
 		response.json({ stateProviders });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -57,11 +59,21 @@ providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (reque
 		//const { error, value } = schema.validate(provider);
 		const savedProvider = await provider.save();
 
+		// Sanitize the logged data to avoid logging the password
+		const sanitizedProvider = {
+			...savedProvider._doc, // Assuming Mongoose document
+			user: {
+				...savedProvider.user,
+				password: undefined, // Remove the password
+			},
+		};
+
+		loggerService.logInfo("Created new provider", sanitizedProvider);
+
 		response.status(201).json(savedProvider);
 	}
 	catch (error) {
-		console.log(error);
-		response.status(500).json({ error: "Internal server error" });
+		handleError(response, error);
 	}
 
 });
@@ -99,8 +111,7 @@ providerRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (req
 
 		response.status(200).json(updatedProvider);
 	} catch (error) {
-		console.log(error);
-		response.status(500).json({ error: "Internal server error" });
+		handleError(response, error);
 	}
 });
 

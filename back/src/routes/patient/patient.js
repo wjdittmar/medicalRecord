@@ -5,6 +5,8 @@ const schema = require("./patientSchema");
 const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware");
 const { createUser } = require("../users");
 const { getDayRange } = require("../../utils/date");
+const loggerService = require("../../services/loggerService");
+const handleError = require("../../utils/errorHandler");
 
 // Endpoint to get the total number of patients should only be visible to admins
 
@@ -13,7 +15,7 @@ patientRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (re
 		const totalPatients = await Patient.countDocuments();
 		response.json({ totalPatients });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -30,7 +32,7 @@ patientRouter.get("/older-than", verifyTokenAndRole(["admin", "provider"]), asyn
 		const patientsOlderThanThreshold = await Patient.countDocuments({ dob: { $lte: thresholdDate } });
 		response.json({ patientsOlderThanThreshold });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -40,7 +42,7 @@ patientRouter.get("/", verifyTokenAndRole(["admin", "provider"]), async (request
 		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 }).populate("user", { email: 1, name: 1, phone: 1 });
 		response.json(patients);
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -81,7 +83,7 @@ patientRouter.get("/search", verifyToken, async (req, res) => {
 
 		res.json(patients);
 	} catch (error) {
-		res.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -122,10 +124,10 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 		});
 
 		const savedPatient = await patient.save();
+		loggerService.logInfo("Created new patient", { name, email });
 		response.status(201).json(savedPatient);
 	} catch (error) {
-		console.log(error);
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -172,8 +174,7 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {
-		console.log(error);
-		response.status(500).json({ error: "Internal server error" });
+		handleError(response, error);
 	}
 });
 

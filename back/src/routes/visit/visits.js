@@ -2,6 +2,7 @@ const visitRouter = require("express").Router();
 const Visit = require("../../models/visit");
 const schema = require("./visitSchema");
 const { verifyTokenAndRole } = require("../../utils/middleware");
+const handleError = require("../../utils/errorHandler");
 
 visitRouter.get("/", verifyTokenAndRole(["admin", "provider"]), (request, response) => {
 	Visit.find({})
@@ -15,8 +16,8 @@ visitRouter.get("/", verifyTokenAndRole(["admin", "provider"]), (request, respon
 		.then(visits => {
 			response.json(visits);
 		})
-		.catch(err => {
-			response.status(500).json({ error: err.message });
+		.catch(error => {
+			handleError(response, error);
 		});
 });
 
@@ -42,6 +43,7 @@ visitRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (request,
 	}
 
 	const savedVisit = await visit.save();
+	loggerService.logInfo("Created new visit", { patient, encounterDate });
 	response.status(201).json(savedVisit);
 });
 
@@ -51,7 +53,7 @@ visitRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (requ
 		const totalVisits = await Visit.countDocuments();
 		response.json({ totalVisits });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 
@@ -70,7 +72,7 @@ visitRouter.get("/date-between", verifyTokenAndRole(["admin", "provider"]), asyn
 		const visitsBetween = await Visit.countDocuments({ encounterDate: { $gt: startDate } });
 		response.json({ visitsBetween });
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 

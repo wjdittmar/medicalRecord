@@ -38,7 +38,8 @@ export default function CreateMessage({ onClose }) {
 			await messageService.create(updatedFormData);
 			onClose();
 		} catch (error) {
-			setException(error.message);
+			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";
+			setException(errorMessage);
 			setOpenSnackbar(true);
 		}
 	};

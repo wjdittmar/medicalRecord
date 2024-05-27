@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { NavLink } from "react-router-dom";
 import authService from '../../services/Auth';
+
 import Notification from '../Notification';
 import Card from '@mui/joy/Card';
 import CardContent from '@mui/joy/CardContent';
@@ -32,9 +33,9 @@ const Login = () => {
 			setEmail('');
 			setPassword('');
 			navigate('/dashboard');
-		} catch (exception) {
-			console.log(exception);
-			notifyError('Invalid credentials, try again.');
+		} catch (error) {
+			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";
+			notifyError(errorMessage);
 		}
 	};
 

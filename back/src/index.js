@@ -3,6 +3,7 @@ const path = require("path");
 const config = require("./utils/config");
 const connect = require("./utils/db");
 const app = require("./app"); // The Express app
+const loggerService = require("./services/loggerService");
 
 // Function to handle database connection
 async function connectToDatabase() {
@@ -14,7 +15,7 @@ async function connectToDatabase() {
 			require(path.resolve(filePath));
 		}
 	} catch (error) {
-		console.error("Error connecting to the database:", error);
+		loggerService.logError("Error connecting to the database:", error);
 		process.exit(1); // Exit the process if an error occurs
 	}
 }
@@ -24,11 +25,11 @@ async function startServer() {
 	try {
 		await connectToDatabase();
 		app.listen(config.PORT, () => {
-			console.log(`Server running on port ${config.PORT}`);
+			loggerService.logInfo(`Server running on port ${config.PORT}`);
 		});
 
 	} catch (error) {
-		console.error("Error starting server:", error);
+		loggerService.logError("Error starting server:", error);
 		process.exit(1); // Exit the process if an error occurs
 	}
 }

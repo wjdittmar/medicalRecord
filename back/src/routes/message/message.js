@@ -3,6 +3,8 @@ const Message = require("../../models/message");
 const { verifyToken, verifyTokenAndRole } = require("../../utils/middleware");
 const schema = require("./messageSchema");
 const mongoose = require("mongoose");
+const loggerService = require("../../services/loggerService");
+const handleError = require("../../utils/errorHandler");
 
 // only admins should be able to see all messages
 
@@ -27,7 +29,7 @@ messageRouter.post("/", verifyToken, async (request, response) => {
 		const savedMessage = await messageToSave.save();
 		response.status(201).json(savedMessage);
 	} catch (error) {
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
@@ -69,14 +71,7 @@ messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
 			});
 		}
 	} catch (error) {
-		console.log(error.message);
-		response.status(500).json({
-			messages: [],
-			metadata: {
-				totalCount: 0,
-				pageSize: ITEMS_PER_PAGE
-			}
-		});
+		handleError(response, error);
 	}
 });
 

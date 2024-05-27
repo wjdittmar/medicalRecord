@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const loggerService = require("../services/loggerService");
 
 const messageSchema = new mongoose.Schema({
 
@@ -32,7 +33,7 @@ messageSchema.post("save", async function (doc) {
 		// Populate recipient field with user data
 		await this.populate("recipient");
 	} catch (error) {
-		console.error("Error populating sender and recipient:", error);
+		loggerService.logError("Error populating sender and recipient:", error);
 	}
 });
 
