@@ -21,6 +21,7 @@
 
 ## Possible additional features:
 
+- Deploy application to AWS
 - Clinical-decision support
   - Utilize existing evidence-based guidelines to provide suggestions to providers regarding optimal treatment plans / monitoring
   - Utilize large-language models to analyze / summarize / and make recommendations utilizing existing minimally structured (provider notes) data
@@ -64,3 +65,9 @@
 - End-to-end testing
 
 See the individual README.md files in the back/ and front/ directories for an overview of each individual component
+
+For any questions or inquiries, please contact wjdittmar@nex-med.io
+
+## Contributing
+
+Contributions are welcome! If you find any issues or have suggestions for improvement, please open an issue or submit a pull request.

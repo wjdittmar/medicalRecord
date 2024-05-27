@@ -4,6 +4,7 @@ const loginRouter = require("express").Router();
 const User = require("../models/user");
 
 const loggerService = require("../services/loggerService");
+const handleError = require("../utils/errorHandler");
 
 loginRouter.post("/", async (request, response) => {
 
@@ -39,8 +40,7 @@ loginRouter.post("/", async (request, response) => {
 			.send(token);
 	}
 	catch (error) {
-		loggerService.logError(error);
-		response.status(500).json({ error: error.message });
+		handleError(response, error);
 	}
 });
 

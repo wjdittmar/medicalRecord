@@ -3,6 +3,7 @@ const bcrypt = require("bcrypt");
 const User = require("../models/user");
 const { verifyToken } = require("../utils/middleware");
 const loggerService = require("../services/loggerService");
+const handleError = require("../utils/errorHandler");
 
 // for creating a new user
 
@@ -26,12 +27,11 @@ userRouter.post("/", async (request, response) => {
 	try {
 		// default as a provider for new user creation
 		const savedUser = await createUser({ email, name, password, role: "provider" });
+		loggerService.logInfo("Created new visit", { email, name });
 		response.status(201).json(savedUser);
 	}
-	catch (exception) {
-		//loggerService.logError(exception);
-		loggerService.logError(exception.code);
-		response.status(500).json({ error: "Internal server error" });
+	catch (error) {
+		handleError(response, error);
 	}
 });
 

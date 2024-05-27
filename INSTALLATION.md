@@ -47,3 +47,25 @@ Run the following command to start the backend server:
 ```bash
 npm run dev
 ```
+
+#### Step 7: Install Frontend Dependencies
+
+Navigate to the /front directory
+
+```bash
+cd back
+```
+
+Then run the following to install the dependencies
+
+```bash
+npm install
+```
+
+#### Step 8: Run the Frontend Server
+
+Run the following command to start the backend server:
+
+```bash
+npm run dev
+```

@@ -39,8 +39,9 @@ const Register = () => {
 			setTimeout(() => {
 				navigate('/login');
 			}, 1000);
-		} catch (exception) {
-			setSnackbarMessage('Registration failed: ' + exception.message);
+		} catch (error) {
+			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";
+			setSnackbarMessage(errorMessage);
 			setSnackbarType('error');
 			setOpenSnackbar(true);
 		}
