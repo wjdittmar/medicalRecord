@@ -1,6 +1,6 @@
 const loggerService = require("../services/loggerService");
 
-const handleError = (response, error, customMessage = "Internal server error") => {
+const handleError = (response, error, statusCode = 500, customMessage = "Internal server error") => {
 	if (error.code && error.code === 11000) {
 		// Extract the field causing the duplicate key error
 		const fieldName = Object.keys(error.keyPattern).join(", ");
@@ -10,8 +10,8 @@ const handleError = (response, error, customMessage = "Internal server error") =
 	}
 
 	const message = error.message || customMessage;
-	loggerService.logError(message);
-	response.status(500).json({ message });
+	loggerService.logError(message, error);
+	return response.status(statusCode).json({ message });
 };
 
 module.exports = handleError;

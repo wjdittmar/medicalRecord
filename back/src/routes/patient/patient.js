@@ -1,9 +1,12 @@
 const patientRouter = require("express").Router();
 const Patient = require("../../models/patient");
 const User = require("../../models/user");
-const schema = require("./patientSchema");
+const createUserSchema = require("../user/createUserSchema");
+const updateUserSchema = require("../user/updateUserSchema");
+const createPatientSchema = require("./createPatientSchema");
+const updatePatientSchema = require("./updatePatientSchema");
 const { verifyToken, verifyTokenAndRole } = require("../../middleware/authMiddleware");
-const { createUser } = require("../users");
+const { createUser } = require("../user/users");
 const { getDayRange } = require("../../utils/date");
 const loggerService = require("../../services/loggerService");
 const handleError = require("../../utils/errorHandler");
@@ -91,37 +94,37 @@ patientRouter.get("/search", verifyToken, async (req, res) => {
 // Endpoint to create a new patient
 patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response) => {
 	try {
-		const body = request.body;
 		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;
 
+		// TODO: implement additional countries
+		// assume US-only, for now
+		const modifiedAddress = { ...address, country: "US" };
 
 		// when you create a new patient,
 		// you must also create a new user
 
-		const savedUser = await createUser({ name, email, phone, password, role: "patient" });
+		const { value: userValue, error: userError } = createUserSchema.validate({ email, name, phone, password, role: "patient" });
+		if (userError) {
+			return handleError(response, userError, 400, userError.details[0].message);
+		}
 
+		const savedUser = await createUser(userValue);
 
-		// TODO: fix validation
-		// const { error, value } = schema.validate({
-		// 	user: savedUser,
-		//  });
-		// if (error) {
-		// 	return response.status(422).json({
-		// 		success: false,
-		// 		result: null,
-		// 		message: error.details[0]?.message,
-		// 	});
-		// }
-
-		const patient = new Patient({
-			user: savedUser._id,
+		const patientValidation = createPatientSchema.validate({
+			user: savedUser._id.toString(),
 			preferredLanguage,
 			dob,
 			sex,
 			ssn,
-			address
+			address: modifiedAddress
 		});
+
+		if (patientValidation.error) {
+			return handleError(response, patientValidation.error, 400, patientValidation.error.details[0].message);
+		}
+
+		const patient = new Patient(patientValidation.value);
 
 		const savedPatient = await patient.save();
 		loggerService.logInfo("Created new patient", { name, email });
@@ -136,25 +139,24 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 	const body = request.body;
 
 	try {
-		// TODO: fix validation
-		//const { error, value } = schema.validate(body);
-		// if (error) {
-		// 	return response.status(400).json({ error: error.details[0].message });
-		// }
 
-		// Find the patient by id
 		const patient = await Patient.findById(id).populate("preExistingConditions");
 		if (!patient) {
-			return response.status(404).json({ error: "Patient not found" });
+			return handleError(response, new Error("Patient not found"), 404, "Patient not found");
+		}
+
+		const { value: userValue, error: userError } = updateUserSchema.validate({ name: body.user.name, email: body.user.email, phone: body.user.phone });
+
+		if (userError) {
+			// TODO: need to handle this error gracefully on the front end when you try to update the values to something invalid
+			return handleError(response, userError, 400, userError.details[0].message);
 		}
 
 		// Update the user associated with the patient
 		const updatedUser = await User.findByIdAndUpdate(
 			patient.user,
 			{
-				name: body.user.name,
-				email: body.user.email,
-				phone: body.user.phone,
+				userValue
 			},
 			{ new: true }
 		);
@@ -168,9 +170,15 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 		patient.ssn = body.ssn;
 		patient.sex = body.sex;
 		patient.preferredLanguage = body.preferredLanguage;
-		patient.address = body.address; // Update address
+		patient.address = body.address;
 
-		const updatedPatient = await patient.save();
+		const { value: patientValue, error: patientError } = updatePatientSchema.validate(patient);
+
+		if (userError) {
+			return handleError(response, patientError, 400, patientError.details[0].message);
+		}
+
+		const updatedPatient = await patientValue.save();
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {

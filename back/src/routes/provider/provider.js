@@ -4,7 +4,7 @@ const Provider = require("../../models/provider");
 const User = require("../../models/user");
 const schema = require("./providerSchema");
 const { verifyTokenAndRole } = require("../../middleware/authMiddleware");
-const { createUser } = require("../users");
+const { createUser } = require("../user/users");
 const loggerService = require("../../services/loggerService");
 const handleError = require("../../utils/errorHandler");
 

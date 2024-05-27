@@ -1,9 +1,10 @@
 const userRouter = require("express").Router();
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
-const { verifyToken } = require("../middleware/authMiddleware");
-const loggerService = require("../services/loggerService");
-const handleError = require("../utils/errorHandler");
+const User = require("../../models/user");
+const { verifyToken } = require("../../middleware/authMiddleware");
+const loggerService = require("../../services/loggerService");
+const handleError = require("../../utils/errorHandler");
+const createUserSchema = require("./createUserSchema");
 
 // for creating a new user
 
@@ -24,10 +25,15 @@ const createUser = async (userData) => {
 
 userRouter.post("/", async (request, response) => {
 	const { email, name, password } = request.body;
+	// default as a provider for new user creation
+	const { value, error } = createUserSchema.validate({ email, name, password, role: "provider" });
+	if (error) {
+		handleError(response, error);
+	}
+
 	try {
-		// default as a provider for new user creation
-		const savedUser = await createUser({ email, name, password, role: "provider" });
-		loggerService.logInfo("Created new visit", { email, name });
+		const savedUser = await createUser(value);
+		loggerService.logInfo("Created new user", { email, name });
 		response.status(201).json(savedUser);
 	}
 	catch (error) {
