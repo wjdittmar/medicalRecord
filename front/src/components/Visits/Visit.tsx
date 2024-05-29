@@ -75,19 +75,19 @@ const Visit = ({ visit, onUpdate }) => {
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<ListItem>
-								<ListItemAvatar>
-									<Avatar>
-										<PersonIcon />
-									</Avatar>
-								</ListItemAvatar>
+								{/* <ListItem>
 								<ListItemText primary={`${visit.patient.user.name}`} />
+							</ListItem> */}
+								<TextField
+									label="Name"
+									value={visit.patient.user.name}
+									disabled
+									fullWidth
+								/>
 							</ListItem>
 						</Grid>
 						<Grid item xs={12}>
 							<ListItem>
-								<ListItemAvatar>
-									<BusinessIcon />
-								</ListItemAvatar>
 								<TextField
 									label="Street Address"
 									value={address.line}
@@ -128,9 +128,6 @@ const Visit = ({ visit, onUpdate }) => {
 						</Grid>
 						<Grid item xs={6}>
 							<ListItem>
-								<ListItemAvatar>
-									<CalendarTodayIcon />
-								</ListItemAvatar>
 								<TextField
 									label="Encounter Date"
 									type="date"
@@ -145,9 +142,6 @@ const Visit = ({ visit, onUpdate }) => {
 						</Grid>
 						<Grid item xs={12}>
 							<ListItem>
-								<ListItemAvatar>
-									<NotesIcon />
-								</ListItemAvatar>
 								<TextField
 									label="Provider Notes"
 									value={providerNotes}
@@ -158,9 +152,11 @@ const Visit = ({ visit, onUpdate }) => {
 							</ListItem>
 						</Grid>
 						<Grid item xs={12}>
-							<Button onClick={handleSave} variant="contained" color="primary" fullWidth>
-								Save
-							</Button>
+							<ListItem>
+								<Button onClick={handleSave} variant="contained" color="primary" fullWidth>
+									Save
+								</Button>
+							</ListItem>
 						</Grid>
 					</Grid>
 				</List>
