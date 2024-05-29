@@ -56,13 +56,26 @@ const Patients = () => {
 						<Grid xs={3}>
 							<FormControl>
 								<FormLabel>Name</FormLabel>
-								<Input autoFocus required onChange={handleSearchChange} value={searchParams.name} name="name" />
+								<Input
+									autoFocus
+									required
+									onChange={handleSearchChange}
+									value={searchParams.name}
+									name="name"
+									sx={{ height: '45px' }}
+								/>
 							</FormControl>
 						</Grid>
 						<Grid xs={3}>
 							<FormControl>
 								<FormLabel>SSN</FormLabel>
-								<Input required onChange={handleSearchChange} value={searchParams.ssn} name="ssn" />
+								<Input
+									required
+									onChange={handleSearchChange}
+									value={searchParams.ssn}
+									name="ssn"
+									sx={{ height: '45px' }}
+								/>
 							</FormControl>
 						</Grid>
 						<Grid xs={3}>
@@ -72,6 +85,7 @@ const Patients = () => {
 									<DatePicker
 										value={searchParams.dob}
 										onChange={(newValue) => setSearchParams({ ...searchParams, dob: newValue })}
+										sx={{ '& .MuiInputBase-root': { height: '45px' } }}
 									/>
 								</LocalizationProvider>
 							</FormControl>
@@ -79,7 +93,13 @@ const Patients = () => {
 						<Grid xs={3}>
 							<FormControl>
 								<FormLabel>Zip Code</FormLabel>
-								<Input required onChange={handleSearchChange} value={searchParams.postalCode} name="postalCode" />
+								<Input
+									required
+									onChange={handleSearchChange}
+									value={searchParams.postalCode}
+									name="postalCode"
+									sx={{ height: '45px' }}
+								/>
 							</FormControl>
 						</Grid>
 						<Grid xs={12} container justifyContent="flex-end" sx={{ mt: 2 }}>

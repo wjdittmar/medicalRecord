@@ -41,5 +41,14 @@ const update = async (id, updatedObject) => {
 	}
 };
 
+const findByCriteria = async (criteria) => {
+	try {
+		const response = await api.get(baseUrl + '/search', { params: criteria });
+		return response.data;
+	} catch (error) {
+		handleRequestError(error);
+	}
+};
 
-export default { getAll, create, getTotalNumber, getVisitsBetween, update };
+
+export default { getAll, create, getTotalNumber, getVisitsBetween, update, findByCriteria };

@@ -17,4 +17,7 @@ visitRouter.get("/date-between", verifyTokenAndRole(["admin", "provider"]), visi
 // Route to update a visit (visible to admin and providers)
 visitRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), visitController.updateVisit);
 
+// Route to find a visit by zip code or encounter date
+visitRouter.get("/search", verifyTokenAndRole(["admin", "provider"]), visitController.findVisit);
+
 module.exports = visitRouter;

@@ -19,7 +19,7 @@ const Epic = () => {
 			const { progressNotes, conditions } = await epicService.getPatient(formData);
 			setConditions(conditions.entry); // Update conditions state with fetched data
 		} catch (error) {
-			console.log("Error fetching patient data:", error.message);
+			console.error("Error fetching patient data:", error.message);
 		}
 	};
 

@@ -18,7 +18,7 @@ import visitService from "../../services/Visits";
 const Visit = ({ visit, onUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [editableVisit, setEditableVisit] = useState({ ...visit });
-	const { address, encounterDate, providerNotes } = editableVisit;
+	const { address, encounterDate, providerNotes, patient } = editableVisit;
 
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
@@ -64,6 +64,7 @@ const Visit = ({ visit, onUpdate }) => {
 	return (
 		<>
 			<tr>
+				<td>{patient.user.name}</td>
 				<td>{address.line}</td>
 				<td>{formattedDate}</td>
 				<td>{providerNotes}</td>

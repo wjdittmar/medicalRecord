@@ -2,6 +2,7 @@ const Visit = require("../models/visit/visit");
 const schema = require("../models/visit/visitSchema");
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
+const { getDayRange } = require("../utils/date");
 
 // Get all visits
 const getAllVisits = async (request, response) => {
@@ -104,10 +105,43 @@ const updateVisit = async (request, response) => {
 	}
 };
 
+const findVisit = async (request, response) => {
+
+	const { encounterDate, postalCode } = request.query;
+	const query = {};
+
+	if (encounterDate) {
+		// the encounter date will be provided in the user's local timezone
+		console.log(encounterDate, "date is");
+		const { startOfDay, endOfDay } = getDayRange(encounterDate);
+		query.encounterDate = { $gte: startOfDay, $lte: endOfDay };
+	}
+	if (postalCode) {
+		query['address.postalCode'] = postalCode;
+	}
+
+	console.log(query);
+	try {
+		const visits = await Visit.find(query)
+			.populate({
+				path: 'patient',
+				populate: {
+					path: 'user',
+					select: 'name email phone'
+				}
+			})
+			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
+		response.json(visits);
+	} catch (error) {
+		handleError(response, error);
+	}
+}
+
 module.exports = {
 	getAllVisits,
 	createVisit,
 	getTotalVisits,
 	getVisitsBetweenDates,
-	updateVisit
+	updateVisit,
+	findVisit
 };

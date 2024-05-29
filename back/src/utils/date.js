@@ -3,9 +3,8 @@ function getFormattedDate(d) {
 }
 
 function getDayRange(dateString) {
-	const dobDate = new Date(dateString);
-	const startOfDay = new Date(dobDate.setUTCHours(0, 0, 0, 0));
-	const endOfDay = new Date(dobDate.setUTCHours(23, 59, 59, 999));
+	const startOfDay = new Date(dateString);
+	const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
 	return { startOfDay, endOfDay };
 }
 
