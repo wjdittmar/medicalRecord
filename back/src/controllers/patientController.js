@@ -1,30 +1,26 @@
-const patientRouter = require("express").Router();
-const Patient = require("../../models/patient");
-const User = require("../../models/user");
-const createUserSchema = require("../user/createUserSchema");
-const updateUserSchema = require("../user/updateUserSchema");
-const createPatientSchema = require("./createPatientSchema");
-const updatePatientSchema = require("./updatePatientSchema");
-const { verifyToken, verifyTokenAndRole } = require("../../middleware/authMiddleware");
-const { createUser } = require("../user/users");
-const { getDayRange } = require("../../utils/date");
-const loggerService = require("../../services/loggerService");
-const handleError = require("../../utils/errorHandler");
+const Patient = require("../models/patient/patient");
+const User = require("../models/user/user");
+const createUserSchema = require("../models/user/createUserSchema");
+const updateUserSchema = require("../models/user/updateUserSchema");
+const createPatientSchema = require("../models/patient/createPatientSchema");
+const updatePatientSchema = require("../models/patient/updatePatientSchema");
+const { createUser } = require("./userController");
+const { getDayRange } = require("../utils/date");
+const loggerService = require("../services/loggerService");
+const handleError = require("../utils/errorHandler");
 
-// Endpoint to get the total number of patients should only be visible to admins
-
-patientRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get total number of patients
+const getTotalPatients = async (request, response) => {
 	try {
 		const totalPatients = await Patient.countDocuments();
 		response.json({ totalPatients });
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-// Endpoint to get the number of patients older than a specified age should only be visible to admins
-
-patientRouter.get("/older-than", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get number of patients older than a specified age
+const getPatientsOlderThan = async (request, response) => {
 	try {
 		const ageThreshold = parseInt(request.query.age); // Extract age threshold from query parameter
 		if (isNaN(ageThreshold)) {
@@ -37,20 +33,22 @@ patientRouter.get("/older-than", verifyTokenAndRole(["admin", "provider"]), asyn
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-// Endpoint to get all patients
-patientRouter.get("/", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get all patients
+const getAllPatients = async (request, response) => {
 	try {
-		const patients = await Patient.find({}).populate("preExistingConditions", { icdcode: 1, disease: 1 }).populate("user", { email: 1, name: 1, phone: 1 });
+		const patients = await Patient.find({})
+			.populate("preExistingConditions", { icdcode: 1, disease: 1 })
+			.populate("user", { email: 1, name: 1, phone: 1 });
 		response.json(patients);
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-// Endpoint to find patients by demographic data
-patientRouter.get("/search", verifyToken, async (req, res) => {
+// Find patients by demographic data
+const findPatientsByDemographic = async (req, res) => {
 	const { name, ssn, dob, postalCode } = req.query;
 	const query = {};
 
@@ -75,24 +73,24 @@ patientRouter.get("/search", verifyToken, async (req, res) => {
 		// If name is provided, find matching users
 		if (name) {
 			const users = await User.find(userQuery, "_id").lean();
-			const userIds = users.map(user => user._id);
+			const userIds = users.map((user) => user._id);
 
 			// Add user IDs to the patient query
 			query.user = { $in: userIds };
 		}
 		const patients = await Patient.find(query)
-			.populate("user", "email name phone").populate("preExistingConditions", { icdcode: 1, disease: 1 })
+			.populate("user", "email name phone")
+			.populate("preExistingConditions", { icdcode: 1, disease: 1 })
 			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
 
 		res.json(patients);
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-
-// Endpoint to create a new patient
-patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response) => {
+// Create a new patient
+const createPatient = async (request, response) => {
 	try {
 		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;
@@ -104,7 +102,13 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 		// when you create a new patient,
 		// you must also create a new user
 
-		const { value: userValue, error: userError } = createUserSchema.validate({ email, name, phone, password, role: "patient" });
+		const { value: userValue, error: userError } = createUserSchema.validate({
+			email,
+			name,
+			phone,
+			password,
+			role: "patient",
+		});
 		if (userError) {
 			return handleError(response, userError, 400, userError.details[0].message);
 		}
@@ -117,11 +121,16 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 			dob,
 			sex,
 			ssn,
-			address: modifiedAddress
+			address: modifiedAddress,
 		});
 
 		if (patientValidation.error) {
-			return handleError(response, patientValidation.error, 400, patientValidation.error.details[0].message);
+			return handleError(
+				response,
+				patientValidation.error,
+				400,
+				patientValidation.error.details[0].message
+			);
 		}
 
 		const patient = new Patient(patientValidation.value);
@@ -132,20 +141,24 @@ patientRouter.post("/", verifyTokenAndRole(["admin"]), async (request, response)
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Update a patient
+const updatePatient = async (request, response) => {
 	const id = request.params.id;
 	const body = request.body;
 
 	try {
-
 		const patient = await Patient.findById(id).populate("preExistingConditions");
 		if (!patient) {
 			return handleError(response, new Error("Patient not found"), 404, "Patient not found");
 		}
 
-		const { value: userValue, error: userError } = updateUserSchema.validate({ name: body.user.name, email: body.user.email, phone: body.user.phone });
+		const { value: userValue, error: userError } = updateUserSchema.validate({
+			name: body.user.name,
+			email: body.user.email,
+			phone: body.user.phone,
+		});
 
 		if (userError) {
 			// TODO: need to handle this error gracefully on the front end when you try to update the values to something invalid
@@ -153,13 +166,7 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 		}
 
 		// Update the user associated with the patient
-		const updatedUser = await User.findByIdAndUpdate(
-			patient.user,
-			{
-				userValue
-			},
-			{ new: true }
-		);
+		const updatedUser = await User.findByIdAndUpdate(patient.user, userValue, { new: true });
 
 		if (!updatedUser) {
 			return response.status(404).json({ error: "User not found" });
@@ -178,12 +185,19 @@ patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (requ
 			return handleError(response, patientError, 400, patientError.details[0].message);
 		}
 
-		const updatedPatient = await patientValue.save();
+		const updatedPatient = await patient.save();
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-module.exports = patientRouter;
+module.exports = {
+	getTotalPatients,
+	getPatientsOlderThan,
+	getAllPatients,
+	findPatientsByDemographic,
+	createPatient,
+	updatePatient,
+};

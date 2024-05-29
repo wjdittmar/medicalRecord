@@ -5,10 +5,10 @@ const { parse } = require("csv-parse");
 const randomEntry = require("./utils");
 const db = require("../utils/db");
 const Patient = require("../models/patient");
-const Provider = require("../models/provider");
+const Provider = require("../models/provider/provider");
 const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit");
-const User = require("../models/user");
+const User = require("../models/user/user");
 const { createUser } = require("../routes/user/users");
 const loggerService = require("../services/loggerService");
 

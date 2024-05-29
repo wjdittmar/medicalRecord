@@ -1,20 +1,20 @@
-const messageRouter = require("express").Router();
-const Message = require("../../models/message");
-const { verifyToken, verifyTokenAndRole } = require("../../middleware/authMiddleware");
-const schema = require("./messageSchema");
+const Message = require("../models/message/message");
+const schema = require("../models/message/messageSchema");
 const mongoose = require("mongoose");
-const loggerService = require("../../services/loggerService");
-const handleError = require("../../utils/errorHandler");
+const handleError = require("../utils/errorHandler");
 
-// only admins should be able to see all messages
+// Get all messages (admin only)
+const getAllMessages = async (request, response) => {
+	try {
+		const messages = await Message.find({});
+		response.json(messages);
+	} catch (error) {
+		handleError(response, error);
+	}
+};
 
-messageRouter.get("/", verifyTokenAndRole(["admin"]), (request, response) => {
-	Message.find({}).then(message => {
-		response.json(message);
-	});
-});
-
-messageRouter.post("/", verifyToken, async (request, response) => {
+// Create a new message
+const createMessage = async (request, response) => {
 	try {
 		const body = request.body;
 		const { error, value } = schema.validate(body);
@@ -31,9 +31,10 @@ messageRouter.post("/", verifyToken, async (request, response) => {
 	} catch (error) {
 		handleError(response, error);
 	}
-});
-messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
+};
 
+// Get messages for a specific recipient with pagination
+const getMessagesByRecipient = async (request, response) => {
 	const ITEMS_PER_PAGE = 10;
 	try {
 		const recipient = request.query.recipient;
@@ -73,8 +74,10 @@ messageRouter.get("/toRecipient", verifyToken, async (request, response) => {
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-
-
-module.exports = messageRouter;
+module.exports = {
+	getAllMessages,
+	createMessage,
+	getMessagesByRecipient,
+};

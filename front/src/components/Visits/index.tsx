@@ -3,6 +3,7 @@ import Visit from './Visit';
 import Pagination from '../Pagination';
 import visitService from "../../services/Visits";
 import Table from '@mui/joy/Table';
+
 const Visits = () => {
 	const [visits, setVisits] = useState([]);
 	const [currentPage, setCurrentPage] = useState(1);

@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const User = require("../models/user");
+const User = require("../models/user/user");
 const { generateAccessToken } = require("./authController");
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
@@ -30,9 +30,6 @@ const login = async (req, res) => {
 		loggerService.logInfo(userForToken, `User from ${req.get("Referrer")} logged in successfully`);
 
 		const accessToken = generateAccessToken(userForToken);
-
-		// Optionally store refresh token in a secure manner (e.g., database)
-		// await User.findByIdAndUpdate(user._id, { refreshToken });
 
 		res.status(200).json({ accessToken });
 	} catch (error) {

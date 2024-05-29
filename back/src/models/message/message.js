@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const loggerService = require("../services/loggerService");
+const loggerService = require("../../services/loggerService");
 
 const messageSchema = new mongoose.Schema({
 

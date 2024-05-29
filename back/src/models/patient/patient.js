@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 const mongoose = require("mongoose");
-const addressSchema = require("./address");
+const addressSchema = require("../address");
 
 const patientSchema = new mongoose.Schema({
 	user: {

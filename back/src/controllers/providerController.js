@@ -1,62 +1,53 @@
-const providerRouter = require("express").Router();
+const Provider = require("../models/provider/provider");
+const User = require("../models/user/user");
+const { createUser } = require("./userController");
+const loggerService = require("../services/loggerService");
+const handleError = require("../utils/errorHandler");
 
-const Provider = require("../../models/provider");
-const User = require("../../models/user");
-const schema = require("./providerSchema");
-const { verifyTokenAndRole } = require("../../middleware/authMiddleware");
-const { createUser } = require("../user/users");
-const loggerService = require("../../services/loggerService");
-const handleError = require("../../utils/errorHandler");
-
-providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get total number of providers
+const getTotalProviders = async (request, response) => {
 	try {
 		const totalProviders = await Provider.countDocuments();
 		response.json({ totalProviders });
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-providerRouter.get("/", verifyTokenAndRole(["admin", "provider"]), (request, response) => {
-
-	Provider.find({}).populate("user", { email: 1, name: 1, phone: 1 }).then(provider => {
-		response.json(provider);
-	});
-});
-
-providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get all providers
+const getAllProviders = async (request, response) => {
 	try {
-		const totalProviders = await Provider.countDocuments();
-		response.json({ totalProviders });
+		const providers = await Provider.find({})
+			.populate("user", { email: 1, name: 1, phone: 1 });
+		response.json(providers);
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-providerRouter.get("/state", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Get total providers by state
+const getProvidersByState = async (request, response) => {
 	try {
 		const stateProviders = await Provider.countDocuments({ "license": { $regex: request.query.state.toUpperCase() } });
 		response.json({ stateProviders });
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
-
+// Create a new provider
+const createProvider = async (request, response) => {
 	const body = request.body;
 
 	try {
-		// when you create a new provider,
-		// you must also create a new user
-
+		// Create a new user for the provider
 		const savedUser = await createUser({ ...body, password: body.password, role: "provider" });
 
 		const provider = new Provider({
 			user: savedUser._id,
-			license: body.license
+			license: body.license,
 		});
-		//const { error, value } = schema.validate(provider);
+
 		const savedProvider = await provider.save();
 
 		// Sanitize the logged data to avoid logging the password
@@ -71,14 +62,13 @@ providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), async (reque
 		loggerService.logInfo("Created new provider", sanitizedProvider);
 
 		response.status(201).json(savedProvider);
-	}
-	catch (error) {
+	} catch (error) {
 		handleError(response, error);
 	}
+};
 
-});
-
-providerRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (request, response) => {
+// Update a provider
+const updateProvider = async (request, response) => {
 	const id = request.params.id;
 	const body = request.body;
 
@@ -113,7 +103,12 @@ providerRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), async (req
 	} catch (error) {
 		handleError(response, error);
 	}
-});
+};
 
-
-module.exports = providerRouter;
+module.exports = {
+	getTotalProviders,
+	getAllProviders,
+	getProvidersByState,
+	createProvider,
+	updateProvider,
+};
