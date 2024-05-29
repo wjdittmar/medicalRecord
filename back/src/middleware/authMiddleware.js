@@ -11,15 +11,19 @@ const tokenExtractor = (request, response, next) => {
 
 const verifyToken = (request, response, next) => {
 	const token = request.token;
+	if (!token) {
+		return response.status(401).json({ error: "Token missing" });
+	}
+
 	try {
-		const decodedToken = verify(token, process.env.SECRET);
+		const decodedToken = verify(token, process.env.ACCESS_TOKEN_SECRET);
 		if (!decodedToken.id) {
 			return response.status(401).json({ error: "Token invalid" });
 		}
 		request.decodedToken = decodedToken; // pass on the token so the other services can access it
 		next();
 	} catch (error) {
-		loggerService.logError("error");
+		loggerService.logError("Error verifying token: ", error);
 		return response.status(401).json({ error: "Token invalid" });
 	}
 };
@@ -32,13 +36,14 @@ const verifyRole = (roles) => {
 		}
 
 		try {
-			const decodedToken = verify(token, process.env.SECRET);
+			const decodedToken = verify(token, process.env.ACCESS_TOKEN_SECRET);
 			if (!roles.includes(decodedToken.role)) {
 				return res.status(403).json({ error: "Access denied" });
 			}
 			req.decodedToken = decodedToken;
 			next();
 		} catch (error) {
+			loggerService.logError("Error verifying token for role: ", error);
 			return res.status(401).json({ error: "Token invalid" });
 		}
 	};

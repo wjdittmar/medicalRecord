@@ -1,15 +1,12 @@
-import axios from 'axios';
-import authService from "../services/Auth";
-
-const baseUrl = '/api/epic';
+import api from './ApiInstance';
+const baseUrl = '/epic';
 
 const getPatient = async (data) => {
 	const config = {
-		...authService.getConfig(),
 		params: data
 
 	};
-	const response = await axios.get(baseUrl, config);
+	const response = await api.get(baseUrl, config);
 	return response.data;
 
 };

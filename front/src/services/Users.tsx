@@ -1,14 +1,13 @@
-import axios from 'axios';
-const baseUrl = '/api/users';
-import authService from "../services/Auth";
+const baseUrl = '/users';
+import api from './ApiInstance';
 
 const register = async credentials => {
-	const response = await axios.post(baseUrl, credentials);
+	const response = await api.post(baseUrl, credentials);
 	return response.data;
 };
 
 const getAll = () => {
-	const request = axios.get(baseUrl, authService.getConfig());
+	const request = api.get(baseUrl);
 	return request.then(response => response.data);
 };
 

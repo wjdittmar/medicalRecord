@@ -29,7 +29,6 @@ app.use("/api/users", userRouter);
 app.use("/api/login", loginRouter);
 app.use("/api/epic", epicRouter);
 app.use("/api/messages", messageRouter);
-
 app.use(errorMiddleware);
 
 /* final catch-all route to index.html defined last */
