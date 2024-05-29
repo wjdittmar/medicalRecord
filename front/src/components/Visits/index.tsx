@@ -10,8 +10,13 @@ const Visits = () => {
 	const resultsPerPage = 7;
 
 	useEffect(() => {
-		visitService.getAll().then(visits => setVisits(visits));
+		fetchVisits();
 	}, []);
+
+	const fetchVisits = async () => {
+		const visits = await visitService.getAll();
+		setVisits(visits);
+	};
 
 	// Recalculate pagination-related variables when visits change
 	const totalPages = Math.ceil(visits.length / resultsPerPage);
@@ -42,7 +47,7 @@ const Visits = () => {
 				</thead>
 				<tbody>
 					{currentVisits.map((visit) => (
-						<Visit key={visit._id} visit={visit} />
+						<Visit key={visit._id} visit={visit} onUpdate={fetchVisits} />
 					))}
 				</tbody>
 			</Table>

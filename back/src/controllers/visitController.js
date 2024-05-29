@@ -80,9 +80,34 @@ const getVisitsBetweenDates = async (request, response) => {
 	}
 };
 
+// Update a visit
+const updateVisit = async (request, response) => {
+	const id = request.params.id;
+	const body = request.body;
+
+	try {
+		// Find the visit by id
+		const updatedVisit = await Visit.findByIdAndUpdate(id, {
+			encounterDate: body.encounterDate,
+			address: body.address,
+			providerNotes: body.providerNotes
+		}, { new: true }
+		);
+
+		if (!updatedVisit) {
+			return response.status(404).json({ error: "Visit not found" });
+		}
+
+		response.status(200).json(updatedVisit);
+	} catch (error) {
+		handleError(response, error);
+	}
+};
+
 module.exports = {
 	getAllVisits,
 	createVisit,
 	getTotalVisits,
 	getVisitsBetweenDates,
+	updateVisit
 };

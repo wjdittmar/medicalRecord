@@ -6,7 +6,6 @@ import ListItemText from '@mui/material/ListItemText';
 import PhoneIcon from '@mui/icons-material/Phone';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import EmailIcon from '@mui/icons-material/Email';
-import Avatar from '@mui/material/Avatar';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import LanguageIcon from '@mui/icons-material/Language';

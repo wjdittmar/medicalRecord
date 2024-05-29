@@ -14,4 +14,7 @@ visitRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), visitContro
 // Route to get the number of visits between specified dates (admin and provider)
 visitRouter.get("/date-between", verifyTokenAndRole(["admin", "provider"]), visitController.getVisitsBetweenDates);
 
+// Route to update a visit (visible to admin and providers)
+visitRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), visitController.updateVisit);
+
 module.exports = visitRouter;

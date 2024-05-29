@@ -32,4 +32,14 @@ const getVisitsBetween = (startDate, endDate) => {
 	return request.then(response => response.data);
 };
 
-export default { getAll, create, getTotalNumber, getVisitsBetween };
+const update = async (id, updatedObject) => {
+	try {
+		const response = await api.put(`${baseUrl}/${id}`, updatedObject);
+		return response.data;
+	} catch (error) {
+		handleRequestError(error);
+	}
+};
+
+
+export default { getAll, create, getTotalNumber, getVisitsBetween, update };

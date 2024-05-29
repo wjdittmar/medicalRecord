@@ -18,7 +18,7 @@ import SnackbarAlert from '../common/SnackbarAlert';
 import patientService from '../../services/Patients';
 import visitService from '../../services/Visits';
 
-export default function CreateVisit({ onClose }) {
+export default function CreateVisit({ onClose, onUpdate }) {
 	const [formData, setFormData] = useState({
 		patient: '',
 		address: {
@@ -49,6 +49,7 @@ export default function CreateVisit({ onClose }) {
 		event.preventDefault();
 		try {
 			await visitService.create(formData);
+			onUpdate();  // Call onUpdate to refresh the visit list
 			onClose();
 		} catch (error) {
 			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";

@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import dayjs from 'dayjs';
 
 import Grid from '@mui/joy/Grid';
 import FormControl from '@mui/joy/FormControl';
@@ -40,11 +39,6 @@ const Patients = () => {
 			setCurrentPage(1);
 			setSearched(true);
 		});
-	};
-
-	const fetchPatients = async () => {
-		const fetchedPatients = await patientService.getAll();
-		setPatients(fetchedPatients);
 	};
 
 	// Recalculate pagination-related variables when patients or currentPage change
