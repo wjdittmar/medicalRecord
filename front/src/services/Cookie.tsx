@@ -1,21 +1,21 @@
 import Cookies from 'js-cookie';
 
-const TOKEN_KEY = 'authorizationToken';
+const ACCESS_TOKEN_KEY = 'accessToken';
 
-const saveToken = (token) => {
-	Cookies.set(TOKEN_KEY, token, { expires: 7, secure: true, sameSite: 'Strict' });
+const saveAccessToken = (token) => {
+	Cookies.set(ACCESS_TOKEN_KEY, token, { expires: 1, secure: true, sameSite: 'Strict' });
 };
 
-const getToken = () => {
-	return Cookies.get(TOKEN_KEY);
+const getAccessToken = () => {
+	return Cookies.get(ACCESS_TOKEN_KEY);
 };
 
-const removeToken = () => {
-	Cookies.remove(TOKEN_KEY);
+const removeAccessToken = () => {
+	Cookies.remove(ACCESS_TOKEN_KEY);
 };
 
 export default {
-	saveToken,
-	getToken,
-	removeToken,
+	saveAccessToken,
+	getAccessToken,
+	removeAccessToken
 };

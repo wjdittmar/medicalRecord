@@ -5,7 +5,7 @@
 #### Step 1: Update Environment variables
 
 Update the "MONGODB_URI" field with the URI of your MongoDB database.
-Update the "SECRET" field with a string for signing jwt
+Update the "ACCESS_TOKEN_SECRET" fields with a string for signing jwt
 
 #### Step 2: Install Backend Dependencies
 
