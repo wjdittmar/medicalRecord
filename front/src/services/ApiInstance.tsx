@@ -22,9 +22,12 @@ api.interceptors.response.use(
 	// do nothing with a 200 response
 	response => response,
 	async error => {
-		if (error.response && error.response.status === 401) {
-			alert('Your login session has expired. You will be logged out.');
+		const errorMessage = error.response.data.error;
+		if (errorMessage === "Token invalid") {
 			authService.logout();
+			return { error: "Session expired. Please log in again." };
+		} else if (errorMessage === "Invalid username or password") {
+			return { error: "Invalid username or password" };
 		}
 		return Promise.reject(error);
 	}
