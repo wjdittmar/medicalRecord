@@ -112,15 +112,12 @@ const findVisit = async (request, response) => {
 
 	if (encounterDate) {
 		// the encounter date will be provided in the user's local timezone
-		console.log(encounterDate, "date is");
 		const { startOfDay, endOfDay } = getDayRange(encounterDate);
 		query.encounterDate = { $gte: startOfDay, $lte: endOfDay };
 	}
 	if (postalCode) {
 		query['address.postalCode'] = postalCode;
 	}
-
-	console.log(query);
 	try {
 		const visits = await Visit.find(query)
 			.populate({

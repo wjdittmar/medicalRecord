@@ -18,7 +18,7 @@ import SnackbarAlert from '../common/SnackbarAlert';
 import patientService from '../../services/Patients';
 import visitService from '../../services/Visits';
 
-export default function CreateVisit({ onClose, onUpdate }) {
+export default function CreateVisit({ onClose }) {
 	const [formData, setFormData] = useState({
 		patient: '',
 		address: {
@@ -34,9 +34,9 @@ export default function CreateVisit({ onClose, onUpdate }) {
 	const [patients, setPatients] = useState([]);
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
-
 	useEffect(() => {
 		patientService.getAll().then(patients => {
+
 			const restructuredPatients = patients.map(patient => ({
 				id: patient._id,
 				label: `${patient.user.name}`
@@ -49,7 +49,6 @@ export default function CreateVisit({ onClose, onUpdate }) {
 		event.preventDefault();
 		try {
 			await visitService.create(formData);
-			onUpdate();  // Call onUpdate to refresh the visit list
 			onClose();
 		} catch (error) {
 			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";
