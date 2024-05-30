@@ -8,7 +8,14 @@ const visitSchema = new mongoose.Schema({
 		required: true
 	},
 	address: addressSchema,
-	providerNotes: String
+	providerNotes: String,
+	provider: [
+		{ type: mongoose.Schema.Types.ObjectId, ref: "Provider" }
+	],
 });
+
+// index by provider to speed up this query, as it will be frequent
+
+visitSchema.index({ provider: 1 });
 
 module.exports = mongoose.model("Visit", visitSchema);

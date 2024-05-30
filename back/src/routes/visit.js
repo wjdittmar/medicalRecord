@@ -20,4 +20,6 @@ visitRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), visitControll
 // Route to find a visit by zip code or encounter date
 visitRouter.get("/search", verifyTokenAndRole(["admin", "provider"]), visitController.findVisit);
 
+visitRouter.get("/by-provider/:providerId", verifyTokenAndRole(["admin", "provider"]), visitController.getVisitsByProvider);
+
 module.exports = visitRouter;

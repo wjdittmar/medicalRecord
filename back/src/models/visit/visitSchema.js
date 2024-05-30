@@ -12,7 +12,8 @@ const schema = Joi.object({
 		country: Joi.string()
 	}).required(),
 	encounterDate: Joi.date().required(),
-	providerNotes: Joi.string()
+	providerNotes: Joi.string(),
+	provider: Joi.array().items(Joi.string().hex().length(24)),
 });
 
 module.exports = schema;

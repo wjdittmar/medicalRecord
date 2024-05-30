@@ -91,9 +91,22 @@ const updateVisit = async (request, response) => {
 		const updatedVisit = await Visit.findByIdAndUpdate(id, {
 			encounterDate: body.encounterDate,
 			address: body.address,
-			providerNotes: body.providerNotes
+			providerNotes: body.providerNotes,
+			provider: body.provider
 		}, { new: true }
-		);
+		).populate({
+			path: 'patient',
+			populate: {
+				path: 'user',
+				select: 'name email phone'
+			}
+		}).populate({
+			path: 'provider',
+			populate: {
+				path: 'user',
+				select: 'name email'
+			}
+		})
 
 		if (!updatedVisit) {
 			return response.status(404).json({ error: "Visit not found" });
@@ -126,6 +139,12 @@ const findVisit = async (request, response) => {
 					path: 'user',
 					select: 'name email phone'
 				}
+			}).populate({
+				path: 'provider',
+				populate: {
+					path: 'user',
+					select: 'name email'
+				}
 			})
 			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
 		response.json(visits);
@@ -134,11 +153,44 @@ const findVisit = async (request, response) => {
 	}
 }
 
+const getVisitsByProvider = async (request, response) => {
+	const providerId = request.params.providerId;
+
+	try {
+		const visits = await Visit.find({ provider: providerId })
+			.populate({
+				path: 'patient',
+				populate: {
+					path: 'user',
+					select: 'name email phone'
+				}
+			})
+			.populate({
+				path: 'provider',
+				populate: {
+					path: 'user',
+					select: 'name email'
+				}
+			});
+
+		if (!visits.length) {
+			return response.status(404).json({ error: "No visits found for this provider" });
+		}
+
+
+
+		response.status(200).json(visits);
+	} catch (error) {
+		handleError(response, error);
+	}
+};
+
 module.exports = {
 	getAllVisits,
 	createVisit,
 	getTotalVisits,
 	getVisitsBetweenDates,
 	updateVisit,
-	findVisit
+	findVisit,
+	getVisitsByProvider
 };
