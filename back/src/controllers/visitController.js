@@ -95,6 +95,12 @@ const updateVisit = async (request, response) => {
 			provider: body.provider
 		}, { new: true }
 		).populate({
+			path: 'patient',
+			populate: {
+				path: 'user',
+				select: 'name email phone'
+			}
+		}).populate({
 			path: 'provider',
 			populate: {
 				path: 'user',
@@ -102,10 +108,6 @@ const updateVisit = async (request, response) => {
 			}
 		})
 
-		const newVisit = await Visit.findById(id).populate({
-			path: 'provider',
-			select: 'name email'
-		});
 		if (!updatedVisit) {
 			return response.status(404).json({ error: "Visit not found" });
 		}
@@ -174,6 +176,8 @@ const getVisitsByProvider = async (request, response) => {
 		if (!visits.length) {
 			return response.status(404).json({ error: "No visits found for this provider" });
 		}
+
+
 
 		response.status(200).json(visits);
 	} catch (error) {

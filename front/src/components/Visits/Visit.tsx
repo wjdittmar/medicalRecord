@@ -1,5 +1,5 @@
 import Drawer from '@mui/material/Drawer';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -17,6 +17,13 @@ const Visit = ({ visit, onUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [editableVisit, setEditableVisit] = useState({ ...visit });
 	const { address, encounterDate, providerNotes, patient, provider = [] } = editableVisit;
+	const [isProviderInVisit, setIsProviderInVisit] = useState(false);
+
+	useEffect(() => {
+		const currentUser = authService.getUser();
+		const currentProvider = currentUser.provider;
+		setIsProviderInVisit(provider.some(p => p._id === currentProvider.id));
+	}, [provider]);
 
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
@@ -59,26 +66,33 @@ const Visit = ({ visit, onUpdate }) => {
 		setOpen(false);
 	};
 
-	console.log(provider);
-	const handleAddProvider = async () => {
+	const handleAddRemoveProvider = async () => {
 		try {
 			const currentUser = authService.getUser();
 			const currentProvider = currentUser.provider;
-			if (provider.find(p => p._id === currentProvider.id)) {
-				alert('You are already assigned to this visit');
-				return;
+
+			let updatedProviderList;
+			if (isProviderInVisit) {
+				// Remove provider from visit
+				updatedProviderList = provider.filter(p => p._id !== currentProvider.id);
+			} else {
+				// Add provider to visit
+				updatedProviderList = [...provider, { _id: currentProvider.id }];
 			}
+
 			const updatedVisit = {
 				...editableVisit,
-				provider: [...provider, { _id: currentProvider.id }]
+				provider: updatedProviderList
 			};
-			await visitService.update(visit._id, {
+
+			const returnedVisit = await visitService.update(visit._id, {
 				...editableVisit,
 				provider: updatedVisit.provider.map(p => p._id)  // Only send provider IDs to the backend
 			});
-			setEditableVisit(updatedVisit);
+			setEditableVisit(returnedVisit);
+			setIsProviderInVisit(!isProviderInVisit);
 		} catch (error) {
-			console.error("Error adding provider to visit:", error);
+			console.error("Error updating provider in visit:", error);
 		}
 	};
 
@@ -181,8 +195,8 @@ const Visit = ({ visit, onUpdate }) => {
 						</Grid>
 						<Grid item xs={12}>
 							<ListItem>
-								<Button onClick={handleAddProvider} variant="contained" color="secondary" fullWidth>
-									Add Me to This Visit
+								<Button onClick={handleAddRemoveProvider} variant="contained" color={isProviderInVisit ? "secondary" : "primary"} fullWidth>
+									{isProviderInVisit ? "Remove Me from This Visit" : "Add Me to This Visit"}
 								</Button>
 							</ListItem>
 						</Grid>
@@ -197,7 +211,10 @@ const Visit = ({ visit, onUpdate }) => {
 													<PersonIcon />
 												</Avatar>
 											</ListItemAvatar>
-											<ListItemText primary={prov.user.name} secondary={prov.user.email} />
+											<ListItemText
+												primary={prov.user?.name || "No Name Available"}
+												secondary={prov.user?.email || "No Email Available"}
+											/>
 										</ListItem>
 									))}
 								</List>
