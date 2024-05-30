@@ -18,11 +18,15 @@ const Visit = ({ visit, onUpdate }) => {
 	const [editableVisit, setEditableVisit] = useState({ ...visit });
 	const { address, encounterDate, providerNotes, patient, provider = [] } = editableVisit;
 	const [isProviderInVisit, setIsProviderInVisit] = useState(false);
+	const [currentProvider, setCurrentProvider] = useState(null);
 
 	useEffect(() => {
 		const currentUser = authService.getUser();
-		const currentProvider = currentUser.provider;
-		setIsProviderInVisit(provider.some(p => p._id === currentProvider.id));
+		if (currentUser && currentUser.provider) {
+			const currentProvider = currentUser.provider;
+			setCurrentProvider(currentProvider);
+			setIsProviderInVisit(provider.some(p => p._id === currentProvider.id));
+		}
 	}, [provider]);
 
 	const toggleDrawer = (newOpen) => () => {
@@ -68,8 +72,9 @@ const Visit = ({ visit, onUpdate }) => {
 
 	const handleAddRemoveProvider = async () => {
 		try {
-			const currentUser = authService.getUser();
-			const currentProvider = currentUser.provider;
+			if (!currentProvider) {
+				return;
+			}
 
 			let updatedProviderList;
 			if (isProviderInVisit) {
@@ -193,13 +198,15 @@ const Visit = ({ visit, onUpdate }) => {
 								</Button>
 							</ListItem>
 						</Grid>
-						<Grid item xs={12}>
-							<ListItem>
-								<Button onClick={handleAddRemoveProvider} variant="contained" color={isProviderInVisit ? "secondary" : "primary"} fullWidth>
-									{isProviderInVisit ? "Remove Me from This Visit" : "Add Me to This Visit"}
-								</Button>
-							</ListItem>
-						</Grid>
+						{currentProvider && (
+							<Grid item xs={12}>
+								<ListItem>
+									<Button onClick={handleAddRemoveProvider} variant="contained" color={isProviderInVisit ? "secondary" : "primary"} fullWidth>
+										{isProviderInVisit ? "Remove Me from This Visit" : "Add Me to This Visit"}
+									</Button>
+								</ListItem>
+							</Grid>
+						)}
 						<Grid item xs={12}>
 							<ListItem>
 								<List>
