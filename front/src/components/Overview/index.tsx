@@ -1,51 +1,75 @@
-import ThreeColumnLayout from "../ThreeColumnLayout";
-import VisitSummary from "../Visits/Summary";
-import PatientSummary from "../Providers/Summary";
-import ProviderSummary from "../Patients/Summary";
-
+import { useEffect, useState } from 'react';
 import timeGridPlugin from '@fullcalendar/timegrid'
 import FullCalendar from '@fullcalendar/react'
+import visitService from "../../services/Visits";
+import authService from "../../services/Auth";
 
-
-let eventGuid = 0
-let todayStr = new Date().toISOString().replace(/T.*$/, '') // YYYY-MM-DD of today
-
-export const INITIAL_EVENTS = [
-	{
-		id: createEventId(),
-		title: 'All-day event',
-		start: todayStr
-	},
-	{
-		id: createEventId(),
-		title: 'Timed event',
-		start: todayStr + 'T12:00:00'
-	}
-]
+let eventGuid = 0;
 
 export function createEventId() {
-	return String(eventGuid++)
+	return String(eventGuid++);
 }
 
 const Overview = () => {
-	return <>
-		{/* <h2>Overview</h2> */}
-		{/* <ThreeColumnLayout left={<ProviderSummary />} middle={<PatientSummary />} right={<VisitSummary />} /> */}
-		<FullCalendar
-			plugins={[timeGridPlugin]}
-			headerToolbar={{
-				left: 'prev,next',
-				center: 'title',
-				right: ''
-			}}
-			initialView='timeGridWeek'
-			slotMinTime={"07:00:00"}
-			slotMaxTime={"20:00:00"}
-			expandRows={true}
-			allDaySlot={false}
-			height={"100%"}
-			initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
-		/>
-	</>;
+	const [visits, setVisits] = useState([]);
+	const [events, setEvents] = useState([]);
+
+	useEffect(() => {
+		const currentUser = authService.getUser();
+		const currentProvider = currentUser.provider;
+
+		const fetchVisits = async () => {
+			try {
+				const visits = await visitService.getByProvider(currentProvider.id);
+				setVisits(visits);
+				const transformedEvents = visits.map(visit => {
+					return {
+						id: createEventId(),
+						title: `Visit with ${visit.patient.user.name}`,
+						start: visit.encounterDate,
+						extendedProps: {
+							address: visit.address,
+							providerNotes: visit.providerNotes
+						}
+					};
+				});
+				setEvents(transformedEvents);
+			} catch (error) {
+				console.error("Error fetching visits:", error);
+			}
+		};
+
+		fetchVisits();
+	}, []);
+
+	return (
+		<>
+			<FullCalendar
+				plugins={[timeGridPlugin]}
+				headerToolbar={{
+					left: 'prev,next',
+					center: 'title',
+					right: ''
+				}}
+				initialView='timeGridWeek'
+				slotMinTime={"07:00:00"}
+				slotMaxTime={"20:00:00"}
+				expandRows={true}
+				allDaySlot={false}
+				height={"100%"}
+				eventContent={renderEventContent}
+				events={events}
+			/>
+		</>
+	);
 };
+
+function renderEventContent(eventInfo) {
+	return (
+		<>
+			{eventInfo.event.title}
+		</>
+	)
+}
+
 export default Overview;
