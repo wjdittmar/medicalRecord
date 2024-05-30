@@ -6,19 +6,17 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Avatar from '@mui/material/Avatar';
 import PersonIcon from '@mui/icons-material/Person';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
-import BusinessIcon from '@mui/icons-material/Business';
-import NotesIcon from '@mui/icons-material/Notes';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import visitService from "../../services/Visits";
+import authService from "../../services/Auth";
 
 const Visit = ({ visit, onUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [editableVisit, setEditableVisit] = useState({ ...visit });
-	const { address, encounterDate, providerNotes, patient } = editableVisit;
+	const { address, encounterDate, providerNotes, patient, provider = [] } = editableVisit;
 
 	const toggleDrawer = (newOpen) => () => {
 		setOpen(newOpen);
@@ -49,13 +47,39 @@ const Visit = ({ visit, onUpdate }) => {
 			...prevVisit,
 			encounterDate: value,
 		}));
-
 	};
 
 	const handleSave = async () => {
-		await visitService.update(visit._id, editableVisit);
+		const updatedVisit = {
+			...editableVisit,
+			provider: provider.map(p => p._id)  // Only send provider IDs to the backend
+		};
+		await visitService.update(visit._id, updatedVisit);
 		onUpdate();
 		setOpen(false);
+	};
+
+	console.log(provider);
+	const handleAddProvider = async () => {
+		try {
+			const currentUser = authService.getUser();
+			const currentProvider = currentUser.provider;
+			if (provider.find(p => p._id === currentProvider.id)) {
+				alert('You are already assigned to this visit');
+				return;
+			}
+			const updatedVisit = {
+				...editableVisit,
+				provider: [...provider, { _id: currentProvider.id }]
+			};
+			await visitService.update(visit._id, {
+				...editableVisit,
+				provider: updatedVisit.provider.map(p => p._id)  // Only send provider IDs to the backend
+			});
+			setEditableVisit(updatedVisit);
+		} catch (error) {
+			console.error("Error adding provider to visit:", error);
+		}
 	};
 
 	const formatter = new Intl.DateTimeFormat('en-US', { day: '2-digit', month: '2-digit', year: 'numeric' });
@@ -75,9 +99,6 @@ const Visit = ({ visit, onUpdate }) => {
 					<Grid container spacing={2}>
 						<Grid item xs={12}>
 							<ListItem>
-								{/* <ListItem>
-								<ListItemText primary={`${visit.patient.user.name}`} />
-							</ListItem> */}
 								<TextField
 									label="Name"
 									value={visit.patient.user.name}
@@ -156,6 +177,30 @@ const Visit = ({ visit, onUpdate }) => {
 								<Button onClick={handleSave} variant="contained" color="primary" fullWidth>
 									Save
 								</Button>
+							</ListItem>
+						</Grid>
+						<Grid item xs={12}>
+							<ListItem>
+								<Button onClick={handleAddProvider} variant="contained" color="secondary" fullWidth>
+									Add Me to This Visit
+								</Button>
+							</ListItem>
+						</Grid>
+						<Grid item xs={12}>
+							<ListItem>
+								<List>
+									<ListItemText primary="Associated Providers" />
+									{provider.map((prov) => (
+										<ListItem key={prov._id}>
+											<ListItemAvatar>
+												<Avatar>
+													<PersonIcon />
+												</Avatar>
+											</ListItemAvatar>
+											<ListItemText primary={prov.user.name} secondary={prov.user.email} />
+										</ListItem>
+									))}
+								</List>
 							</ListItem>
 						</Grid>
 					</Grid>

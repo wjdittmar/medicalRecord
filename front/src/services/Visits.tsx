@@ -50,5 +50,15 @@ const findByCriteria = async (criteria) => {
 	}
 };
 
+const getByProvider = async (providerId) => {
+	try {
+		const response = await api.get(`${baseUrl}/by-provider/${providerId}`);
+		return response.data;
+	} catch (error) {
+		handleRequestError(error);
+	}
 
-export default { getAll, create, getTotalNumber, getVisitsBetween, update, findByCriteria };
+};
+
+
+export default { getAll, create, getTotalNumber, getVisitsBetween, update, findByCriteria, getByProvider };

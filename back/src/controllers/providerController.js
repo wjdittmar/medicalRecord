@@ -105,6 +105,7 @@ const updateProvider = async (request, response) => {
 	}
 };
 
+
 module.exports = {
 	getTotalProviders,
 	getAllProviders,
