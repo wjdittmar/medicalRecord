@@ -340,3 +340,9 @@ div.patientSearchGrid {
 div.patientSearchGrid label {
   display: block;
 }
+
+/* FullCalendar styles */
+
+div.fc-event-main {
+  font-size: 0.8em;
+}
