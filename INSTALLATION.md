@@ -4,7 +4,7 @@
 
 #### Step 1: Update Environment variables
 
-Update the "MONGODB_URI" field with the URI of your MongoDB database.
+Update the "MONGODB_URI" field with the URI of your MongoDB database and "TEST_MONGODB_URI" with the URI of a MongoDB for testing
 Update the "ACCESS_TOKEN_SECRET" fields with a string for signing jwt
 
 #### Step 2: Install Backend Dependencies

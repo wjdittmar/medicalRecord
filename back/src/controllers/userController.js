@@ -1,36 +1,15 @@
-const bcrypt = require("bcrypt");
 const User = require("../models/user/user");
-const createUserSchema = require("../models/user/createUserSchema");
+
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
-
-// Create a new user
-const createUser = async (userData) => {
-	const saltRounds = 10;
-	const passwordHash = await bcrypt.hash(userData.password, saltRounds);
-	const user = new User({
-		email: userData.email,
-		name: userData.name,
-		phone: userData.phone,
-		passwordHash: passwordHash,
-		role: userData.role,
-	});
-	return user.save();
-};
+const { createProviderHelper } = require("./providerController");
 
 // Handler for user registration
 const registerUser = async (request, response) => {
-	const { email, name, password } = request.body;
-	// default as a provider for new user creation
-	const { value, error } = createUserSchema.validate({ email, name, password, role: "provider" });
-	if (error) {
-		return handleError(response, error);
-	}
-
 	try {
-		const savedUser = await createUser(value);
-		loggerService.logInfo("Created new user", { email, name });
-		response.status(201).json(savedUser);
+		const savedProvider = await createProviderHelper({ ...request.body, license: "" });
+		loggerService.logInfo("Created new provider", { email: savedProvider.email, name: savedProvider.name });
+		response.status(201).json(savedProvider);
 	} catch (error) {
 		handleError(response, error);
 	}
@@ -49,5 +28,4 @@ const getAllUsers = async (request, response) => {
 module.exports = {
 	registerUser,
 	getAllUsers,
-	createUser,
 };

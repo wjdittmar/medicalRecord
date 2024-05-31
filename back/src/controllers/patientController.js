@@ -1,10 +1,9 @@
 const Patient = require("../models/patient/patient");
 const User = require("../models/user/user");
-const createUserSchema = require("../models/user/createUserSchema");
 const updateUserSchema = require("../models/user/updateUserSchema");
 const createPatientSchema = require("../models/patient/createPatientSchema");
 const updatePatientSchema = require("../models/patient/updatePatientSchema");
-const { createUser } = require("./userController");
+const { createUser } = require("./utils/userUtils");
 const { getDayRange } = require("../utils/date");
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
@@ -102,18 +101,13 @@ const createPatient = async (request, response) => {
 		// when you create a new patient,
 		// you must also create a new user
 
-		const { value: userValue, error: userError } = createUserSchema.validate({
+		const savedUser = await createUser({
 			email,
 			name,
 			phone,
 			password,
 			role: "patient",
 		});
-		if (userError) {
-			return handleError(response, userError, 400, userError.details[0].message);
-		}
-
-		const savedUser = await createUser(userValue);
 
 		const patientValidation = createPatientSchema.validate({
 			user: savedUser._id.toString(),
@@ -185,7 +179,7 @@ const updatePatient = async (request, response) => {
 			return handleError(response, patientError, 400, patientError.details[0].message);
 		}
 
-		const updatedPatient = await patient.save();
+		const updatedPatient = await patientValue.save();
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {

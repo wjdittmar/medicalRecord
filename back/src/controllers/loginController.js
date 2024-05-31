@@ -37,7 +37,6 @@ const login = async (req, res) => {
 		};
 
 
-
 		loggerService.logInfo(userForToken, `User from ${req.get("Referrer")} logged in successfully`);
 
 		const accessToken = generateAccessToken(userForToken);

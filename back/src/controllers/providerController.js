@@ -1,6 +1,6 @@
 const Provider = require("../models/provider/provider");
 const User = require("../models/user/user");
-const { createUser } = require("./userController");
+const { createUser } = require("./utils/userUtils");
 const loggerService = require("../services/loggerService");
 const handleError = require("../utils/errorHandler");
 
@@ -35,38 +35,37 @@ const getProvidersByState = async (request, response) => {
 	}
 };
 
-// Create a new provider
+const createProviderHelper = async (body) => {
+	const savedUser = await createUser({ ...body, role: "provider" });
+
+	const provider = new Provider({
+		user: savedUser._id,
+		license: body.license,
+	});
+
+	const savedProvider = await provider.save();
+	console.log(savedProvider, "save");
+
+	return {
+		...savedProvider._doc,
+		user: {
+			...savedProvider.user,
+			password: undefined,
+		},
+	};
+};
+
 const createProvider = async (request, response) => {
 	const body = request.body;
 
 	try {
-		// Create a new user for the provider
-		const savedUser = await createUser({ ...body, password: body.password, role: "provider" });
-
-		const provider = new Provider({
-			user: savedUser._id,
-			license: body.license,
-		});
-
-		const savedProvider = await provider.save();
-
-		// Sanitize the logged data to avoid logging the password
-		const sanitizedProvider = {
-			...savedProvider._doc, // Assuming Mongoose document
-			user: {
-				...savedProvider.user,
-				password: undefined, // Remove the password
-			},
-		};
-
-		loggerService.logInfo("Created new provider", sanitizedProvider);
-
+		const savedProvider = await createProviderHelper(body);
+		loggerService.logInfo("Created new provider", savedProvider);
 		response.status(201).json(savedProvider);
 	} catch (error) {
 		handleError(response, error);
 	}
 };
-
 // Update a provider
 const updateProvider = async (request, response) => {
 	const id = request.params.id;
@@ -112,4 +111,5 @@ module.exports = {
 	getProvidersByState,
 	createProvider,
 	updateProvider,
+	createProviderHelper
 };

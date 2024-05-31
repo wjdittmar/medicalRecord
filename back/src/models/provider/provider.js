@@ -4,7 +4,6 @@ const mongoose = require("mongoose");
 const providerSchema = new mongoose.Schema({
 	license: {
 		type: String,
-		required: true
 	},
 	user: {
 		type: mongoose.Schema.Types.ObjectId,
