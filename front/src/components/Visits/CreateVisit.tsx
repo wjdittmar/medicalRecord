@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import dayjs from 'dayjs';
 
-import { DatePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import Autocomplete from '@mui/joy/Autocomplete';
 import Stack from '@mui/joy/Stack';
@@ -28,15 +28,17 @@ export default function CreateVisit({ onClose }) {
 			postalCode: ''
 		},
 		providerNotes: '',
-		encounterDate: dayjs('2022-04-17'),
+		encounterDate: dayjs(),
 	});
+
+	const [encounterTime, setEncounterTime] = useState(dayjs().hour(14).minute(0));
 
 	const [patients, setPatients] = useState([]);
 	const [exception, setException] = useState('');
 	const [openSnackbar, setOpenSnackbar] = useState(false);
+
 	useEffect(() => {
 		patientService.getAll().then(patients => {
-
 			const restructuredPatients = patients.map(patient => ({
 				id: patient._id,
 				label: `${patient.user.name}`
@@ -48,7 +50,8 @@ export default function CreateVisit({ onClose }) {
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
-			await visitService.create(formData);
+			const combinedDateTime = formData.encounterDate.hour(encounterTime.hour()).minute(encounterTime.minute());
+			await visitService.create({ ...formData, encounterDate: combinedDateTime });
 			onClose();
 		} catch (error) {
 			const errorMessage = error.response?.data?.message || error.message || "An unexpected error occurred.";
@@ -163,6 +166,14 @@ export default function CreateVisit({ onClose }) {
 								value={formData.encounterDate}
 								onChange={(newValue) => setFormData({ ...formData, encounterDate: newValue })}
 							/>
+						</LocalizationProvider>
+					</FormControl>
+					<FormControl>
+						<FormLabel required={true}>Time of Visit</FormLabel>
+						<LocalizationProvider dateAdapter={AdapterDayjs}>
+							<TimePicker
+								value={encounterTime}
+								onChange={(newValue) => setEncounterTime(newValue)} />
 						</LocalizationProvider>
 					</FormControl>
 					<FormControl>

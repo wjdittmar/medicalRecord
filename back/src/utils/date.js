@@ -4,7 +4,7 @@ function getFormattedDate(d) {
 
 function getDayRange(dateString) {
 	const startOfDay = new Date(dateString);
-	const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000);
+	const endOfDay = new Date(startOfDay.getTime() + 24 * 60 * 60 * 1000 - 1);
 	return { startOfDay, endOfDay };
 }
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import timeGridPlugin from '@fullcalendar/timegrid'
-import FullCalendar from '@fullcalendar/react'
+import timeGridPlugin from '@fullcalendar/timegrid';
+import FullCalendar from '@fullcalendar/react';
 import visitService from "../../services/Visits";
 import authService from "../../services/Auth";
 
@@ -13,16 +13,20 @@ export function createEventId() {
 const Overview = () => {
 	const [visits, setVisits] = useState([]);
 	const [events, setEvents] = useState([]);
-
 	useEffect(() => {
 		const currentUser = authService.getUser();
 		const currentProvider = currentUser.provider;
-
+		// TODO: use react query library to continuously poll to check for updates to the schedule
 		const fetchVisits = async () => {
 			try {
-				const visits = await visitService.getByProvider(currentProvider.id);
-				setVisits(visits);
-				const transformedEvents = visits.map(visit => {
+				let returnedVisits;
+				if (currentProvider) {
+					returnedVisits = await visitService.getByProvider(currentProvider.id);
+				} else {
+					returnedVisits = await visitService.getAll();
+				}
+
+				const transformedEvents = returnedVisits.map(visit => {
 					return {
 						id: createEventId(),
 						title: `Visit with ${visit.patient.user.name}`,
@@ -33,6 +37,7 @@ const Overview = () => {
 						}
 					};
 				});
+				setVisits(returnedVisits);
 				setEvents(transformedEvents);
 			} catch (error) {
 				console.error("Error fetching visits:", error);
@@ -69,7 +74,7 @@ function renderEventContent(eventInfo) {
 		<>
 			{eventInfo.event.title}
 		</>
-	)
+	);
 }
 
 export default Overview;

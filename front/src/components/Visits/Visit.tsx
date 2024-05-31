@@ -1,5 +1,5 @@
-import Drawer from '@mui/material/Drawer';
 import { useState, useEffect } from "react";
+import Drawer from '@mui/material/Drawer';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
@@ -10,12 +10,17 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import { DatePicker, TimePicker, LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs from 'dayjs';
+
 import visitService from "../../services/Visits";
 import authService from "../../services/Auth";
 
 const Visit = ({ visit, onUpdate }) => {
 	const [open, setOpen] = useState(false);
 	const [editableVisit, setEditableVisit] = useState({ ...visit });
+	const [encounterTime, setEncounterTime] = useState(dayjs(visit.encounterDate));
 	const { address, encounterDate, providerNotes, patient, provider = [] } = editableVisit;
 	const [isProviderInVisit, setIsProviderInVisit] = useState(false);
 	const [currentProvider, setCurrentProvider] = useState(null);
@@ -61,8 +66,10 @@ const Visit = ({ visit, onUpdate }) => {
 	};
 
 	const handleSave = async () => {
+		const combinedDateTime = dayjs(encounterDate).hour(encounterTime.hour()).minute(encounterTime.minute());
 		const updatedVisit = {
 			...editableVisit,
+			encounterDate: combinedDateTime,
 			provider: provider.map(p => p._id)  // Only send provider IDs to the backend
 		};
 		await visitService.update(visit._id, updatedVisit);
@@ -136,7 +143,7 @@ const Visit = ({ visit, onUpdate }) => {
 								/>
 							</ListItem>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={4}>
 							<ListItem>
 								<TextField
 									label="City"
@@ -146,8 +153,9 @@ const Visit = ({ visit, onUpdate }) => {
 								/>
 							</ListItem>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={4}>
 							<ListItem>
+
 								<TextField
 									label="State"
 									value={address.state}
@@ -156,7 +164,7 @@ const Visit = ({ visit, onUpdate }) => {
 								/>
 							</ListItem>
 						</Grid>
-						<Grid item xs={6}>
+						<Grid item xs={4}>
 							<ListItem>
 								<TextField
 									label="Postal Code"
@@ -168,16 +176,24 @@ const Visit = ({ visit, onUpdate }) => {
 						</Grid>
 						<Grid item xs={6}>
 							<ListItem>
-								<TextField
-									label="Encounter Date"
-									type="date"
-									value={new Date(encounterDate).toISOString().substr(0, 10)}
-									onChange={(e) => handleDateChange(e.target.value)}
-									fullWidth
-									InputLabelProps={{
-										shrink: true,
-									}}
-								/>
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+									<DatePicker
+										label="Encounter Date"
+										value={dayjs(encounterDate)}
+										onChange={(newValue) => handleDateChange(newValue)}
+									/>
+								</LocalizationProvider>
+							</ListItem>
+						</Grid>
+						<Grid item xs={6}>
+							<ListItem>
+								<LocalizationProvider dateAdapter={AdapterDayjs}>
+									<TimePicker
+										label="Encounter Time"
+										value={dayjs(encounterDate)}
+										onChange={(newValue) => setEncounterTime(newValue)}
+									/>
+								</LocalizationProvider>
 							</ListItem>
 						</Grid>
 						<Grid item xs={12}>
