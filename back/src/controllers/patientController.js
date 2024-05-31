@@ -90,6 +90,7 @@ const findPatientsByDemographic = async (req, res) => {
 
 // Create a new patient
 const createPatient = async (request, response) => {
+
 	try {
 		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;

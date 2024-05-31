@@ -9,7 +9,7 @@ const Provider = require("../models/provider/provider");
 const Diagnosis = require("../models/diagnosis");
 const Visit = require("../models/visit/visit");
 const User = require("../models/user/user");
-const { createUser } = require("../controllers/userController");
+const { createUser } = require("../controllers/utils/userUtils");
 const loggerService = require("../services/loggerService");
 
 const NUM_PROVIDERS = 50;

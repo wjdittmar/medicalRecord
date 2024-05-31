@@ -44,7 +44,6 @@ const createProviderHelper = async (body) => {
 	});
 
 	const savedProvider = await provider.save();
-	console.log(savedProvider, "save");
 
 	return {
 		...savedProvider._doc,

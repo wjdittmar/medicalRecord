@@ -2,7 +2,9 @@ const { verify } = require("jsonwebtoken");
 const loggerService = require("../services/loggerService");
 
 const tokenExtractor = (request, response, next) => {
+
 	const authorization = request.get("authorization");
+
 	if (authorization && authorization.startsWith("Bearer ")) {
 		request.token = authorization.replace("Bearer ", "");
 	}
@@ -11,6 +13,7 @@ const tokenExtractor = (request, response, next) => {
 
 const verifyToken = (request, response, next) => {
 	const token = request.token;
+
 	if (!token) {
 		return response.status(401).json({ error: "Token missing" });
 	}
@@ -18,6 +21,7 @@ const verifyToken = (request, response, next) => {
 	try {
 		const decodedToken = verify(token, process.env.ACCESS_TOKEN_SECRET);
 		if (!decodedToken.id) {
+			loggerService.logError("Token is missing id");
 			return response.status(401).json({ error: "Token invalid" });
 		}
 		request.decodedToken = decodedToken; // pass on the token so the other services can access it
@@ -38,6 +42,7 @@ const verifyRole = (roles) => {
 		try {
 			const decodedToken = verify(token, process.env.ACCESS_TOKEN_SECRET);
 			if (!roles.includes(decodedToken.role)) {
+				loggerService.logError("Role is missing from token");
 				return res.status(403).json({ error: "Access denied" });
 			}
 			req.decodedToken = decodedToken;
