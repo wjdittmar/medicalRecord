@@ -1,13 +1,14 @@
-const Patient = require("../models/patient/patient");
-const User = require("../models/user/user");
-const createUserSchema = require("../models/user/createUserSchema");
-const updateUserSchema = require("../models/user/updateUserSchema");
-const createPatientSchema = require("../models/patient/createPatientSchema");
-const updatePatientSchema = require("../models/patient/updatePatientSchema");
-const { createUser } = require("./userController");
-const { getDayRange } = require("../utils/date");
-const loggerService = require("../services/loggerService");
-const handleError = require("../utils/errorHandler");
+import Patient from "../models/patient/patient";
+import User from "../models/user/user";
+import createUserSchema from "../models/user/createUserSchema";
+import updateUserSchema from "../models/user/updateUserSchema";
+import createPatientSchema from "../models/patient/createPatientSchema";
+import updatePatientSchema from "../models/patient/updatePatientSchema";
+import { createUser } from "./userController";
+import { getDayRange } from "../utils/date";
+import loggerService from "../services/loggerService";
+import handleError from "../utils/errorHandler";
+import { Request, Response } from "express";
 
 // Get total number of patients
 const getTotalPatients = async (request, response) => {

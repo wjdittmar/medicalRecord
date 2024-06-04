@@ -1,7 +1,7 @@
-const loggerService = require("../services/loggerService");
+import { logError } from "../services/loggerService.js";
 
 const errorMiddleware = (err, req, res, next) => {
-	loggerService.logError(err.message, err);
+	logError(err.message, err);
 
 	const statusCode = err.statusCode || 500;
 	const message = err.message || "Internal Server Error";
@@ -9,4 +9,4 @@ const errorMiddleware = (err, req, res, next) => {
 	res.status(statusCode).json({ error: message });
 };
 
-module.exports = errorMiddleware;
+export default errorMiddleware;

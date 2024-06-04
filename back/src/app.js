@@ -1,16 +1,16 @@
-var path = require("path");
-const express = require("express");
-const cors = require("cors");
-const diagnosesRouter = require("./routes/diagnosis");
-const patientRouter = require("./routes/patient");
-const providerRouter = require("./routes/provider");
-const visitRouter = require("./routes/visit");
-const { userRouter } = require("./routes/users");
-const loginRouter = require("./routes/login");
-const epicRouter = require("./routes/epic");
-const messageRouter = require("./routes/message");
-const middleware = require("./middleware/authMiddleware");
-const errorMiddleware = require("./middleware/errorMiddleware");
+import path from "path";
+import express from "express";
+import cors from "cors";
+import diagnosesRouter from "./routes/diagnosis.js";
+import patientRouter from "./routes/patient.js";
+import providerRouter from "./routes/provider.js";
+import visitRouter from "./routes/visit.js";
+import { userRouter } from "./routes/users.js";
+import loginRouter from "./routes/login.js";
+import epicRouter from "./routes/epic.js";
+import messageRouter from "./routes/message.js";
+import middleware from "./middleware/authMiddleware.js";
+import errorMiddleware from "./middleware/errorMiddleware.js";
 
 const app = express();
 
@@ -19,7 +19,6 @@ app.use(express.static("dist"));
 app.use(cors());
 app.use(express.json());
 app.use(middleware.tokenExtractor);
-
 
 app.use("/api/diagnoses", diagnosesRouter);
 app.use("/api/patients", patientRouter);
@@ -36,5 +35,4 @@ app.get("/*", (req, res) => {
 	res.sendFile(path.resolve("dist/index.html"));
 });
 
-
-module.exports = app;
+export default app;

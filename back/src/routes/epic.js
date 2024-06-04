@@ -1,8 +1,11 @@
-const epicRouter = require("express").Router();
-const { verifyToken } = require("../middleware/authMiddleware");
-const epicService = require("../services/epicService");
-const { getFormattedDate } = require("../utils/date");
-const loggerService = require("../services/loggerService");
+import express from "express";
+import { verifyToken } from "../middleware/authMiddleware.js";
+import * as epicService from "../services/epicService.js";
+import { getFormattedDate } from "../utils/date.js";
+import { logError } from "../services/loggerService.js";
+
+
+const epicRouter = express.Router();
 
 epicRouter.get("/", verifyToken, async (request, response) => {
 	try {
@@ -20,9 +23,9 @@ epicRouter.get("/", verifyToken, async (request, response) => {
 
 		response.status(200).json({ progressNotes, conditions });
 	} catch (error) {
-		loggerService.logError("Error fetching patient data:", error.message);
+		logError("Error fetching patient data:", error.message);
 		response.status(500).json({ error: "Internal Server Error" });
 	}
 });
 
-module.exports = epicRouter;
+export default epicRouter;

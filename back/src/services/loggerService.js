@@ -1,5 +1,5 @@
-const winston = require("winston");
-require("winston-daily-rotate-file");
+import winston from "winston";
+import "winston-daily-rotate-file";
 
 // Create a transport for info logs
 const infoTransport = new winston.transports.DailyRotateFile({
@@ -35,15 +35,10 @@ const logger = winston.createLogger({
 	],
 });
 
-const logInfo = (message, data) => {
+export const logInfo = (message, data) => {
 	logger.info(message, { data });
 };
 
-const logError = (message, error) => {
+export const logError = (message, error) => {
 	logger.error(message, { error });
-};
-
-module.exports = {
-	logInfo,
-	logError,
 };

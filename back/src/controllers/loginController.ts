@@ -1,9 +1,9 @@
-const bcrypt = require("bcrypt");
-const User = require("../models/user/user");
-const Provider = require("../models/provider/provider");
-const { generateAccessToken } = require("./authController");
-const loggerService = require("../services/loggerService");
-const handleError = require("../utils/errorHandler");
+import bcrypt from "bcrypt";
+import User from "../models/user/user";
+import Provider from "../models/provider/provider";
+import { generateAccessToken } from "./authController";
+import loggerService from "../services/loggerService";
+import handleError from "../utils/errorHandler";
 
 const login = async (req, res) => {
 	try {
