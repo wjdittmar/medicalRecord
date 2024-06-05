@@ -3,7 +3,7 @@ import path from 'path';
 import config from './utils/config.js';
 import connect from './utils/db.js';
 import app from './app.js'; // The Express app
-import loggerService from './services/loggerService.js';
+import { logError, logInfo } from "./services/loggerService";
 
 // Function to handle database connection
 async function connectToDatabase() {
@@ -15,7 +15,7 @@ async function connectToDatabase() {
 			await import(path.resolve(filePath));
 		}
 	} catch (error) {
-		loggerService.logError('Error connecting to the database:', error);
+		logError('Error connecting to the database:', error);
 		process.exit(1); // Exit the process if an error occurs
 	}
 }
@@ -25,10 +25,10 @@ async function startServer() {
 	try {
 		await connectToDatabase();
 		app.listen(config.PORT, () => {
-			loggerService.logInfo(`Server running on port ${config.PORT}`);
+			logInfo(`Server running on port ${config.PORT}`);
 		});
 	} catch (error) {
-		loggerService.logError('Error starting server:', error);
+		logError('Error starting server:', error);
 		process.exit(1); // Exit the process if an error occurs
 	}
 }

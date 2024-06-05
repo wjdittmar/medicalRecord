@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const createUserSchema = Joi.object({
 	email: Joi.string().email().required().lowercase().trim(),
@@ -8,4 +8,4 @@ const createUserSchema = Joi.object({
 	role: Joi.string().valid("admin", "provider", "patient").required()
 });
 
-module.exports = createUserSchema;
+export default createUserSchema;

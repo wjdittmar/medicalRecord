@@ -3,10 +3,10 @@
 	"version": "1.0.0",
 	"description": "backend for medical record app",
 	"main": "src/index.js",
-	"type": "module",
 	"scripts": {
-		"start": "node src/index.js",
-		"dev": "nodemon src/index.js --ignore public/",
+		"type-check": "tsc --noEmit",
+		"start": "npm run type-check && tsx src/index.js",
+		"dev": "nodemon --exec tsx src/index.js --ignore public/",
 		"build:ui": "rm -rf dist && cd ../front/ && npm run build && cp -r dist ../back",
 		"production": "NODE_ENV=production",
 		"setup": "node src/setup/setup.js",
@@ -43,6 +43,7 @@
 		"eslint": "^8.56.0",
 		"eslint-plugin-jest": "^27.6.1",
 		"eslint-plugin-react": "^7.33.2",
+		"tsx": "^4.11.2",
 		"typescript": "^5.4.5"
 	}
 }

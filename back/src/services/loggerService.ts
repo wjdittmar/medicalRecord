@@ -35,10 +35,12 @@ const logger = winston.createLogger({
 	],
 });
 
-export const logInfo = (message, data) => {
+export const logInfo = (message: string, data: unknown): void => {
 	logger.info(message, { data });
 };
 
-export const logError = (message, error) => {
+export const logError = (message: string, error: unknown): void => {
 	logger.error(message, { error });
 };
+
+export default logger;

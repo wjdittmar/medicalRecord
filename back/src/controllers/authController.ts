@@ -1,7 +1,7 @@
 import jwt from "jsonwebtoken";
-import { User } from '../../../types/user'; // Adjust the relative path as needed
+import { UserTokenPayload } from "../../../types/userTokenPayload";
 
-const generateAccessToken = (user: User) => {
+const generateAccessToken = (user: UserTokenPayload) => {
 	return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET as string, { expiresIn: "1d" });
 };
 

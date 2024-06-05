@@ -27,7 +27,7 @@ const userSchema: Schema = new Schema({
 		type: String,
 		enum: ['admin', 'provider', 'patient'],
 		required: true,
-	},
+	}
 });
 
 const User = mongoose.model<UserModel>('User', userSchema);

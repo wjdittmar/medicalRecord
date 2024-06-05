@@ -2,7 +2,7 @@ import express from "express";
 import { verifyToken } from "../middleware/authMiddleware.js";
 import * as epicService from "../services/epicService.js";
 import { getFormattedDate } from "../utils/date.js";
-import { logError } from "../services/loggerService.js";
+import { logError } from "../services/loggerService";
 
 
 const epicRouter = express.Router();

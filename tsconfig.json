@@ -8,6 +8,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "baseUrl": "./",
+    "allowImportingTsExtensions": true,
     "paths": {
       "@types/*": ["types/*"]
     }

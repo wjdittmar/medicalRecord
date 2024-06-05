@@ -1,17 +1,18 @@
-/* eslint-disable no-underscore-dangle */
-const mongoose = require("mongoose");
+import { Schema, model } from 'mongoose';
+import { Provider } from '../../../../types/provider';
 
-const providerSchema = new mongoose.Schema({
+const providerSchema = new Schema<Provider>({
 	license: {
 		type: String,
-		required: true
+		required: true,
 	},
 	user: {
-		type: mongoose.Schema.Types.ObjectId,
-		ref: "User",
-		required: true
-	},
-
+		type: Schema.Types.ObjectId,
+		ref: 'User',
+		required: true,
+	}
 });
 
-module.exports = mongoose.model("Provider", providerSchema);
+const Provider = model<Provider>('Provider', providerSchema);
+
+export default Provider;

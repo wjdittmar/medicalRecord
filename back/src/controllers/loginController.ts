@@ -1,44 +1,44 @@
 import bcrypt from "bcrypt";
+import { Request, Response } from "express";
 import User from "../models/user/user";
 import Provider from "../models/provider/provider";
 import { generateAccessToken } from "./authController";
-import loggerService from "../services/loggerService";
+import { logError, logInfo } from "../services/loggerService";
+import { UserTokenPayload } from "../../../types/userTokenPayload";
+import { Types } from "mongoose";
+
 import handleError from "../utils/errorHandler";
 
-const login = async (req, res) => {
+const login = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { email, password } = req.body;
 
 		const user = await User.findOne({ email });
 
-		const passwordCorrect = user === null
-			? false
-			: await bcrypt.compare(password, user.passwordHash);
-		if (!(user && passwordCorrect)) {
-			loggerService.logError({ email }, "Incorrect login attempt");
-			return res.status(401).json({
+		const passwordCorrect = user && await bcrypt.compare(password, user.passwordHash);
+		if (!user || !passwordCorrect) {
+			logError("Incorrect login attempt", { email });
+			res.status(401).json({
 				message: "Invalid username or password"
 			});
+			return;
 		}
+
 		let provider = null;
 		if (user.role === "provider") {
 			// Fetch provider details if the user is a provider
 			provider = await Provider.findOne({ user: user._id });
 		}
 
-		const userForToken = {
+		const userForToken: UserTokenPayload = {
 			email: user.email,
-			id: user._id,
+			id: user._id as Types.ObjectId, // cast it explciity because we know that user will be defined here and that it will contain the _id field
 			role: user.role,
 			name: user.name,
-			provider: provider ? {
-				id: provider._id
-			} : null
+			provider: provider ? { id: provider._id } : null,
 		};
 
-
-
-		loggerService.logInfo(userForToken, `User from ${req.get("Referrer")} logged in successfully`);
+		logInfo(`User from ${req.get("Referrer")} logged in successfully`, userForToken);
 
 		const accessToken = generateAccessToken(userForToken);
 
@@ -48,6 +48,4 @@ const login = async (req, res) => {
 	}
 };
 
-module.exports = {
-	login
-};
+export { login };

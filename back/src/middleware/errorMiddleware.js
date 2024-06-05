@@ -1,4 +1,4 @@
-import { logError } from "../services/loggerService.js";
+import { logError } from "../services/loggerService";
 
 const errorMiddleware = (err, req, res, next) => {
 	logError(err.message, err);

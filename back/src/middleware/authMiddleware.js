@@ -1,6 +1,5 @@
-import jwt from "jsonwebtoken";
-const { verify } = jwt;
-import { logError } from "../services/loggerService.js";
+import { verify } from "jsonwebtoken";
+import { logError } from "../services/loggerService";
 
 export const tokenExtractor = (request, response, next) => {
 	const authorization = request.get("authorization");
@@ -57,4 +56,11 @@ export const verifyTokenAndRole = (roles) => {
 			verifyRole(roles)(req, res, next);
 		});
 	};
+};
+
+export default {
+	tokenExtractor,
+	verifyToken,
+	verifyRole,
+	verifyTokenAndRole,
 };
