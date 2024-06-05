@@ -1,7 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-// TODO: could maybe do additional validation
-
+// Define the message schema
 const schema = Joi.object({
 	sender: Joi.string().hex().length(24),
 	recipient: Joi.string().hex().length(24),
@@ -10,4 +9,4 @@ const schema = Joi.object({
 	body: Joi.string().required()
 });
 
-module.exports = schema;
+export default schema;

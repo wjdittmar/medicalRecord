@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
-import User from "../models/user/user";
-import Provider from "../models/provider/provider";
+import UserModel from "../models/user/user";
+import ProviderModel from "../models/provider/provider";
 import { generateAccessToken } from "./authController";
 import { logError, logInfo } from "../services/loggerService";
 import { UserTokenPayload } from "../../../types/userTokenPayload";
@@ -13,7 +13,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
 	try {
 		const { email, password } = req.body;
 
-		const user = await User.findOne({ email });
+		const user = await UserModel.findOne({ email });
 
 		const passwordCorrect = user && await bcrypt.compare(password, user.passwordHash);
 		if (!user || !passwordCorrect) {
@@ -27,7 +27,7 @@ const login = async (req: Request, res: Response): Promise<void> => {
 		let provider = null;
 		if (user.role === "provider") {
 			// Fetch provider details if the user is a provider
-			provider = await Provider.findOne({ user: user._id });
+			provider = await ProviderModel.findOne({ user: user._id });
 		}
 
 		const userForToken: UserTokenPayload = {

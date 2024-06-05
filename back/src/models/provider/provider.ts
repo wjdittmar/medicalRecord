@@ -13,6 +13,6 @@ const providerSchema = new Schema<Provider>({
 	}
 });
 
-const Provider = model<Provider>('Provider', providerSchema);
+const ProviderModel = model<Provider>('Provider', providerSchema);
 
-export default Provider;
+export default ProviderModel;

@@ -1,12 +1,13 @@
-const Message = require("../models/message/message");
-const schema = require("../models/message/messageSchema");
-const mongoose = require("mongoose");
-const handleError = require("../utils/errorHandler");
+import { Request, Response } from "express";
+import mongoose from "mongoose";
+import MessageModel from "../models/message/message";
+import schema from "../models/message/messageSchema";
+import handleError from "../utils/errorHandler";
 
 // Get all messages (admin only)
-const getAllMessages = async (request, response) => {
+const getAllMessages = async (request: Request, response: Response): Promise<void> => {
 	try {
-		const messages = await Message.find({});
+		const messages = await MessageModel.find({});
 		response.json(messages);
 	} catch (error) {
 		handleError(response, error);
@@ -14,7 +15,7 @@ const getAllMessages = async (request, response) => {
 };
 
 // Create a new message
-const createMessage = async (request, response) => {
+const createMessage = async (request: Request, response: Response): Promise<Response | void> => {
 	try {
 		const body = request.body;
 		const { error, value } = schema.validate(body);
@@ -25,7 +26,7 @@ const createMessage = async (request, response) => {
 				message: error.details[0]?.message,
 			});
 		}
-		const messageToSave = new Message(value);
+		const messageToSave = new MessageModel(value);
 		const savedMessage = await messageToSave.save();
 		response.status(201).json(savedMessage);
 	} catch (error) {
@@ -34,12 +35,12 @@ const createMessage = async (request, response) => {
 };
 
 // Get messages for a specific recipient with pagination
-const getMessagesByRecipient = async (request, response) => {
+const getMessagesByRecipient = async (request: Request, response: Response): Promise<void> => {
 	const ITEMS_PER_PAGE = 10;
 	try {
-		const recipient = request.query.recipient;
-		const page = parseInt(request.query.page, 10) || 1;
-		const messages = await Message.aggregate([
+		const recipient = request.query.recipient as string;
+		const page = parseInt(request.query.page as string, 10) || 1;
+		const messages = await MessageModel.aggregate([
 			{ $match: { recipient: new mongoose.Types.ObjectId(recipient) } },
 			{ $lookup: { from: "users", localField: "sender", foreignField: "_id", as: "sender" } },
 			{ $unwind: "$sender" },
@@ -76,7 +77,7 @@ const getMessagesByRecipient = async (request, response) => {
 	}
 };
 
-module.exports = {
+export {
 	getAllMessages,
 	createMessage,
 	getMessagesByRecipient,

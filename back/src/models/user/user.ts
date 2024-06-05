@@ -1,8 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { User } from '../../../../types/user';
-
-interface UserModel extends User, Document { }
-
 const userSchema: Schema = new Schema({
 	email: {
 		type: String,
@@ -30,6 +27,6 @@ const userSchema: Schema = new Schema({
 	}
 });
 
-const User = mongoose.model<UserModel>('User', userSchema);
+const UserModel = mongoose.model<User>('User', userSchema);
 
-export default User;
+export default UserModel;
