@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 // TODO: could maybe do additional validation
 
@@ -16,4 +16,4 @@ const schema = Joi.object({
 	provider: Joi.array().items(Joi.string().hex().length(24)),
 });
 
-module.exports = schema;
+export default schema;

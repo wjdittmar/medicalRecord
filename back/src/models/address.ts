@@ -1,12 +1,12 @@
 import { Schema } from "mongoose";
-import { Address } from "../../../types/address"
+import { Address } from "../../../types/address";
 
 const addressSchema = new Schema<Address>({
-	street: { type: String, required: true },
-	city: { type: String, required: true },
-	state: { type: String, required: true },
-	postalCode: { type: String, required: true },
-	country: { type: String, required: true },
+	line: { type: String, required: false },
+	city: { type: String, required: false },
+	state: { type: String, required: false },
+	postalCode: { type: String, required: false },
+	country: { type: String, required: false },
 });
 
 export default addressSchema;

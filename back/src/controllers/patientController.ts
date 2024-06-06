@@ -211,7 +211,7 @@ const updatePatient = async (request: Request, response: Response): Promise<void
 			return;
 		}
 
-		const updatedPatient = await patient.save();
+		const updatedPatient = await patientValue.save();
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {
