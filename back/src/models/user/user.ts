@@ -1,5 +1,5 @@
-import mongoose, { Document, Schema } from 'mongoose';
-import { User } from '../../../../types/user';
+import mongoose, { Schema } from "mongoose";
+import { User } from "../../../../types/user";
 const userSchema: Schema = new Schema({
 	email: {
 		type: String,
@@ -22,11 +22,11 @@ const userSchema: Schema = new Schema({
 	},
 	role: {
 		type: String,
-		enum: ['admin', 'provider', 'patient'],
+		enum: ["admin", "provider", "patient"],
 		required: true,
 	}
 });
 
-const UserModel = mongoose.model<User>('User', userSchema);
+const UserModel = mongoose.model<User>("User", userSchema);
 
 export default UserModel;

@@ -56,7 +56,7 @@ type UserQuery = {
 	name?: string | RegExp;
 };
 
-type PatientQuery = Partial<Pick<Patient, 'ssn' | 'address'>> & {
+type PatientQuery = Partial<Pick<Patient, "ssn" | "address">> & {
 	dob?: Date | { $gte?: Date; $lte?: Date };
 	"address.postalCode"?: string;
 	user?: { $in: mongoose.Types.ObjectId[] };

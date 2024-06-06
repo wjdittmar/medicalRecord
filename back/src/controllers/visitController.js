@@ -9,10 +9,10 @@ const getAllVisits = async (request, response) => {
 	try {
 		const visits = await Visit.find({})
 			.populate({
-				path: 'patient',
+				path: "patient",
 				populate: {
-					path: 'user',
-					select: 'name'
+					path: "user",
+					select: "name"
 				}
 			});
 		response.json(visits);
@@ -68,10 +68,10 @@ const getVisitsBetweenDates = async (request, response) => {
 		const startDate = new Date(request.query.startDate);
 		const endDate = new Date(request.query.endDate);
 
-		if (Object.prototype.toString.call(startDate) !== '[object Date]') {
+		if (Object.prototype.toString.call(startDate) !== "[object Date]") {
 			return response.status(400).json({ error: "Invalid start date" });
 		}
-		if (Object.prototype.toString.call(endDate) !== '[object Date]') {
+		if (Object.prototype.toString.call(endDate) !== "[object Date]") {
 			return response.status(400).json({ error: "Invalid end date" });
 		}
 		const visitsBetween = await Visit.countDocuments({ encounterDate: { $gt: startDate } });
@@ -95,18 +95,18 @@ const updateVisit = async (request, response) => {
 			provider: body.provider
 		}, { new: true }
 		).populate({
-			path: 'patient',
+			path: "patient",
 			populate: {
-				path: 'user',
-				select: 'name email phone'
+				path: "user",
+				select: "name email phone"
 			}
 		}).populate({
-			path: 'provider',
+			path: "provider",
 			populate: {
-				path: 'user',
-				select: 'name email'
+				path: "user",
+				select: "name email"
 			}
-		})
+		});
 
 		if (!updatedVisit) {
 			return response.status(404).json({ error: "Visit not found" });
@@ -129,21 +129,21 @@ const findVisit = async (request, response) => {
 		query.encounterDate = { $gte: startOfDay, $lte: endOfDay };
 	}
 	if (postalCode) {
-		query['address.postalCode'] = postalCode;
+		query["address.postalCode"] = postalCode;
 	}
 	try {
 		const visits = await Visit.find(query)
 			.populate({
-				path: 'patient',
+				path: "patient",
 				populate: {
-					path: 'user',
-					select: 'name email phone'
+					path: "user",
+					select: "name email phone"
 				}
 			}).populate({
-				path: 'provider',
+				path: "provider",
 				populate: {
-					path: 'user',
-					select: 'name email'
+					path: "user",
+					select: "name email"
 				}
 			})
 			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
@@ -151,7 +151,7 @@ const findVisit = async (request, response) => {
 	} catch (error) {
 		handleError(response, error);
 	}
-}
+};
 
 const getVisitsByProvider = async (request, response) => {
 	const providerId = request.params.providerId;
@@ -159,17 +159,17 @@ const getVisitsByProvider = async (request, response) => {
 	try {
 		const visits = await Visit.find({ provider: providerId })
 			.populate({
-				path: 'patient',
+				path: "patient",
 				populate: {
-					path: 'user',
-					select: 'name email phone'
+					path: "user",
+					select: "name email phone"
 				}
 			})
 			.populate({
-				path: 'provider',
+				path: "provider",
 				populate: {
-					path: 'user',
-					select: 'name email'
+					path: "user",
+					select: "name email"
 				}
 			});
 

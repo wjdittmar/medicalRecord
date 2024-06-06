@@ -7,8 +7,10 @@ module.exports = {
 	},
 	"extends": [
 		"eslint:recommended",
-		"plugin:react/recommended"
+		"plugin:react/recommended",
+		"plugin:@typescript-eslint/recommended"
 	],
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaFeatures": {
 			"jsx": true
@@ -17,7 +19,9 @@ module.exports = {
 		"sourceType": "module"
 	},
 	"plugins": [
-		"react", "jest"
+		"react",
+		"jest",
+		"@typescript-eslint"
 	],
 	"rules": {
 		"indent": ["error", "tab"],
@@ -41,6 +45,11 @@ module.exports = {
 		"arrow-spacing": [
 			"error", { "before": true, "after": true }
 		],
-		"react/prop-types": 0
+		"react/prop-types": 0,
+	},
+	"settings": {
+		"react": {
+			"version": "detect"
+		}
 	}
 };

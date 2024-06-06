@@ -1,4 +1,4 @@
-const Joi = require("joi");
+import Joi from "joi";
 
 const schema = Joi.object({
 	user: Joi.object({
@@ -7,4 +7,4 @@ const schema = Joi.object({
 	license: Joi.string().required()
 });
 
-module.exports = schema;
+export default schema;
