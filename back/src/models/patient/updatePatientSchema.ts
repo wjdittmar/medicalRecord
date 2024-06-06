@@ -1,6 +1,6 @@
 const Joi = require("joi");
 
-const updatePatientSchema = Joi.object({
+export const updatePatientSchema = Joi.object({
 	dob: Joi.date().required(),
 	ssn: Joi.string().required(),
 	sex: Joi.string().required(),
@@ -14,4 +14,4 @@ const updatePatientSchema = Joi.object({
 	}).required(),
 });
 
-module.exports = updatePatientSchema;
+export default updatePatientSchema;

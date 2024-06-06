@@ -1,19 +1,21 @@
-import Patient from "../models/patient/patient";
-import User from "../models/user/user";
+import { Request, Response } from "express";
+import PatientModel from "../models/patient/patient";
+import mongoose from "mongoose";
+import UserModel from "../models/user/user";
+import { Patient } from "types/patient";
 import createUserSchema from "../models/user/createUserSchema";
 import updateUserSchema from "../models/user/updateUserSchema";
 import createPatientSchema from "../models/patient/createPatientSchema";
 import updatePatientSchema from "../models/patient/updatePatientSchema";
 import { createUser } from "./userController";
 import { getDayRange } from "../utils/date";
-import loggerService from "../services/loggerService";
+import { logInfo } from "../services/loggerService";
 import handleError from "../utils/errorHandler";
-import { Request, Response } from "express";
 
 // Get total number of patients
-const getTotalPatients = async (request, response) => {
+const getTotalPatients = async (request: Request, response: Response): Promise<void> => {
 	try {
-		const totalPatients = await Patient.countDocuments();
+		const totalPatients = await PatientModel.countDocuments();
 		response.json({ totalPatients });
 	} catch (error) {
 		handleError(response, error);
@@ -21,15 +23,15 @@ const getTotalPatients = async (request, response) => {
 };
 
 // Get number of patients older than a specified age
-const getPatientsOlderThan = async (request, response) => {
+const getPatientsOlderThan = async (request: Request, response: Response): Promise<void> => {
 	try {
-		const ageThreshold = parseInt(request.query.age); // Extract age threshold from query parameter
+		const ageThreshold = parseInt(request.query.age as string); // Extract age threshold from query parameter
 		if (isNaN(ageThreshold)) {
-			return response.status(400).json({ error: "Invalid age threshold" });
+			response.status(400).json({ error: "Invalid age threshold" });
 		}
 		const currentDate = new Date();
-		const thresholdDate = new Date(currentDate - 1000 * 60 * 60 * 24 * 365 * ageThreshold);
-		const patientsOlderThanThreshold = await Patient.countDocuments({ dob: { $lte: thresholdDate } });
+		const thresholdDate = new Date(currentDate.getTime() - 1000 * 60 * 60 * 24 * 365 * ageThreshold);
+		const patientsOlderThanThreshold = await PatientModel.countDocuments({ dob: { $lte: thresholdDate } });
 		response.json({ patientsOlderThanThreshold });
 	} catch (error) {
 		handleError(response, error);
@@ -37,9 +39,9 @@ const getPatientsOlderThan = async (request, response) => {
 };
 
 // Get all patients
-const getAllPatients = async (request, response) => {
+const getAllPatients = async (request: Request, response: Response): Promise<void> => {
 	try {
-		const patients = await Patient.find({})
+		const patients = await PatientModel.find({})
 			.populate("preExistingConditions", { icdcode: 1, disease: 1 })
 			.populate("user", { email: 1, name: 1, phone: 1 });
 		response.json(patients);
@@ -48,50 +50,67 @@ const getAllPatients = async (request, response) => {
 	}
 };
 
+// this will only be used here
+// and represents a selection of fields from the user type
+type UserQuery = {
+	name?: string | RegExp;
+};
+
+type PatientQuery = Partial<Pick<Patient, 'ssn' | 'address'>> & {
+	dob?: Date | { $gte?: Date; $lte?: Date };
+	"address.postalCode"?: string;
+	user?: { $in: mongoose.Types.ObjectId[] };
+};
+
 // Find patients by demographic data
-const findPatientsByDemographic = async (req, res) => {
-	const { name, ssn, dob, postalCode } = req.query;
-	const query = {};
+const findPatientsByDemographic = async (req: Request, res: Response): Promise<void> => {
+
+	const { name, ssn, dob, postalCode } = req.query as {
+		name?: string;
+		ssn?: string;
+		dob?: string;
+		postalCode?: string;
+	};
+
+	const patientQuery: PatientQuery = {};
 
 	if (ssn) {
-		query.ssn = ssn;
+		patientQuery.ssn = ssn;
 	}
 	if (dob) {
 		const { startOfDay, endOfDay } = getDayRange(dob);
-		query.dob = { $gte: startOfDay, $lte: endOfDay };
+		patientQuery.dob = { $gte: startOfDay, $lte: endOfDay };
 	}
 	if (postalCode) {
-		query["address.postalCode"] = postalCode;
+		patientQuery["address.postalCode"] = postalCode;
 	}
 
 	try {
-		let userQuery = {};
-
-		if (name) {
-			userQuery.name = new RegExp(name, "i"); // Case-insensitive regex search for name
-		}
-
 		// If name is provided, find matching users
 		if (name) {
-			const users = await User.find(userQuery, "_id").lean();
+
+			const userQuery: UserQuery = { name: new RegExp(name, "i") }; // Case-insensitive regex search for name
+
+			const users = await UserModel.find(userQuery, "_id").lean();
 			const userIds = users.map((user) => user._id);
 
 			// Add user IDs to the patient query
-			query.user = { $in: userIds };
+			patientQuery.user = { $in: userIds };
 		}
-		const patients = await Patient.find(query)
+
+		const patients = await PatientModel.find(patientQuery)
 			.populate("user", "email name phone")
 			.populate("preExistingConditions", { icdcode: 1, disease: 1 })
 			.lean(); // Use lean to get plain JavaScript objects instead of Mongoose documents
 
 		res.json(patients);
 	} catch (error) {
-		handleError(response, error);
+		handleError(res, error);
 	}
 };
 
 // Create a new patient
-const createPatient = async (request, response) => {
+const createPatient = async (request: Request, response: Response): Promise<void> => {
 	try {
 		const { name, phone, email, password, address } = request.body;
 		const { preferredLanguage, dob, sex, ssn } = request.body;
@@ -111,7 +130,8 @@ const createPatient = async (request, response) => {
 			role: "patient",
 		});
 		if (userError) {
-			return handleError(response, userError, 400, userError.details[0].message);
+			handleError(response, userError, 400, userError.details[0].message);
+			return;
 		}
 
 		const savedUser = await createUser(userValue);
@@ -126,18 +146,19 @@ const createPatient = async (request, response) => {
 		});
 
 		if (patientValidation.error) {
-			return handleError(
+			handleError(
 				response,
 				patientValidation.error,
 				400,
 				patientValidation.error.details[0].message
 			);
+			return;
 		}
 
-		const patient = new Patient(patientValidation.value);
+		const patient = new PatientModel(patientValidation.value);
 
 		const savedPatient = await patient.save();
-		loggerService.logInfo("Created new patient", { name, email });
+		logInfo("Created new patient", { name, email });
 		response.status(201).json(savedPatient);
 	} catch (error) {
 		handleError(response, error);
@@ -145,14 +166,15 @@ const createPatient = async (request, response) => {
 };
 
 // Update a patient
-const updatePatient = async (request, response) => {
+const updatePatient = async (request: Request, response: Response): Promise<void> => {
 	const id = request.params.id;
 	const body = request.body;
 
 	try {
-		const patient = await Patient.findById(id).populate("preExistingConditions");
+		const patient = await PatientModel.findById(id).populate("preExistingConditions");
 		if (!patient) {
-			return handleError(response, new Error("Patient not found"), 404, "Patient not found");
+			handleError(response, new Error("Patient not found"), 404, "Patient not found");
+			return;
 		}
 
 		const { value: userValue, error: userError } = updateUserSchema.validate({
@@ -163,14 +185,16 @@ const updatePatient = async (request, response) => {
 
 		if (userError) {
 			// TODO: need to handle this error gracefully on the front end when you try to update the values to something invalid
-			return handleError(response, userError, 400, userError.details[0].message);
+			handleError(response, userError, 400, userError.details[0].message);
+			return;
 		}
 
 		// Update the user associated with the patient
-		const updatedUser = await User.findByIdAndUpdate(patient.user, userValue, { new: true });
+		const updatedUser = await UserModel.findByIdAndUpdate(patient.user, userValue, { new: true });
 
 		if (!updatedUser) {
-			return response.status(404).json({ error: "User not found" });
+			response.status(404).json({ error: "User not found" });
+			return;
 		}
 
 		// Update other patient fields
@@ -182,8 +206,9 @@ const updatePatient = async (request, response) => {
 
 		const { value: patientValue, error: patientError } = updatePatientSchema.validate(patient);
 
-		if (userError) {
-			return handleError(response, patientError, 400, patientError.details[0].message);
+		if (patientError) {
+			handleError(response, patientError, 400, patientError.details[0].message);
+			return;
 		}
 
 		const updatedPatient = await patient.save();
@@ -194,7 +219,7 @@ const updatePatient = async (request, response) => {
 	}
 };
 
-module.exports = {
+export {
 	getTotalPatients,
 	getPatientsOlderThan,
 	getAllPatients,
