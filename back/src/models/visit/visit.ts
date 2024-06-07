@@ -1,7 +1,7 @@
 // visit.ts
 import mongoose, { Schema, Model } from "mongoose";
 import { Visit } from "../../../../types/visit";
-import addressSchema from "../address";
+import addressSchema from "../address/address";
 
 const visitSchema: Schema<Visit> = new mongoose.Schema({
 	patient: { type: mongoose.Schema.Types.ObjectId, ref: "Patient" },

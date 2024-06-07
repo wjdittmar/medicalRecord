@@ -1,5 +1,5 @@
 import express from "express";
-import { verifyToken } from "../middleware/authMiddleware.js";
+import { verifyToken } from "../middleware/authMiddleware";
 import * as epicService from "../services/epicService.js";
 import { getFormattedDate } from "../utils/date";
 import { logError } from "../services/loggerService";

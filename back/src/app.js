@@ -9,7 +9,7 @@ import { userRouter } from "./routes/users.js";
 import loginRouter from "./routes/login.js";
 import epicRouter from "./routes/epic.js";
 import messageRouter from "./routes/message.js";
-import middleware from "./middleware/authMiddleware.js";
+import middleware from "./middleware/authMiddleware";
 import errorMiddleware from "./middleware/errorMiddleware.js";
 
 const app = express();

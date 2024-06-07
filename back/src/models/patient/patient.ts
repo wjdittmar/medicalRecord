@@ -1,9 +1,12 @@
 import { Schema, Document, model } from "mongoose";
-import addressSchema from "../address";
+import addressSchema from "../address/address";
 import { Patient } from "../../../../types/patient";
+import { Types } from "mongoose";
 
+export interface PatientDocument extends Patient, Document {
+	_id?: Types.ObjectId;
+}
 
-export interface PatientDocument extends Patient, Document { }
 const patientSchema = new Schema<PatientDocument>({
 	user: {
 		type: Schema.Types.ObjectId,
@@ -24,6 +27,14 @@ const patientSchema = new Schema<PatientDocument>({
 		unique: true
 	},
 	address: { type: addressSchema, required: true }
+});
+
+patientSchema.set("toObject", {
+	transform: (document, returnedObject) => {
+		returnedObject.id = returnedObject._id.toString();
+		delete returnedObject._id;
+		delete returnedObject.__v;
+	}
 });
 
 // Create and export the Patient model

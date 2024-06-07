@@ -1,12 +1,12 @@
 import { Request, Response } from "express";
-import PatientModel from "../models/patient/patient";
+import PatientModel, { PatientDocument } from "../models/patient/patient"; // Adjust the import path as necessary
+
 import mongoose from "mongoose";
 import UserModel from "../models/user/user";
 import { Patient } from "types/patient";
 import createUserSchema from "../models/user/createUserSchema";
 import updateUserSchema from "../models/user/updateUserSchema";
-import createPatientSchema from "../models/patient/createPatientSchema";
-import updatePatientSchema from "../models/patient/updatePatientSchema";
+import patientSchema from "../models/patient/patientSchema";
 import { createUser } from "./userController";
 import { getDayRange } from "../utils/date";
 import { logInfo } from "../services/loggerService";
@@ -136,7 +136,7 @@ const createPatient = async (request: Request, response: Response): Promise<void
 
 		const savedUser = await createUser(userValue);
 
-		const patientValidation = createPatientSchema.validate({
+		const patientValidation = patientSchema.validate({
 			user: savedUser._id.toString(),
 			preferredLanguage,
 			dob,
@@ -171,7 +171,9 @@ const updatePatient = async (request: Request, response: Response): Promise<void
 	const body = request.body;
 
 	try {
-		const patient = await PatientModel.findById(id).populate("preExistingConditions");
+		// have to add lean otherwise it adds the __parent field and messes up validation
+		const patient = await PatientModel.findById(id).populate("preExistingConditions").lean();
+
 		if (!patient) {
 			handleError(response, new Error("Patient not found"), 404, "Patient not found");
 			return;
@@ -196,22 +198,34 @@ const updatePatient = async (request: Request, response: Response): Promise<void
 			response.status(404).json({ error: "User not found" });
 			return;
 		}
+		// Convert ObjectId to string before validation
+		const patientData = {
+			...patient,
+			user: patient.user.toString(),
+		};
 
 		// Update other patient fields
-		patient.dob = body.dob;
-		patient.ssn = body.ssn;
-		patient.sex = body.sex;
-		patient.preferredLanguage = body.preferredLanguage;
-		patient.address = body.address;
+		patientData.dob = body.dob;
+		patientData.ssn = body.ssn;
+		patientData.sex = body.sex;
+		patientData.preferredLanguage = body.preferredLanguage;
+		patientData.address = body.address;
 
-		const { value: patientValue, error: patientError } = updatePatientSchema.validate(patient);
+		const { value: patientValue, error: patientError } = patientSchema.validate(patientData, {
+			allowUnknown: true, // Allow `__v` but remove it
+			stripUnknown: true,
+		});
 
 		if (patientError) {
 			handleError(response, patientError, 400, patientError.details[0].message);
 			return;
 		}
 
-		const updatedPatient = await patientValue.save();
+
+		// cast it explicitly to a document so that typescript doesn't complain
+
+		const updatedPatientData = patientValue as PatientDocument;
+		const updatedPatient = await PatientModel.findByIdAndUpdate(id, updatedPatientData, { new: true }).populate("preExistingConditions");
 
 		response.status(200).json(updatedPatient);
 	} catch (error) {
