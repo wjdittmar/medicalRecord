@@ -1,16 +1,15 @@
-const bcrypt = require("bcrypt");
-const fs = require("fs");
-const { parse } = require("csv-parse");
-
-const randomEntry = require("./utils");
-const db = require("../utils/db");
-const Patient = require("../models/patient/patient");
-const Provider = require("../models/provider/provider");
-const Diagnosis = require("../models/diagnosis");
-const Visit = require("../models/visit/visit");
-const User = require("../models/user/user");
-const { createUser } = require("../controllers/userController");
-const loggerService = require("../services/loggerService");
+import bcrypt from "bcrypt";
+import fs from "fs";
+import { parse } from "csv-parse";
+import randomEntry from "./utils";
+import db from "../utils/db";
+import Patient from "../models/patient/patient";
+import Provider from "../models/provider/provider";
+import Diagnosis from "../models/diagnosis";
+import Visit from "../models/visit/visit";
+import User from "../models/user/user";
+import { createUser } from "../controllers/userController";
+import loggerService from "../services/loggerService";
 
 const NUM_PROVIDERS = 50;
 const NUM_PATIENTS = 100;

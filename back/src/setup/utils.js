@@ -1,4 +1,4 @@
-const { faker } = require("@faker-js/faker");
+import { faker } from "@faker-js/faker";
 
 
 function createRandomProvider() {
@@ -30,7 +30,7 @@ function createRandomVisit() {
 		providerNotes: faker.hacker.phrase()
 	};
 }
-module.exports = {
+export default {
 	createRandomProvider,
 	createRandomPatient,
 	createRandomVisit,

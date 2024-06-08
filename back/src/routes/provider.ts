@@ -1,6 +1,8 @@
-const providerRouter = require("express").Router();
-const { verifyTokenAndRole } = require("../middleware/authMiddleware");
-const providerController = require("../controllers/providerController");
+import { Router } from "express";
+import { verifyTokenAndRole } from "../middleware/authMiddleware";
+import * as providerController from "../controllers/providerController";
+
+const providerRouter = Router();
 
 // Route to get the total number of providers (visible to admin and providers)
 providerRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), providerController.getTotalProviders);
@@ -17,4 +19,4 @@ providerRouter.post("/", verifyTokenAndRole(["admin", "provider"]), providerCont
 // Route to update a provider (visible to admin and providers)
 providerRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), providerController.updateProvider);
 
-module.exports = providerRouter;
+export default providerRouter;

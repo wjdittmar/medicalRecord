@@ -1,6 +1,8 @@
-const visitRouter = require("express").Router();
-const { verifyTokenAndRole } = require("../middleware/authMiddleware");
-const visitController = require("../controllers/visitController");
+import { Router } from "express";
+import { verifyTokenAndRole } from "../middleware/authMiddleware";
+import * as visitController from "../controllers/visitController";
+
+const visitRouter = Router();
 
 // Route to get all visits (admin and provider)
 visitRouter.get("/", verifyTokenAndRole(["admin", "provider"]), visitController.getAllVisits);
@@ -20,6 +22,7 @@ visitRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), visitControll
 // Route to find a visit by zip code or encounter date
 visitRouter.get("/search", verifyTokenAndRole(["admin", "provider"]), visitController.findVisit);
 
+// Route to get visits by provider ID (admin and provider)
 visitRouter.get("/by-provider/:providerId", verifyTokenAndRole(["admin", "provider"]), visitController.getVisitsByProvider);
 
-module.exports = visitRouter;
+export default visitRouter;

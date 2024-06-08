@@ -1,9 +1,13 @@
-import express from "express";
-import Diagnosis from "../models/diagnosis.js";
+import express, { Request, Response } from "express";
+import Diagnosis from "../models/diagnosis";
 
 const diagnosisRouter = express.Router();
 
-diagnosisRouter.get("/:id", async (request, response) => {
+interface DiagnosisRequestParams {
+	id: string;
+}
+
+diagnosisRouter.get("/:id", async (request: Request<DiagnosisRequestParams>, response: Response) => {
 	try {
 		const diagnosis = await Diagnosis.find({ icdcode: request.params.id });
 		response.json(diagnosis);

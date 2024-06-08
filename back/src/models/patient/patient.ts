@@ -29,14 +29,6 @@ const patientSchema = new Schema<PatientDocument>({
 	address: { type: addressSchema, required: true }
 });
 
-patientSchema.set("toObject", {
-	transform: (document, returnedObject) => {
-		returnedObject.id = returnedObject._id.toString();
-		delete returnedObject._id;
-		delete returnedObject.__v;
-	}
-});
-
 // Create and export the Patient model
 const PatientModel = model<PatientDocument>("Patient", patientSchema);
 export default PatientModel;

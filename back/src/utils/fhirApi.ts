@@ -1,13 +1,18 @@
-const axios = require("axios");
-const querystring = require("querystring");
-const { sign } = require("jsonwebtoken");
-const { v4: uuidv4 } = require("uuid");
-const config = require("./config");
+import axios, { AxiosResponse, InternalAxiosRequestConfig } from "axios";
+import querystring from "querystring";
+import { sign } from "jsonwebtoken";
+import { v4 as uuidv4 } from "uuid";
+import * as config from "./config";
 
 const tokenUrl = "https://fhir.epic.com/interconnect-fhir-oauth/oauth2/token";
 const baseUrl = "https://fhir.epic.com/interconnect-fhir-oauth/api/FHIR/R4";
 
-const getAccessToken = async () => {
+// Define the response type for the access token
+interface AccessTokenResponse {
+	access_token: string;
+}
+
+const getAccessToken = async (): Promise<string> => {
 	const payload = {
 		iss: config.EPIC_CLIENT_ID,
 		sub: config.EPIC_CLIENT_ID,
@@ -22,7 +27,7 @@ const getAccessToken = async () => {
 	});
 
 	try {
-		const response = await axios.post(
+		const response: AxiosResponse<AccessTokenResponse> = await axios.post(
 			tokenUrl,
 			querystring.stringify({
 				grant_type: "client_credentials",
@@ -46,10 +51,10 @@ const fhirApi = axios.create({
 	baseURL: baseUrl,
 });
 
-fhirApi.interceptors.request.use(async (config) => {
+fhirApi.interceptors.request.use(async (config: InternalAxiosRequestConfig): Promise<InternalAxiosRequestConfig> => {
 	const accessToken = await getAccessToken();
 	config.headers.Authorization = `Bearer ${accessToken}`;
 	return config;
 });
 
-module.exports = fhirApi;
+export default fhirApi;

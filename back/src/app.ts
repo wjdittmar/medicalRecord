@@ -1,16 +1,16 @@
 import path from "path";
 import express from "express";
 import cors from "cors";
-import diagnosesRouter from "./routes/diagnosis.js";
-import patientRouter from "./routes/patient.js";
-import providerRouter from "./routes/provider.js";
-import visitRouter from "./routes/visit.js";
-import { userRouter } from "./routes/users.js";
-import loginRouter from "./routes/login.js";
-import epicRouter from "./routes/epic.js";
-import messageRouter from "./routes/message.js";
+import diagnosesRouter from "./routes/diagnosis";
+import patientRouter from "./routes/patient";
+import providerRouter from "./routes/provider";
+import visitRouter from "./routes/visit";
+import { userRouter } from "./routes/user";
+import loginRouter from "./routes/login";
+import epicRouter from "./routes/epic";
+import messageRouter from "./routes/message";
 import middleware from "./middleware/authMiddleware";
-import errorMiddleware from "./middleware/errorMiddleware.js";
+import errorMiddleware from "./middleware/errorMiddleware";
 
 const app = express();
 

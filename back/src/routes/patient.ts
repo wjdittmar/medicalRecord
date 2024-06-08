@@ -1,6 +1,8 @@
-const patientRouter = require("express").Router();
-const { verifyToken, verifyTokenAndRole } = require("../middleware/authMiddleware");
-const patientController = require("../controllers/patientController");
+import { Router } from "express";
+import { verifyToken, verifyTokenAndRole } from "../middleware/authMiddleware";
+import * as patientController from "../controllers/patientController";
+
+const patientRouter = Router();
 
 // Endpoint to get the total number of patients
 patientRouter.get("/total", verifyTokenAndRole(["admin", "provider"]), patientController.getTotalPatients);
@@ -20,4 +22,4 @@ patientRouter.post("/", verifyTokenAndRole(["admin", "provider"]), patientContro
 // Endpoint to update a patient
 patientRouter.put("/:id", verifyTokenAndRole(["admin", "provider"]), patientController.updatePatient);
 
-module.exports = patientRouter;
+export default patientRouter;

@@ -1,6 +1,12 @@
+import { Request, Response } from "express";
 import { logError } from "../services/loggerService";
 
-const errorMiddleware = (err, req, res, next) => {
+// Define a custom error type with optional statusCode
+interface CustomError extends Error {
+	statusCode?: number;
+}
+
+const errorMiddleware = (err: CustomError, req: Request, res: Response): void => {
 	logError(err.message, err);
 
 	const statusCode = err.statusCode || 500;
