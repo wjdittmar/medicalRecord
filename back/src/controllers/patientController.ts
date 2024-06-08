@@ -4,8 +4,7 @@ import PatientModel, { PatientDocument } from "../models/patient/patient"; // Ad
 import mongoose from "mongoose";
 import UserModel from "../models/user/user";
 import { Patient } from "types/patient";
-import createUserSchema from "../models/user/createUserSchema";
-import updateUserSchema from "../models/user/updateUserSchema";
+import userSchema from "../models/user/userSchema";
 import patientSchema from "../models/patient/patientSchema";
 import { createUser } from "./userController";
 import { getDayRange } from "../utils/date";
@@ -122,7 +121,7 @@ const createPatient = async (request: Request, response: Response): Promise<void
 		// when you create a new patient,
 		// you must also create a new user
 
-		const { value: userValue, error: userError } = createUserSchema.validate({
+		const { value: userValue, error: userError } = userSchema.validate({
 			email,
 			name,
 			phone,
@@ -179,11 +178,16 @@ const updatePatient = async (request: Request, response: Response): Promise<void
 			return;
 		}
 
+		// extract all the fields from the schema and make them optional so that we can validate just a subset of them
+		const updateUserSchema = userSchema.fork(Object.keys(userSchema.describe().keys), (schema) => schema.optional());
+
 		const { value: userValue, error: userError } = updateUserSchema.validate({
 			name: body.user.name,
 			email: body.user.email,
 			phone: body.user.phone,
 		});
+
+
 
 		if (userError) {
 			// TODO: need to handle this error gracefully on the front end when you try to update the values to something invalid

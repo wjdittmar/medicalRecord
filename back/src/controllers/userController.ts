@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
 import UserModel from "../models/user/user";
-import createUserSchema from "../models/user/createUserSchema";
+import userSchema from "../models/user/userSchema";
 import { logInfo } from "../services/loggerService";
 import handleError from "../utils/errorHandler";
 import { User } from "../../../types/user";
@@ -25,7 +25,7 @@ const registerUser = async (request: Request, response: Response) => {
 	const { email, name, password } = request.body;
 
 	// default as a provider for new user creation
-	const { value, error } = createUserSchema.validate({ email, name, password, role: "provider" });
+	const { value, error } = userSchema.validate({ email, name, password, role: "provider" });
 	if (error) {
 		return handleError(response, error);
 	}
