@@ -9,7 +9,7 @@ http://www.nex-med.io
 - Showcase ability to develop full-stack applications using the MERN development stack (MongoDB, Express, React.js, Node.js)
 - Showcase ability to utilize version control (Git) effectively with feature branches
 - Demonstrate basic user authentication and authorization using the bearer token scheme and expiring secure cookies
-- Demonstrate use of the reactQuery library to implement an internal messaging system that allow susers to receive notifications when they get a new message
+- Demonstrate use of the reactQuery library to implement an internal messaging system that allows users to receive notifications when they get a new message
 - Demonstrate ability to develop a Node.js backend to authenticate and interact with the Epic FHIR API, leveraging OAuth 2.0 for secure access token retrieval and patient data querying
 - Develop a basic implementation of security measures to protect sensitive patient data: implement role-based access control, allowing for different privileges for different user level (e.g. admin, provider, patient); centralized asynchronous access logs with a customizable rotation schedule (using the Winston logging library)
 
