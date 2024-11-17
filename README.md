@@ -15,12 +15,9 @@ http://www.nex-med.io
 
 ## Features:
 
-- Ability to add / remove / update visits, patients, and providers with search capability
-  - ![search](https://github.com/user-attachments/assets/1b009387-8871-4af9-b52d-62c7d888088d)
+- Ability to add / remove / update visits, patients, and providers with the ability to search by visit and patient
 - Appointment calendar that shows relevant visits for the logged-in user
-  - ![calendar](https://github.com/user-attachments/assets/923fbffe-0309-4e9c-bf4f-661c764e4a6a)
 - Internal real-time messaging system with notifications
-  - ![messaging](https://github.com/user-attachments/assets/7f51f4ec-860c-48c2-990e-40bacd561ed4)
 
 ## Todo:
 
