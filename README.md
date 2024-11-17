@@ -7,11 +7,20 @@ http://www.nex-med.io
 - Demonstrate the ability to take feature requirements and translate them into a minimum viable product
 - Showcase understanding of basic HTML / CSS
 - Showcase ability to develop full-stack applications using the MERN development stack (MongoDB, Express, React.js, Node.js)
-- Showcase ability to utilize version control (Git) effectively with feature branches
 - Demonstrate basic user authentication and authorization using the bearer token scheme and expiring secure cookies
-- Demonstrate use of the reactQuery library to implement an internal messaging system that allows users to receive notifications when they get a new message
+- Demonstrate use of the reactQuery library to handle state management
 - Demonstrate ability to develop a Node.js backend to authenticate and interact with the Epic FHIR API, leveraging OAuth 2.0 for secure access token retrieval and patient data querying
-- Develop a basic implementation of security measures to protect sensitive patient data: implement role-based access control, allowing for different privileges for different user level (e.g. admin, provider, patient); centralized asynchronous access logs with a customizable rotation schedule (using the Winston logging library)
+- Develop a basic implementation of security measures to protect sensitive patient data: implement role-based access control, allowing for different privileges for different user level (e.g. admin, provider, patient)
+- Centralized asynchronous access logs with a customizable rotation schedule (using the Winston logging library)
+
+## Features:
+
+- Ability to add / remove / update visits, patients, and providers with search capability
+  - ![search](https://github.com/user-attachments/assets/1b009387-8871-4af9-b52d-62c7d888088d)
+- Appointment calendar that shows relevant visits for the logged-in user
+  - ![calendar](https://github.com/user-attachments/assets/923fbffe-0309-4e9c-bf4f-661c764e4a6a)
+- Internal real-time messaging system with notifications
+  - ![messaging](https://github.com/user-attachments/assets/7f51f4ec-860c-48c2-990e-40bacd561ed4)
 
 ## Todo:
 
@@ -22,8 +31,8 @@ http://www.nex-med.io
 - CI/CD deployment pipeline
 
 ## Possible additional features:
-
-- Deploy application to AWS
+- Implement a FHIR server for storing patient information
+- Deploy application on ECS Fargate
 - Clinical-decision support
   - Utilize existing evidence-based guidelines to provide suggestions to providers regarding optimal treatment plans / monitoring
   - Utilize large-language models to analyze / summarize / and make recommendations utilizing existing minimally structured (provider notes) data
